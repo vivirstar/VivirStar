@@ -3,9 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#2d7a4f">
 <title>Rooze Ventas</title>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -193,6 +190,14 @@ button:disabled{opacity:0.55;cursor:not-allowed;}
 .btn:active:not(:disabled){filter:brightness(0.80) !important;transform:scale(0.97) !important;}
 @media(hover:none){button:active:not(:disabled){filter:brightness(0.78);transform:scale(0.96);}}
 </style>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#18181b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="VivirStar">
+  <link rel="apple-touch-icon" href="https://cdn.shopify.com/s/files/1/0744/2300/9452/files/vsr.jpg?v=1777677364">
+  <link rel="icon" type="image/jpeg" href="https://cdn.shopify.com/s/files/1/0744/2300/9452/files/vsr.jpg?v=1777677364">
 </head>
 <body>
 
@@ -231,6 +236,10 @@ button:disabled{opacity:0.55;cursor:not-allowed;}
       <div class="row">
         <div><h2 id="ventas-title">Mis Ventas</h2><div class="tb-sub" id="ventas-sub">Cargando...</div></div>
         <div style="display:flex;align-items:center;gap:8px">
+          <div id="notif-bell" style="display:none;position:relative;cursor:pointer;margin-right:4px" onclick="clearNotifBadge()" title="Notificaciones">
+          <span style="font-size:20px">🔔</span>
+          <span id="notif-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:#dc2626;color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;font-weight:700;align-items:center;justify-content:center;line-height:16px;text-align:center">0</span>
+        </div>
           <button onclick="logout()" style="padding:6px 12px;border-radius:8px;background:#fee2e2;color:#991b1b;border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--fs)">Salir</button>
           <div class="av" id="ventas-av"></div>
         </div>
@@ -521,7 +530,7 @@ const FBCFG={
   appId:'1:301272114212:web:1a846a62c935bb6e8524b1',
   measurementId:'G-NS9QZY5Z73'
 };
-const VAPID='BEJzL3G7sWhCsMVmf0kMxyGAacO-k52q5M9nOjWKiCBSMq7gtETT7cDwP4d5daSSl7EKQ1wYUVUC7qGmmXPbwiw';
+const VAPID='REEMPLAZAR_CON_VAPID_DE_VIVIRSTAR26'; // ← Ir a Firebase Console > Project Settings > Cloud Messaging > Web Push Certificates > Generate key pair
 
 // ═══ SALARY SCALE (weekly - loaded from config) ═══
 const DEFAULT_SCALE=[
@@ -729,6 +738,8 @@ function statusBadge(s){
 function renderVentas(){
   const el=$('ventas-list');
   $('ventas-av').textContent=cu?.ini||'?';
+  var bell=document.getElementById('notif-bell');
+  if(bell&&(isAdmin()||isSuper()))bell.style.display='flex';
   $('ventas-title').textContent=isAdmin()?'Todas las ventas':'Mis ventas';
   $('ventas-sub').textContent=cu?.name||'';
   const {start:vStart,end:vEnd}=getVentasDateRange();
@@ -1079,6 +1090,8 @@ $('btn-nueva').onclick=async function(){
     const savedOrder={id:ref.id,...orderData,fv:orderData.fechaMs};
     closeOv('ov-nueva');
     toast('✓ Venta registrada');
+    // Notify superadmins of new order
+    notifySuperAdminNewOrder(savedOrder).catch(function(e){console.log('notif:',e);});
     if(savedOrder.id)setTimeout(function(){openNotaModal(savedOrder);},300);
   }catch(e){
     console.error('Error registrando venta:',e);
@@ -2679,6 +2692,95 @@ function loadNotaLogoFile(inp){
   var r=new FileReader();
   r.onload=function(ev){cfg.logoUrl=ev.target.result;var el=document.getElementById('cfg-lu');if(el)el.value='[logo cargado]';toast('Logo listo - guarda la configuracion');};
   r.readAsDataURL(f);
+}
+
+
+// ═══ NOTIFICACIONES SUPERADMIN ══════════════════════════════════════════════
+
+// Request notification permission when superadmin/admin logs in
+async function requestNotifPermission(){
+  if(!('Notification' in window))return;
+  if(Notification.permission==='default'){
+    const perm=await Notification.requestPermission();
+    if(perm==='granted') await saveFCMToken();
+  } else if(Notification.permission==='granted'){
+    await saveFCMToken();
+  }
+}
+
+// Save new order notification to Firestore so superadmins see it
+async function notifySuperAdminNewOrder(order){
+  try{
+    // Write notification document — superadmin listener picks this up
+    await db.collection('notifications').add({
+      type:'nueva_venta',
+      title:'🛍️ Nueva venta registrada',
+      body:(order.vendedor||'Vendedor')+' · '+order.cliente+' · S/ '+(order.cobrar||0).toFixed(2)+' · '+(order.zona||'Lima'),
+      orderId:order.id,
+      vendedor:order.vendedor||'',
+      cliente:order.cliente||'',
+      cobrar:order.cobrar||0,
+      zona:order.zona||'',
+      createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+      read:false
+    });
+  }catch(e){console.log('Notif write error:',e);}
+}
+
+// Listen for new notifications (superadmin/admin only)
+var _notifListener=null;
+var _notifCount=0;
+
+function startNotifListener(){
+  if(_notifListener)return; // already running
+  if(!isAdmin()&&!isSuper())return; // only for admin roles
+  // Listen for unread notifications from the last 24h
+  var since=new Date(Date.now()-86400000);
+  _notifListener=db.collection('notifications')
+    .where('read','==',false)
+    .onSnapshot(function(snap){
+      var newDocs=snap.docChanges().filter(function(ch){return ch.type==='added';});
+      newDocs.forEach(function(ch){
+        var d=ch.doc.data();
+        // Don't notify if it's our own sale
+        if(d.vendedor===cu.name||d.vendedor===cu.email)return;
+        // Show browser notification
+        if(Notification.permission==='granted'){
+          var n=new Notification(d.title||'Nueva venta',{
+            body:d.body||'',
+            icon:'https://cdn.shopify.com/s/files/1/0744/2300/9452/files/vsr.jpg?v=1777677364',
+            badge:'https://cdn.shopify.com/s/files/1/0744/2300/9452/files/vsr.jpg?v=1777677364',
+            tag:'venta-'+ch.doc.id,
+            requireInteraction:false,
+            silent:false
+          });
+          n.onclick=function(){window.focus();n.close();};
+        }
+        // Update badge count
+        _notifCount++;
+        updateNotifBadge();
+        toast('🛍️ '+d.body,'info');
+      });
+    },function(e){console.log('Notif listener:',e);});
+  listeners.push(_notifListener);
+}
+
+function updateNotifBadge(){
+  var badge=document.getElementById('notif-badge');
+  if(!badge)return;
+  badge.textContent=_notifCount>9?'9+':String(_notifCount);
+  badge.style.display=_notifCount>0?'flex':'none';
+}
+
+function clearNotifBadge(){
+  _notifCount=0;
+  updateNotifBadge();
+  // Mark all as read
+  db.collection('notifications').where('read','==',false).get().then(function(snap){
+    var batch=db.batch();
+    snap.docs.forEach(function(d){batch.update(d.ref,{read:true});});
+    return batch.commit();
+  }).catch(function(e){console.log('mark read:',e);});
 }
 
 

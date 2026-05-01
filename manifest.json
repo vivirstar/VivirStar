@@ -1,0 +1,25 @@
+{
+  "name": "VivirStar — Sistema de Ventas",
+  "short_name": "VivirStar",
+  "description": "Sistema de ventas, stock y notas de venta VivirStar",
+  "start_url": "/VivirStar/ventas.html",
+  "scope": "/VivirStar/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#18181b",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdn.shopify.com/s/files/1/0744/2300/9452/files/vsr.jpg?v=1777677364",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn.shopify.com/s/files/1/0744/2300/9452/files/vsr.jpg?v=1777677364",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}
