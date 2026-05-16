@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Rooze Ventas</title>
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#2d7a4f">
+<title>VivirStar/ZOMA Ventas</title>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -49,8 +52,8 @@ body{font-family:var(--fs);background:var(--bg3);color:var(--tx);max-width:430px
 .divider{height:0.5px;background:var(--bo);margin:9px 0}
 /* BADGES */
 .badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;flex-shrink:0}
-.badge.pend{background:#fef3c7;color:#92400e}
-.badge.env{background:#dbeafe;color:#1e40af}
+.badge.pend{background:#ccfbf1;color:#0f766e}
+.badge.env{background:#ede9fe;color:#6d28d9}
 .badge.ent{background:#dcfce7;color:#166534}
 .badge.anul{background:#fee2e2;color:#991b1b}
 /* DETAIL ROWS */
@@ -148,8 +151,8 @@ body{font-family:var(--fs);background:var(--bg3);color:var(--tx);max-width:430px
 /* STATUS SELECTOR */
 .status-opts{display:flex;gap:6px;flex-wrap:wrap}
 .sopt{padding:8px 14px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:#e8e8e8;color:#888;font-family:var(--fs)}
-.sopt.pend.on{background:#fef3c7;color:#92400e}
-.sopt.env.on{background:#dbeafe;color:#1e40af}
+.sopt.pend.on{background:#ccfbf1;color:#0f766e}
+.sopt.env.on{background:#ede9fe;color:#6d28d9}
 .sopt.ent.on{background:#dcfce7;color:#166534}
 .sopt.anul.on{background:#fee2e2;color:#991b1b}
 /* TOAST */
@@ -189,24 +192,481 @@ button:disabled{opacity:0.55;cursor:not-allowed;}
 .btn{transition:filter 150ms ease,transform 100ms ease !important;}
 .btn:active:not(:disabled){filter:brightness(0.80) !important;transform:scale(0.97) !important;}
 @media(hover:none){button:active:not(:disabled){filter:brightness(0.78);transform:scale(0.96);}}
+
+/* ── Shopify sub-tabs ── */
+.sst{padding:6px 12px;background:none;border:none;font-size:12px;font-weight:500;cursor:pointer;color:var(--tx2);font-family:inherit;transition:filter 150ms;}
+.sst.on{background:var(--accent);color:#fff;font-weight:700;}
+.sht{padding:7px 14px;border:0.5px solid var(--bo2);background:var(--bg2);color:var(--tx2);border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;font-family:inherit;transition:filter 150ms ease;}
+.sht.on{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700;}
+.shopify-kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;}
+.shopify-kpi{background:var(--bg2);border-radius:12px;padding:14px;border:0.5px solid var(--bo2);}
+.shopify-kpi .lbl{font-size:11px;color:var(--tx2);font-weight:500;margin-bottom:4px;}
+.shopify-kpi .val{font-size:22px;font-weight:800;color:var(--tx);}
+.shopify-kpi .sub{font-size:11px;color:var(--tx3);margin-top:2px;}
+.shopify-card{background:var(--bg2);border-radius:12px;padding:14px;border:0.5px solid var(--bo2);margin-bottom:8px;}
+.shopify-card .sc-name{font-size:14px;font-weight:700;color:var(--tx);margin-bottom:2px;}
+.shopify-card .sc-sub{font-size:12px;color:var(--tx2);}
+.shopify-badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;}
+.sh-confirmed{background:#d1fae5;color:#065f46;}
+.sh-pending{background:#ccfbf1;color:#0f766e;}
+.sh-abandoned{background:#fee2e2;color:#991b1b;}
+.sh-draft{background:#e0e7ff;color:#3730a3;}
+
+
+
+/* ── Ventas search ───────────────────────────────── */
+.ventas-search-wrap{background:var(--bg);border-bottom:0.5px solid var(--bo);padding:0 14px 8px;flex-shrink:0;}
+.ventas-search{width:100%;height:38px;border:0.5px solid var(--bo2);border-radius:12px;background:var(--bg2);color:var(--tx);font-family:var(--fs);font-size:13px;padding:0 12px 0 34px;outline:none;}
+.ventas-search:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(45,122,79,0.10);}
+.ventas-search-box{position:relative;}
+.ventas-search-box:before{content:'🔎';position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:13px;opacity:.6;pointer-events:none;}
+
+/* ── Shopify Pro UI v2 ─────────────────────────────── */
+#tab-shopify{background:linear-gradient(180deg,var(--bg2) 0%,var(--bg3) 100%);}
+.shopify-pro-head{padding:12px 14px 8px;flex-shrink:0;background:var(--bg2);border-bottom:0.5px solid var(--bo);}
+.shopify-head-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px;}
+.shopify-title-block{min-width:0;flex:1;}
+.shopify-title-block h2{font-size:17px;line-height:1.05;font-weight:800;color:var(--tx);margin:0;letter-spacing:-0.02em;}
+.shopify-title-block p{font-size:11px;line-height:1.22;color:var(--tx2);margin:3px 0 0;max-width:130px;}
+.shopify-store-switch{display:flex;background:var(--bg);border:0.5px solid var(--bo2);border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.035);}
+.shopify-store-switch .sst{min-width:58px;padding:9px 10px;font-size:11px;font-weight:700;border-radius:0;color:var(--tx2);}
+.shopify-store-switch .sst.on{background:var(--accent);color:#fff;}
+.shopify-refresh{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;background:var(--accent);color:#fff;border:none;border-radius:12px;padding:8px 11px;min-width:74px;font-size:11px;font-weight:700;line-height:1.1;font-family:var(--fs);box-shadow:0 4px 12px rgba(45,122,79,0.18);}
+.shopify-refresh span:first-child{font-size:13px;line-height:1;}
+.shopify-controls{display:flex;align-items:stretch;gap:6px;}
+.shopify-tabs{display:flex;gap:6px;overflow-x:auto;padding:2px 0 1px;scrollbar-width:none;}
+.shopify-tabs::-webkit-scrollbar{display:none;}
+.shopify-tabs .sht{padding:8px 13px;border-radius:20px;background:var(--bg);border:0.5px solid var(--bo);font-size:12px;font-weight:650;box-shadow:0 2px 7px rgba(0,0,0,0.03);}
+.shopify-tabs .sht.on{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 4px 12px rgba(45,122,79,0.14);}
+.shopify-scroll{flex:1;overflow-y:auto;padding:10px 14px 112px;}
+.shopify-kpi{background:var(--bg);border-radius:12px;border:0.5px solid var(--bo);box-shadow:0 2px 8px rgba(0,0,0,0.025);}
+.shopify-card{background:var(--bg);border-radius:12px;padding:13px 14px;border:0.5px solid var(--bo);margin-bottom:8px;box-shadow:0 2px 10px rgba(0,0,0,0.035);}
+.shopify-order-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px;}
+.shopify-order-left{min-width:0;flex:1;}
+.shopify-card .sc-name{font-size:14px;line-height:1.2;font-weight:700;color:var(--tx);margin-bottom:2px;letter-spacing:-0.01em;}
+.shopify-card .sc-sub{font-size:12px;color:var(--tx2);font-weight:500;line-height:1.25;}
+.shopify-order-tags{display:flex;align-items:center;gap:4px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;}
+.shopify-badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:999px;font-size:10px;font-weight:700;line-height:1;white-space:nowrap;}
+.sh-confirmed{background:#d1fae5;color:#047857;}
+.sh-pending{background:#fff4c2;color:#9a5b00;}
+.sh-cancelled{background:#ffe4e6;color:#be123c;}
+.sh-abandoned{background:#ffe9d6;color:#c2410c;}
+.sh-draft{background:#e0e7ff;color:#4338ca;}
+.shopify-store-pill{display:inline-flex;padding:3px 7px;border-radius:999px;font-size:10px;font-weight:700;background:var(--bg2);color:var(--tx2);line-height:1;}
+.shopify-order-product{font-size:12px;color:var(--tx2);line-height:1.32;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.shopify-order-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:0.5px solid var(--bo);padding-top:8px;}
+.shopify-order-date{font-size:11px;color:var(--tx3);font-weight:650;}
+.shopify-order-money{font-size:14px;font-weight:800;color:var(--accent);letter-spacing:-0.01em;white-space:nowrap;}
+.shopify-wa{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:#25D366;text-decoration:none;box-shadow:0 4px 10px rgba(37,211,102,0.22);flex-shrink:0;}
+.shopify-wa svg{width:15px;height:15px;display:block;}
+.shopify-status-actions{display:flex;align-items:center;gap:5px;flex-wrap:wrap;justify-content:flex-start;}
+.shopify-status-btn{border:none;border-radius:999px;font-size:10px;font-weight:700;padding:6px 9px;font-family:var(--fs);white-space:nowrap;line-height:1;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.04);}
+.shopify-status-btn.pending{background:#fff4c2;color:#9a5b00;}
+.shopify-status-btn.reminder{background:#ede9fe;color:#6d28d9;}
+.shopify-status-btn.duplicate{background:#e2e8f0;color:#334155;}
+.shopify-status-btn.confirmed{background:#daf4e4;color:#047857;}
+.shopify-status-btn.cancelled{background:#ffe4e6;color:#be123c;}
+.shopify-status-btn.active{opacity:1;box-shadow:0 1px 0 rgba(255,255,255,0.65), 0 4px 10px rgba(0,0,0,0.04);}
+.shopify-status-btn:not(.active){opacity:0.72;}
+.shopify-status-note{font-size:10px;color:var(--tx3);font-weight:650;margin-top:4px;}
+.shopify-manual-note{display:inline-flex;align-items:center;gap:4px;margin-top:4px;padding:3px 7px;border-radius:999px;background:var(--bg2);color:var(--tx3);font-size:9px;font-weight:700;line-height:1;}
+@media(max-width:430px){.shopify-order-footer{align-items:flex-start;flex-direction:column;}.shopify-order-footer-right{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;}.shopify-status-actions{gap:5px;}.shopify-status-btn{padding:6px 9px;font-size:10px;}}
+@media(max-width:380px){.shopify-store-switch .sst{min-width:55px;padding:10px 9px}.shopify-refresh{min-width:76px;padding:9px 10px}.shopify-tabs .sht{padding:9px 13px}.shopify-title-block h2{font-size:22px}}
+
+
+/* ── Shopify compact mobile overrides ── */
+#tab-shopify .shopify-kpi-grid{gap:8px;margin-bottom:12px;}
+#tab-shopify .shopify-kpi{padding:11px 12px;border-radius:12px;}
+#tab-shopify .shopify-kpi .lbl{font-size:10px;margin-bottom:3px;}
+#tab-shopify .shopify-kpi .val{font-size:20px;}
+#tab-shopify .shopify-kpi .sub{font-size:10px;}
+#tab-shopify .empty{padding:32px 0;font-size:13px;}
+#tab-shopify .shopify-card input{font-size:13px;}
+
+
+/* ── Shopify Compact UI v12 · igual estilo que Ventas ───────── */
+#tab-shopify{
+  background:var(--bg3);
+}
+.shopify-pro-head{
+  padding:12px 14px 8px !important;
+  background:var(--bg) !important;
+}
+.shopify-head-top{
+  gap:8px !important;
+  margin-bottom:9px !important;
+  align-items:flex-start !important;
+}
+.shopify-title-block h2{
+  font-size:17px !important;
+  line-height:1.05 !important;
+  font-weight:700 !important;
+  letter-spacing:-0.02em !important;
+}
+.shopify-title-block p{
+  font-size:12px !important;
+  line-height:1.25 !important;
+  margin-top:2px !important;
+  max-width:130px !important;
+}
+.shopify-controls{
+  gap:6px !important;
+}
+.shopify-store-switch{
+  border-radius:12px !important;
+  box-shadow:none !important;
+}
+.shopify-store-switch .sst{
+  min-width:56px !important;
+  padding:9px 10px !important;
+  font-size:11px !important;
+  font-weight:700 !important;
+}
+.shopify-refresh{
+  min-width:72px !important;
+  padding:8px 10px !important;
+  border-radius:12px !important;
+  font-size:11px !important;
+  font-weight:700 !important;
+  box-shadow:none !important;
+}
+.shopify-refresh span:first-child{
+  font-size:13px !important;
+}
+.shopify-tabs{
+  gap:6px !important;
+  padding:2px 0 1px !important;
+}
+.shopify-tabs .sht{
+  padding:8px 13px !important;
+  border-radius:20px !important;
+  font-size:12px !important;
+  font-weight:600 !important;
+  box-shadow:none !important;
+}
+.shopify-scroll{
+  padding:10px 14px 110px !important;
+}
+.shopify-kpi-grid{
+  gap:8px !important;
+  margin-bottom:12px !important;
+}
+.shopify-kpi{
+  border-radius:12px !important;
+  padding:11px 12px !important;
+  box-shadow:none !important;
+  background:var(--bg) !important;
+}
+.shopify-kpi .lbl{
+  font-size:10px !important;
+  font-weight:600 !important;
+}
+.shopify-kpi .val{
+  font-size:20px !important;
+  font-weight:800 !important;
+}
+.shopify-kpi .sub{
+  font-size:10px !important;
+}
+.shopify-card{
+  border-radius:var(--r) !important;
+  padding:13px 14px !important;
+  margin-bottom:8px !important;
+  box-shadow:none !important;
+  background:var(--bg) !important;
+  border:0.5px solid var(--bo) !important;
+}
+.shopify-order-head{
+  gap:8px !important;
+  margin-bottom:8px !important;
+}
+.shopify-card .sc-name{
+  font-size:14px !important;
+  line-height:1.2 !important;
+  font-weight:700 !important;
+  letter-spacing:0 !important;
+  margin-bottom:2px !important;
+}
+.shopify-card .sc-sub{
+  font-size:12px !important;
+  line-height:1.25 !important;
+  color:var(--tx2) !important;
+  font-weight:500 !important;
+}
+.shopify-order-product{
+  font-size:12px !important;
+  line-height:1.35 !important;
+  color:var(--tx2) !important;
+  margin-bottom:8px !important;
+  -webkit-line-clamp:2 !important;
+}
+.shopify-order-footer{
+  padding-top:8px !important;
+  gap:8px !important;
+}
+.shopify-badge{
+  padding:3px 8px !important;
+  font-size:10px !important;
+  font-weight:700 !important;
+}
+.shopify-store-pill{
+  padding:3px 8px !important;
+  font-size:10px !important;
+  font-weight:700 !important;
+}
+.shopify-status-actions{
+  gap:5px !important;
+}
+.shopify-status-btn{
+  padding:6px 9px !important;
+  font-size:10px !important;
+  font-weight:700 !important;
+}
+.shopify-order-money{
+  font-size:15px !important;
+  font-weight:800 !important;
+}
+.shopify-wa{
+  width:24px !important;
+  height:24px !important;
+  box-shadow:0 3px 8px rgba(37,211,102,0.18) !important;
+}
+.shopify-wa svg{
+  width:14px !important;
+  height:14px !important;
+}
+.shopify-manual-note{
+  margin-top:4px !important;
+  padding:2px 7px !important;
+  font-size:9.5px !important;
+}
+@media(max-width:380px){
+  .shopify-store-switch .sst{min-width:50px !important;padding:8px 8px !important;font-size:10.5px !important;}
+  .shopify-refresh{min-width:66px !important;padding:8px 8px !important;font-size:10.5px !important;}
+  .shopify-tabs .sht{padding:7px 11px !important;font-size:11.5px !important;}
+}
+
+
+/* ── Shopify Date Filter v15 ─────────────────────────────── */
+.shopify-date-filter{position:relative;display:flex;align-items:center;gap:8px;padding-top:8px;flex-wrap:wrap;}
+.shopify-date-btn{display:inline-flex;align-items:center;gap:6px;background:var(--bg);border:0.5px solid var(--bo);border-radius:999px;padding:8px 12px;font-size:11.5px;font-weight:750;color:var(--tx);font-family:var(--fs);box-shadow:0 2px 7px rgba(0,0,0,0.03);}
+.shopify-date-btn span{color:var(--accent);font-weight:850;}
+.shopify-date-menu{display:none;position:absolute;top:calc(100% + 6px);left:0;width:210px;background:var(--bg);border:0.5px solid var(--bo2);border-radius:14px;box-shadow:0 14px 35px rgba(0,0,0,0.13);overflow:hidden;z-index:70;}
+.shopify-date-menu.open{display:block;}
+.shopify-date-menu .di{padding:11px 14px;border-bottom:0.5px solid var(--bo);font-size:12px;font-weight:650;color:var(--tx);cursor:pointer;}
+.shopify-date-menu .di:last-child{border-bottom:none;}
+.shopify-date-menu .di.on{background:var(--accent2);color:var(--accent);font-weight:850;}
+.shopify-date-custom{display:none;align-items:center;gap:6px;width:100%;}
+.shopify-date-custom input{min-width:0;flex:1;background:var(--bg);border:0.5px solid var(--bo);border-radius:9px;padding:8px 9px;font-size:11px;color:var(--tx);font-family:var(--fs);}
+.shopify-date-custom button{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:8px 10px;font-size:11px;font-weight:800;font-family:var(--fs);}
+
+
+/* ── Meta Empresarial móvil · Fase 3 v17 ─────────────────── */
+.bizm-hero{background:var(--bg);border:0.5px solid var(--bo);border-radius:18px;padding:16px;margin-bottom:12px;box-shadow:0 1px 2px rgba(0,0,0,.02)}
+.bizm-title{font-size:20px;font-weight:850;color:var(--tx);letter-spacing:-.03em;margin-bottom:4px}
+.bizm-sub{font-size:12px;color:var(--tx2);font-weight:550;line-height:1.35}
+.bizm-pill{display:inline-flex;align-items:center;border-radius:999px;background:var(--accent2);color:var(--accent);padding:5px 9px;font-size:11px;font-weight:800;margin-top:10px}
+.bizm-progress{height:12px;background:var(--bg2);border:0.5px solid var(--bo2);border-radius:999px;overflow:hidden;margin-top:10px}
+.bizm-progress-fill{height:100%;background:var(--accent);border-radius:999px}
+.bizm-filter{display:flex;gap:7px;overflow-x:auto;padding:2px 0 10px;margin-bottom:6px;-webkit-overflow-scrolling:touch}
+.bizm-filter::-webkit-scrollbar{display:none}
+.bizm-filter .bf{border:none;background:var(--bg);border:0.5px solid var(--bo);border-radius:999px;padding:8px 12px;font-size:11px;font-weight:750;color:var(--tx2);font-family:var(--fs);white-space:nowrap}
+.bizm-filter .bf.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.bizm-custom{display:none;background:var(--bg);border:0.5px solid var(--bo);border-radius:14px;padding:10px;margin-bottom:12px}
+.bizm-custom .row{gap:8px}
+.bizm-custom input{flex:1;min-width:0;background:var(--bg2);border:0.5px solid var(--bo2);border-radius:10px;padding:8px;font-size:12px;color:var(--tx);font-family:var(--fs)}
+.bizm-custom button{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-weight:800;font-family:var(--fs)}
+.bizm-kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.bizm-card{background:var(--bg);border:0.5px solid var(--bo);border-radius:16px;padding:14px;margin-bottom:12px}
+.bizm-label{font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:850;color:var(--tx3);margin-bottom:6px}
+.bizm-value{font-size:22px;letter-spacing:-.03em;font-weight:900;color:var(--tx)}
+.bizm-value.green{color:var(--accent)}
+.bizm-mini{font-size:11px;color:var(--tx2);font-weight:600;margin-top:2px}
+.bizm-alert{border-radius:14px;padding:12px 13px;font-size:12px;font-weight:750;background:var(--accent2);color:var(--accent);border:0.5px solid rgba(45,122,79,.25);margin-bottom:12px;line-height:1.4}
+.bizm-metric-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:0.5px solid var(--bo);font-size:13px;color:var(--tx2)}
+.bizm-metric-row:last-child{border-bottom:none}
+.bizm-metric-row strong{color:var(--accent);font-size:13px;font-weight:900}
+.bizm-metric-row.bad strong{color:#991b1b}
+.bizm-metric-row.total{border-top:0.5px solid var(--accent);margin-top:4px}
+.bizm-metric-row.total span,.bizm-metric-row.total strong{font-size:14px;color:var(--tx);font-weight:900}
+.bizm-editor-title{font-size:13px;color:var(--tx);font-weight:850;margin:2px 0 10px}
+.bizm-input-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.bizm-field label{display:block;font-size:10px;color:var(--tx3);font-weight:850;text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
+.bizm-field input{width:100%;box-sizing:border-box;background:var(--bg2);border:0.5px solid var(--bo2);border-radius:11px;padding:9px 10px;font-size:13px;font-weight:750;color:var(--tx);font-family:var(--fs)}
+.bizm-save{width:100%;background:var(--accent);color:#fff;border:none;border-radius:12px;padding:12px 14px;font-size:13px;font-weight:850;font-family:var(--fs);margin-top:10px}
+.bizm-week{background:var(--bg);border:0.5px solid var(--bo);border-radius:16px;margin-bottom:10px;overflow:hidden}
+.bizm-week[open]{border-color:rgba(45,122,79,.35)}
+.bizm-week summary{list-style:none;padding:13px 14px;background:var(--bg2);display:flex;align-items:flex-start;justify-content:space-between;gap:10px;cursor:pointer}
+.bizm-week summary::-webkit-details-marker{display:none}
+.bizm-week-name{font-size:13px;font-weight:900;color:var(--tx)}
+.bizm-week-date{font-size:10px;color:var(--tx3);font-weight:650;margin-top:2px}
+.bizm-week-right{text-align:right;display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+.bizm-chip{display:inline-flex;border-radius:999px;padding:4px 8px;background:var(--accent2);color:var(--accent);font-size:10px;font-weight:850}
+.bizm-week-body{padding:13px}
+.bizm-salary-item{border-bottom:0.5px solid var(--bo);padding:10px 0}
+.bizm-salary-item:last-child{border-bottom:none}
+.bizm-salary-name{font-size:13px;font-weight:900;color:var(--tx)}
+.bizm-salary-meta{font-size:11px;color:var(--tx3);font-weight:650;margin-top:2px;line-height:1.35}
+.bizm-salary-controls{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.bizm-note{font-size:11px;color:var(--tx3);font-weight:650;line-height:1.4;margin-top:8px}
+.bizm-insight{display:flex;gap:10px;align-items:flex-start;background:var(--bg);border:0.5px solid var(--bo);border-radius:14px;padding:12px;margin-bottom:8px}
+.bizm-insight-icon{width:28px;height:28px;border-radius:999px;background:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:14px;flex:0 0 28px}
+.bizm-insight-title{font-size:12px;font-weight:900;color:var(--tx);margin-bottom:2px}
+.bizm-insight-body{font-size:11px;color:var(--tx2);font-weight:650;line-height:1.4}
+@media(max-width:380px){.bizm-kpis,.bizm-input-grid,.bizm-salary-controls{grid-template-columns:1fr}.bizm-value{font-size:20px}}
+
+
+/* ── Bottom nav scroll para Super Admin con Meta v18 ───────── */
+.nav{
+  overflow-x:auto;
+  justify-content:flex-start;
+  gap:4px;
+  padding-left:10px;
+  padding-right:10px;
+  -webkit-overflow-scrolling:touch;
+}
+.nav::-webkit-scrollbar{display:none}
+.nb{min-width:70px;flex:0 0 auto}
+.nb.on{min-width:78px}
+
+
+/* ── Fix UX móvil: filtros horizontales visibles v19 ───────── */
+.body{overflow-x:hidden;padding-bottom:145px}
+#meta-body{padding-top:12px}
+.bizm-hero{margin-bottom:14px;flex-shrink:0}
+.bizm-filter{
+  min-height:42px;
+  height:auto;
+  align-items:center;
+  overflow-x:auto;
+  overflow-y:visible;
+  padding:0 2px 12px;
+  margin:0 0 12px;
+  position:relative;
+  z-index:2;
+  flex-shrink:0;
+}
+.bizm-filter .bf{
+  min-height:34px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  line-height:1;
+  flex:0 0 auto;
+  box-shadow:0 1px 2px rgba(0,0,0,.03);
+}
+.bizm-alert{position:relative;z-index:1}
+.meta-filter-bar,
+.shtabs,
+.shopify-store-tabs,
+.hist-status-row,
+.ventas-status-row{
+  overflow-x:auto;
+  overflow-y:visible;
+  -webkit-overflow-scrolling:touch;
+  min-height:42px;
+}
+.meta-filter-bar::-webkit-scrollbar,
+.shtabs::-webkit-scrollbar,
+.shopify-store-tabs::-webkit-scrollbar,
+.hist-status-row::-webkit-scrollbar,
+.ventas-status-row::-webkit-scrollbar{display:none}
+.meta-filter-bar button,
+.shtabs button,
+.shopify-store-tabs button{
+  flex:0 0 auto;
+  min-height:34px;
+  line-height:1;
+}
+.bizm-week summary{min-height:62px}
+.bizm-salary-controls input,
+.bizm-field input{min-height:38px}
+.nav{max-width:calc(100vw - 22px)}
+
+
+/* ── Fix semanas Meta Empresarial móvil v20 ───────────────── */
+.bizm-week-card{
+  background:var(--bg);
+  border:0.5px solid var(--bo);
+  border-radius:16px;
+  margin-bottom:10px;
+  overflow:hidden;
+}
+.bizm-week-card.open{
+  border-color:rgba(45,122,79,.35);
+  box-shadow:0 4px 16px rgba(0,0,0,.035);
+}
+.bizm-week-head{
+  width:100%;
+  border:none;
+  background:var(--bg2);
+  padding:13px 14px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  text-align:left;
+  font-family:var(--fs);
+  cursor:pointer;
+}
+.bizm-week-card .bizm-week-body{display:none;padding:13px}
+.bizm-week-card.open .bizm-week-body{display:block}
+.bizm-week-card.open .bizm-chevron{transform:rotate(180deg)}
+.bizm-chevron{font-size:10px;color:var(--tx3);transition:.15s;display:inline-flex}
+.bizm-week{display:none!important}
+
+/* ── Meta Empresarial móvil · semanas completas v21 ───────── */
+.bizm-editor-card-mobile{padding:14px;margin-bottom:12px}
+.bizm-editor-card-mobile .bizm-editor-title{font-size:14px;font-weight:900;margin-bottom:12px}
+.bizm-month-editor-mobile{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.bizm-month-editor-mobile .bizm-save{margin-top:0}
+details.bizm-week.bizm-week-details-mobile{display:block!important;background:var(--bg);border:0.5px solid var(--bo);border-radius:16px;margin-bottom:10px;overflow:hidden}
+details.bizm-week.bizm-week-details-mobile[open]{border-color:rgba(45,122,79,.35);box-shadow:0 4px 16px rgba(0,0,0,.035)}
+.bizm-week-details-mobile summary{list-style:none;min-height:62px;padding:13px 14px;background:var(--bg2);display:flex;align-items:flex-start;justify-content:space-between;gap:10px;cursor:pointer}
+.bizm-week-details-mobile summary::-webkit-details-marker{display:none}
+.bizm-week-details-mobile .bizm-week-left{min-width:0;flex:1}
+.bizm-week-details-mobile .bizm-week-right{display:flex;flex-direction:row;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:5px;text-align:right;max-width:58%}
+.bizm-week-details-mobile .bizm-chip{font-size:9.5px;padding:4px 7px}
+.bizm-week-details-mobile .bizm-week-body{padding:13px;background:var(--bg)}
+.bizm-editor-card-mobile > .bizm-save{margin-top:2px}
+@media(max-width:380px){.bizm-week-details-mobile .bizm-week-right{max-width:100%;justify-content:flex-start}.bizm-week-details-mobile summary{flex-direction:column}.bizm-week-details-mobile .bizm-chip{font-size:9px}}
+
+
+.store-analysis-list{display:flex;flex-direction:column;gap:10px}
+.store-analysis-card{background:#fff;border:1px solid var(--bo);border-radius:14px;padding:13px 14px;box-shadow:0 2px 8px rgba(0,0,0,.025)}
+.store-analysis-card.missing{border-style:dashed;background:#fffaf5}
+.store-analysis-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:9px}
+.store-analysis-name{font-size:14px;font-weight:850;color:var(--tx);letter-spacing:-.01em}.store-analysis-sub{font-size:11px;color:var(--tx3);font-weight:700;margin-top:2px}.store-analysis-head strong{font-size:15px;color:var(--accent);white-space:nowrap}.store-progress{height:6px;background:var(--bg2);border-radius:999px;overflow:hidden;margin-bottom:10px}.store-progress span{display:block;height:100%;background:var(--accent);border-radius:999px}.store-channel-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.store-channel-box{border-radius:11px;border:1px solid var(--bo);background:var(--bg2);padding:10px}.store-channel-box.whatsapp{background:#ecfdf5;border-color:#bbf7d0}.store-channel-box.shopify{background:#eef2ff;border-color:#c7d2fe}.store-channel-box.sin_via{background:#f8fafc;border-color:#e2e8f0}.store-channel-label{font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:850;color:var(--tx3)}.store-channel-main{font-size:16px;font-weight:850;color:var(--tx);margin-top:3px}.store-channel-sub{font-size:11px;font-weight:700;color:var(--tx2);margin-top:1px}.store-role-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}.store-role-pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--bo);border-radius:999px;background:#fff;padding:5px 8px;font-size:10.5px;color:var(--tx2)}.store-role-pill strong{color:var(--accent);font-weight:850}.store-role-pill span{font-weight:700}.store-people-list{margin-top:8px;border-top:1px dashed var(--bo);padding-top:7px}.store-person-row{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--tx2);padding:3px 0}.store-person-row small{color:var(--tx3);font-weight:700}.store-person-row strong{color:var(--tx);white-space:nowrap}
+@media(max-width:900px){.store-channel-grid{grid-template-columns:1fr}}
+
+
+/* ── Ventas por tienda desplegable ───────────────────────── */
+.store-analysis-detail{padding:0!important;overflow:hidden}
+.store-analysis-summary{display:block;cursor:pointer;padding:13px 14px;list-style:none;user-select:none}
+.store-analysis-summary::-webkit-details-marker{display:none}
+.store-analysis-summary .store-analysis-head{margin-bottom:9px}
+.store-analysis-arrow{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--bg2);color:var(--tx3);font-size:16px;font-weight:800;line-height:1;transition:transform .18s ease;flex-shrink:0}
+.store-analysis-detail[open] .store-analysis-arrow{transform:rotate(180deg);background:var(--accent2);color:var(--accent)}
+.store-analysis-body{padding:0 14px 13px}
+.store-detail-hint{color:var(--accent);font-weight:800}
+.store-analysis-detail[open] .store-detail-hint{color:var(--tx3)}
+
+
+.login-logo{box-shadow:0 10px 24px rgba(9,94,54,.12);background:#fff!important}
+
 </style>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#18181b">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="VivirStar">
-  <link rel="apple-touch-icon" href="https://cdn.shopify.com/s/files/1/0744/2300/9452/files/vsr.jpg?v=1777677364">
-  <link rel="icon" type="image/jpeg" href="https://cdn.shopify.com/s/files/1/0744/2300/9452/files/vsr.jpg?v=1777677364">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#087c46">
+  <link rel="icon" href="/icon-192.png">
 </head>
 <body>
 
 <!-- LOGIN -->
 <div class="screen active" id="sc-login">
   <div class="login-wrap">
-    <div class="login-logo"><img src="icon-192.png" onerror="this.style.display='none'"></div>
+    <div class="login-logo"><img src="logo-vivirstar.png" onerror="this.onerror=null;this.src='icon-192.png'"></div>
     <div>
-      <div class="login-title">Rooze Ventas</div>
+      <div class="login-title">VivirStar/ZOMA Ventas</div>
       <div class="login-sub">Sistema de gestión de pedidos</div>
     </div>
     <div class="login-form">
@@ -236,10 +696,6 @@ button:disabled{opacity:0.55;cursor:not-allowed;}
       <div class="row">
         <div><h2 id="ventas-title">Mis Ventas</h2><div class="tb-sub" id="ventas-sub">Cargando...</div></div>
         <div style="display:flex;align-items:center;gap:8px">
-          <div id="notif-bell" style="display:none;position:relative;cursor:pointer;margin-right:4px" onclick="clearNotifBadge()" title="Notificaciones">
-          <span style="font-size:20px">🔔</span>
-          <span id="notif-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:#dc2626;color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;font-weight:700;align-items:center;justify-content:center;line-height:16px;text-align:center">0</span>
-        </div>
           <button onclick="logout()" style="padding:6px 12px;border-radius:8px;background:#fee2e2;color:#991b1b;border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--fs)">Salir</button>
           <div class="av" id="ventas-av"></div>
         </div>
@@ -263,8 +719,8 @@ button:disabled{opacity:0.55;cursor:not-allowed;}
           </div>
         </div>
         <!-- Status filters -->
-        <button id="f-pend" onclick="setFilt('pendiente')" style="cursor:pointer;font-weight:600;background:#fef3c7;color:#92400e;border:none;padding:6px 14px;border-radius:20px;font-size:12px;font-family:var(--fs);flex-shrink:0">Pendiente</button>
-        <button id="f-env" onclick="setFilt('enviado')" style="cursor:pointer;font-weight:600;background:#dbeafe;color:#1e40af;border:none;padding:6px 14px;border-radius:20px;font-size:12px;font-family:var(--fs);flex-shrink:0">Enviado</button>
+        <button id="f-pend" onclick="setFilt('pendiente')" style="cursor:pointer;font-weight:600;background:#ccfbf1;color:#0f766e;border:none;padding:6px 14px;border-radius:20px;font-size:12px;font-family:var(--fs);flex-shrink:0">Pendiente</button>
+        <button id="f-env" onclick="setFilt('enviado')" style="cursor:pointer;font-weight:600;background:#ede9fe;color:#6d28d9;border:none;padding:6px 14px;border-radius:20px;font-size:12px;font-family:var(--fs);flex-shrink:0">Enviado</button>
         <button id="f-ent" onclick="setFilt('entregado')" style="cursor:pointer;font-weight:600;background:#dcfce7;color:#166534;border:none;padding:6px 14px;border-radius:20px;font-size:12px;font-family:var(--fs);flex-shrink:0">Entregado</button>
         <button id="f-anul" onclick="setFilt('anulado')" style="cursor:pointer;font-weight:600;background:#fee2e2;color:#991b1b;border:none;padding:6px 14px;border-radius:20px;font-size:12px;font-family:var(--fs);flex-shrink:0">Anulado</button>
       </div>
@@ -272,6 +728,11 @@ button:disabled{opacity:0.55;cursor:not-allowed;}
         <input type="date" id="vd-from" style="flex:1;padding:7px;border:0.5px solid var(--bo2);border-radius:8px;background:var(--bg2);color:var(--tx);font-family:var(--fs);font-size:12px">
         <input type="date" id="vd-to" style="flex:1;padding:7px;border:0.5px solid var(--bo2);border-radius:8px;background:var(--bg2);color:var(--tx);font-family:var(--fs);font-size:12px">
         <button onclick="applyVentasDate()" style="padding:7px 12px;background:var(--accent);color:var(--accent-tx);border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--fs)">Ver</button>
+      </div>
+      <div class="ventas-search-wrap">
+        <div class="ventas-search-box">
+          <input id="ventas-search" class="ventas-search" type="search" placeholder="Buscar por nombre, celular, DNI, producto..." oninput="setVentasSearch(this.value)">
+        </div>
       </div>
     </div>
     <div class="body" id="ventas-list"><div class="spin"></div></div>
@@ -376,7 +837,63 @@ button:disabled{opacity:0.55;cursor:not-allowed;}
 
   <!-- NAV -->
   <div class="nav" id="main-nav"></div>
+
+<!-- ── SHOPIFY MODULE ─────────────────────────────────────────────────── -->
+<div id="tab-shopify" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+  <div class="shopify-pro-head">
+    <div class="shopify-head-top">
+      <div class="shopify-title-block">
+        <h2>Shopify</h2>
+        <p>Pedidos y clientes en tiempo real</p>
+      </div>
+      <div class="shopify-controls">
+        <div class="shopify-store-switch">
+          <button onclick="setShopifyStore('all')" id="ss-all" class="sst on">Todas</button>
+          <button onclick="setShopifyStore('vivirstar')" id="ss-vivirstar" class="sst">VIVIRSTAR</button>
+          <button onclick="setShopifyStore('zoma')" id="ss-zoma" class="sst">ZOMA</button>
+        </div>
+        <button onclick="loadShopifyData()" class="shopify-refresh"><span>↻</span><span>Actualizar</span></button>
+      </div>
+    </div>
+    <div class="shopify-tabs" id="shopify-subtabs">
+      <button onclick="setShopifyTab('analytics')" id="sht-analytics" class="sht on">📊 Analytics</button>
+      <button onclick="setShopifyTab('orders')" id="sht-orders" class="sht">📦 Pedidos</button>
+      <button onclick="setShopifyTab('clientes')" id="sht-clientes" class="sht">👥 Clientes</button>
+      <button onclick="setShopifyTab('abandoned')" id="sht-abandoned" class="sht">🛒 Abandonados</button>
+      <button onclick="setShopifyTab('drafts')" id="sht-drafts" class="sht">📝 Preliminares</button>
+    </div>
+    <div class="shopify-date-filter">
+      <div id="shopify-count-chip" style="display:none;align-items:center;justify-content:center;background:var(--accent2);color:var(--accent);border:0.5px solid rgba(45,122,79,.22);border-radius:999px;padding:8px 11px;font-size:11.5px;font-weight:800;white-space:nowrap">0 pedidos</div>
+      <button class="shopify-date-btn" onclick="toggleShopifyDateDrop()">Filtrar: <span id="shopify-date-label">Todo</span> ▼</button>
+      <div class="shopify-date-menu" id="shopify-date-drop">
+        <div class="di on" onclick="setShopifyDatePeriod('all','Todo',this)">Todo</div>
+        <div class="di" onclick="setShopifyDatePeriod('today','Hoy',this)">Hoy</div>
+        <div class="di" onclick="setShopifyDatePeriod('yesterday','Ayer',this)">Ayer</div>
+        <div class="di" onclick="setShopifyDatePeriod('week','Semana',this)">Esta semana</div>
+        <div class="di" onclick="setShopifyDatePeriod('15days','15 días',this)">Últimos 15 días</div>
+        <div class="di" onclick="setShopifyDatePeriod('month','Mes',this)">Este mes</div>
+        <div class="di" onclick="setShopifyDatePeriod('custom','Personalizado',this)">Personalizado</div>
+      </div>
+      <div class="shopify-date-custom" id="shopify-date-custom">
+        <input type="date" id="shopify-date-from">
+        <input type="date" id="shopify-date-to">
+        <button onclick="applyShopifyCustomDate()">Ver</button>
+      </div>
+    </div>
+    <div id="shopify-search-wrap" style="display:none;padding-top:8px">
+      <div style="position:relative">
+        <span style="position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:13px;opacity:.6;pointer-events:none">🔎</span>
+        <input id="shopify-search-input" oninput="setShopifySearch(this.value)" placeholder="Buscar cliente, celular, DNI, provincia o producto..." style="width:100%;height:38px;border:0.5px solid var(--bo2);border-radius:12px;background:var(--bg);color:var(--tx);font-family:var(--fs);font-size:12.5px;padding:0 12px 0 34px;outline:none;box-sizing:border-box">
+      </div>
+    </div>
+  </div>
+  <div class="shopify-scroll">
+    <div id="shopify-content"><div class="empty"><p>Cargando datos de Shopify...</p></div></div>
+  </div>
 </div>
+
+</div>
+<!-- cierre de sc-app -->
 
 <!-- MODAL: NUEVA VENTA -->
 <div class="ov" id="ov-nueva">
@@ -394,6 +911,8 @@ button:disabled{opacity:0.55;cursor:not-allowed;}
       <div class="fld"><label>Cliente</label><input id="nv-cliente" placeholder="Nombre completo"></div>
       <div class="fld"><label>Celular</label><input id="nv-celular" type="tel" placeholder="+51 9XX XXX XXX"></div>
       <div class="fld"><label>DNI <span style="font-weight:400;color:var(--tx2)">(opcional)</span></label><input id="nv-dni" placeholder="12345678" maxlength="12"></div>
+      <div class="fld"><label>Tienda de venta</label><select id="nv-tienda" style="background:var(--bg2);border:0.5px solid var(--bo2);border-radius:8px;padding:11px 12px;font-size:14px;color:var(--tx);font-family:var(--fs);width:100%;outline:none"></select></div>
+      <div class="fld"><label>Vía de venta</label><input id="nv-venta-via" readonly style="color:var(--accent);font-weight:700"></div>
       <div class="fld"><label>Cobrar / Total (S/)</label><input id="nv-cobrar" type="number" step="0.50" placeholder="0.00" oninput="calcSaldo()"></div>
       <div class="fld"><label>Adelanto recibido (S/) <span style="font-weight:400;color:var(--tx2)">(opcional)</span></label><input id="nv-adelanto" type="number" step="0.50" placeholder="0.00" value="0" oninput="calcSaldo()"></div>
       <div id="saldo-preview" style="display:none;background:var(--bg2);border-radius:9px;padding:10px 12px;font-size:13px;border:0.5px solid rgba(0,0,0,0.1)">
@@ -462,6 +981,9 @@ button:disabled{opacity:0.55;cursor:not-allowed;}
     <div style="display:flex;flex-direction:column;gap:10px">
       <div class="fld"><label>Cliente</label><input id="eo-cliente" placeholder="Nombre completo"></div>
       <div class="fld"><label>Celular</label><input id="eo-celular" type="tel" placeholder="+51 9XX XXX XXX"></div>
+      <div class="fld"><label>DNI <span style="font-weight:400;color:var(--tx2)">(opcional)</span></label><input id="eo-dni" placeholder="12345678" maxlength="12"></div>
+      <div class="fld"><label>Tienda de venta</label><select id="eo-tienda" style="background:var(--bg2);border:0.5px solid var(--bo2);border-radius:8px;padding:11px 12px;font-size:14px;color:var(--tx);font-family:var(--fs);width:100%;outline:none"></select></div>
+      <div class="fld"><label>Vía de venta</label><input id="eo-venta-via" readonly style="color:var(--accent);font-weight:700"></div>
       <div class="fld"><label>Producto</label>
         <select id="eo-producto" style="background:var(--bg2);border:0.5px solid var(--bo2);border-radius:8px;padding:11px 12px;font-size:14px;color:var(--tx);font-family:var(--fs);width:100%;outline:none"></select>
       </div>
@@ -530,7 +1052,7 @@ const FBCFG={
   appId:'1:301272114212:web:1a846a62c935bb6e8524b1',
   measurementId:'G-NS9QZY5Z73'
 };
-const VAPID='REEMPLAZAR_CON_VAPID_DE_VIVIRSTAR26'; // ← Ir a Firebase Console > Project Settings > Cloud Messaging > Web Push Certificates > Generate key pair
+const VAPID='BAQqIEvdcOSFJkMM69WWkaC2OnujtlmlXS26UwFKOOW-a9Vh1sUehV9AiALQIkQG3kyeQIOcD7F1e1zgy-MWX6U';
 
 // ═══ SALARY SCALE (weekly - loaded from config) ═══
 const DEFAULT_SCALE=[
@@ -542,6 +1064,7 @@ let salaryScale=[...DEFAULT_SCALE];
 // ═══ STATE ═══
 let auth,db,cu=null,orders=[],cfg={productos:[],deliveryCostos:{}};
 let curFilt='all',curTab='ventas',newStatus='pendiente',editStatus='pendiente';
+let ventasSearch='';
 let resPeriod='today',resCustomFrom=0,resCustomTo=Date.now();
 let histPeriod='all',histCustomFrom=0,histCustomTo=Date.now();
 let listeners=[];
@@ -549,6 +1072,39 @@ const $=id=>document.getElementById(id);
 function fmtN(n){if(n===null||n===undefined||isNaN(Number(n)))return'0';return Number(n).toLocaleString('es-PE',{maximumFractionDigits:0});}
 function fmtC(n){if(n===null||n===undefined||isNaN(Number(n)))return'S/ 0.00';return'S/ '+Number(n).toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function fmtC0(n){if(n===null||n===undefined||isNaN(Number(n)))return'S/ 0';return'S/ '+fmtN(n);}
+
+function normalizeSearchText(v){
+  return String(v || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]/g,'');
+}
+function orderMatchesVentasSearch(o,qRaw){
+  var qText = normalizeSearchText(qRaw);
+  var qDigits = String(qRaw || '').replace(/\D/g,'');
+  if(!qText && !qDigits) return true;
+
+  var fields = [
+    o.cliente,
+    o.celular,
+    o.dni,
+    o.producto,
+    o.ciudad,
+    o.zona,
+    o.vendedor
+  ];
+
+  var textBlob = normalizeSearchText(fields.join(' '));
+  var phoneBlob = String(o.celular || '').replace(/\D/g,'');
+
+  return (qText && textBlob.indexOf(qText) !== -1) ||
+         (qDigits && phoneBlob.indexOf(qDigits) !== -1);
+}
+function setVentasSearch(v){
+  ventasSearch = String(v || '');
+  renderVentas();
+}
 
 // ═══ INIT ═══
 if(!firebase.apps.length)firebase.initializeApp(FBCFG);
@@ -586,6 +1142,7 @@ async function loadApp(fbUser){
     if(!ud.exists){await auth.signOut();showSc('sc-login');return;}
     cu={id:ud.id,...ud.data()};
     await loadConfig();
+    await loadUsersCacheForAnalysis();
     buildNav();
     startListeners();
     showSc('sc-app');
@@ -605,18 +1162,26 @@ async function loadConfig(){
 // ═══ NAV ═══
 const TABS_VENDEDOR=[
   {id:'ventas',label:'Ventas',svg:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'},
-  {id:'meta',label:'Mi meta',svg:'<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>'},
-  {id:'historial',label:'Historial',svg:'<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/>'},
+  {id:'meta',label:'Mi meta',svg:'<path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>'},
+  {id:'historial',label:'Historial',svg:'<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/>'}
+
 ];
 const TABS_ADMIN=[
   {id:'ventas',label:'Ventas',svg:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'},
+    {id:'meta',label:'Meta',svg:'<path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>'},
   {id:'resumen',label:'Resumen',svg:'<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>'},
   {id:'historial',label:'Historial',svg:'<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/>'},
+  {id:'shopify',label:'Shopify',svg:'<path d="M15.7 4.3c0 0-.2 0-.4.1-.4-1.1-1.2-2.1-2.5-2.1h-.1C12.3 1.6 11.8 1 11 1c-3.1 0-4.6 3.9-5.1 5.9l-2.2.7C3 7.9 3 8 2.9 8.3L1 19.8l14.1 2.6 6.4-1.6L15.7 4.3zM13 3.8c-.6.2-1.3.4-2 .6.4-1.5 1.1-2.3 1.7-2.6.3.5.4 1.3.3 2zm-2.5-1.8c.1 0 .3.1.4.1-.8.4-1.6 1.5-2 3.3l-1.5.5C8 3.9 9.3 2 10.5 2zm1.6 10.3c-.1.2-.4.4-.8.4-.3 0-.5-.1-.7-.2L10 14l-.6-1.5c-.2.1-.4.2-.7.2-.4 0-.7-.1-.8-.4-.1-.2 0-.5.3-.7.1-.1.3-.1.5-.1.5 0 .9.3 1 .8h.6c.1-.5.5-.8 1-.8.2 0 .4 0 .5.1.3.2.4.5.3.7z"/>'},
   {id:'config',label:'Config',svg:'<circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>'},
 ];
 
+const TABS_ADMIN_LIMITED = TABS_VENDEDOR.concat([TABS_ADMIN.find(function(t){return t.id==='shopify';})]);
+
 function buildNav(){
-  const tabs=isSuper()?TABS_ADMIN:(isAdmin()?TABS_ADMIN:TABS_VENDEDOR);
+  // Super admin conserva todas las funciones.
+  // Administrador queda como vendedor + Shopify.
+  // Vendedor conserva solo ventas/meta/historial.
+  const tabs=isSuper()?TABS_ADMIN:(isAdminRole()?TABS_ADMIN_LIMITED:TABS_VENDEDOR);
   $('main-nav').innerHTML=tabs.map(t=>`
     <button class="nb" id="nb-${t.id}" onclick="showTab('${t.id}')">
       <svg viewBox="0 0 24 24">${t.svg}</svg>${t.label}
@@ -624,6 +1189,15 @@ function buildNav(){
 }
 
 function showTab(tab){
+  if(tab==='shopify' && !canUseShopify()){
+    toast('Shopify solo disponible para Admin y Super Admin');
+    tab='ventas';
+  }
+  if((tab==='resumen'||tab==='config') && !isSuper()){
+    toast('Esta sección es solo para Super Admin');
+    tab='ventas';
+  }
+
   curTab=tab;
   document.querySelectorAll('[id^="tab-"]').forEach(t=>{t.style.display='none';});
   $(`tab-${tab}`).style.display='flex';
@@ -634,19 +1208,277 @@ function showTab(tab){
   if(tab==='resumen')renderResumen();
   if(tab==='historial')renderHistorial();
   if(tab==='config')renderConfig();
+  if(tab==='shopify')renderShopify();
 }
 
 // ═══ ROLE HELPERS ═══
 const isSuper=()=>cu?.role==='superuser';
-const isAdmin=()=>['admin','superuser'].includes(cu?.role);
+const isAdminRole=()=>cu?.role==='admin';
+// Compatibilidad: en el código antiguo isAdmin significaba ver/editar todo.
+// Desde esta versión, esos privilegios quedan solo para superuser.
+const isAdmin=()=>cu?.role==='superuser';
 const isVendedor=()=>cu?.role==='vendedor';
+const canUseShopify=()=>isSuper()||isAdminRole();
+
+function normalizeShopifyStoreName(v){
+  v=String(v||'').toLowerCase().trim();
+  if(v==='vivirstar'||v==='vivirstar')return'vivirstar';
+  if(v==='zoma'||v==='zoma')return'zoma';
+  return v.replace(/[^a-z0-9_-]/g,'');
+}
+function getAllowedShopifyStores(user){
+  user=user||cu||{};
+  if(user.role==='superuser')return['vivirstar','zoma'];
+  var raw=user.shopifyStores||user.shopifyStore||user.tiendaShopify||user.shopify_store||user.storePermission||user.storePermissions||[];
+  if(typeof raw==='string')raw=[raw];
+  if(!Array.isArray(raw))raw=[];
+  var out=[];
+  raw.forEach(function(s){
+    s=normalizeShopifyStoreName(s);
+    if(s&&out.indexOf(s)===-1)out.push(s);
+  });
+  return out;
+}
+function hasShopifyStoreAccess(store,user){
+  if((user||cu||{}).role==='superuser')return true;
+  store=normalizeShopifyStoreName(store);
+  return getAllowedShopifyStores(user).indexOf(store)!==-1;
+}
+
+function shopifyStoreDisplayName(store){
+  var id=normalizeShopifyStoreName(store);
+  var names={vivirstar:'VIVIRSTAR',zoma:'ZOMA'};
+  if(Array.isArray((typeof cfg!=='undefined'&&cfg&&cfg.tiendas)?cfg.tiendas:[])){
+    (cfg.tiendas||[]).forEach(function(t){
+      var tid=normalizeShopifyStoreName(t.id||t.key||t.slug||t.name);
+      if(tid)names[tid]=t.name||String(tid).toUpperCase();
+    });
+  }
+  return names[id]||String(store||id||'Tienda').toUpperCase();
+}
+function getAllSalesStores(){
+  var byId={}, order=[];
+  function addStore(id,name){
+    id=normalizeShopifyStoreName(id);
+    name=String(name||id||'').trim();
+    if(!id||!name)return;
+    var nameKey=normalizeShopifyStoreName(name);
+    // Si la tienda configurada usa ids genéricos como default/t123, pero el nombre es VIVIRSTAR/ZOMA,
+    // usamos el nombre normalizado para evitar duplicados visuales y permisos inconsistentes.
+    if((id==='default'||/^t\d+$/i.test(id)||id==='tienda'||id==='store')&&nameKey)id=nameKey;
+    var existsId=byId[id];
+    if(existsId){
+      if(!existsId.name||existsId.name===existsId.id.toUpperCase())existsId.name=name;
+      return;
+    }
+    var duplicatedByName=order.find(function(s){return normalizeShopifyStoreName(s.name)===nameKey||s.id===nameKey;});
+    if(duplicatedByName){
+      if(!duplicatedByName.name||duplicatedByName.name===duplicatedByName.id.toUpperCase())duplicatedByName.name=name;
+      byId[id]=duplicatedByName;
+      return;
+    }
+    byId[id]={id:id,name:name};
+    order.push(byId[id]);
+  }
+  addStore('vivirstar','VIVIRSTAR');
+  addStore('zoma','ZOMA');
+  if(Array.isArray((typeof cfg!=='undefined'&&cfg&&cfg.tiendas)?cfg.tiendas:[])){
+    (cfg.tiendas||[]).forEach(function(t){
+      var rawId=t.shopifyStore||t.shopifyId||t.storeId||t.key||t.slug||t.id||t.name;
+      var rawName=t.name||t.nombre||t.label||rawId;
+      addStore(rawId,rawName);
+    });
+  }
+  return order;
+}
+function getUserSalesStores(user){
+  user=user||cu||{};
+  var all=getAllSalesStores();
+  if(user.role==='superuser')return all;
+  var allowed=getAllowedShopifyStores(user);
+  if(!allowed.length)return all; // evita bloquear ventas existentes hasta que se asignen permisos
+  var out=all.filter(function(s){return allowed.indexOf(s.id)!==-1;});
+  return out.length?out:all;
+}
+function buildSalesStoreOptions(selected,user){
+  var stores=getUserSalesStores(user);
+  var sel=normalizeShopifyStoreName(selected||((stores[0]&&stores[0].id)||''));
+  return stores.map(function(s){return '<option value="'+shopifyHtml(s.id)+'" '+(s.id===sel?'selected':'')+'>'+shopifyHtml(s.name)+'</option>';}).join('');
+}
+function getDefaultSalesStore(user){
+  var stores=getUserSalesStores(user);
+  return (stores[0]&&stores[0].id)||'vivirstar';
+}
+function getSalesChannelByRole(user){
+  user=user||cu||{};
+  if(user.role==='admin'||user.role==='superuser')return 'shopify';
+  return 'whatsapp';
+}
+function salesChannelLabel(ch){
+  ch=String(ch||'').toLowerCase();
+  if(ch==='shopify')return 'Shopify';
+  if(ch==='whatsapp')return 'WhatsApp';
+  return 'Sin vía';
+}
+function orderSalesChannel(o){
+  o=o||{};
+  var ch=String(o.ventaVia||o.canalVenta||o.salesChannel||o.origenVenta||'').toLowerCase().trim();
+  if(ch==='wa')ch='whatsapp';
+  if(ch==='shopify'||ch==='whatsapp')return ch;
+  var r=String(o.vendedorRole||o.role||'').toLowerCase();
+  if(r==='admin'||r==='superuser')return 'shopify';
+  if(r==='vendedor')return 'whatsapp';
+  return 'sin_via';
+}
+function getOrderStoreId(o){
+  return normalizeShopifyStoreName((o||{}).tienda||(o||{}).store||(o||{}).shopifyStore||(o||{}).marca||(o||{}).origenTienda||(o||{}).storeName||'');
+}
+
+
+// ═══ ANÁLISIS POR TIENDA / CANAL / ROL ═════════════════════
+function normalizeRoleForAnalysis(role){
+  role=String(role||'').toLowerCase().trim();
+  if(role==='superadmin'||role==='super_admin')role='superuser';
+  if(role==='administrator')role='admin';
+  if(role==='seller')role='vendedor';
+  return role||'sin_rol';
+}
+function userAnalysisKeyFromOrder(o){
+  return String((o&&o.vendedorId)||'').trim();
+}
+function getCachedUserForOrder(o){
+  o=o||{};
+  var uid=userAnalysisKeyFromOrder(o);
+  if(uid&&window._usersCacheById&&window._usersCacheById[uid])return window._usersCacheById[uid];
+  if(window._usersCacheByName){
+    var k=normalizeSearchText(o.vendedor||'');
+    if(k&&window._usersCacheByName[k])return window._usersCacheByName[k];
+  }
+  return null;
+}
+async function loadUsersCacheForAnalysis(){
+  window._usersCacheById=window._usersCacheById||{};
+  window._usersCacheByName=window._usersCacheByName||{};
+  try{
+    var snap=await db.collection('users').get();
+    var byId={}, byName={};
+    snap.forEach(function(doc){
+      var u=Object.assign({id:doc.id},doc.data()||{});
+      byId[doc.id]=u;
+      var nk=normalizeSearchText(u.name||u.displayName||u.email||'');
+      if(nk)byName[nk]=u;
+    });
+    window._usersCacheById=byId;
+    window._usersCacheByName=byName;
+  }catch(e){
+    console.warn('No se pudo cargar usuarios para análisis por tienda',e&&e.message?e.message:e);
+  }
+}
+function inferOrderRoleForAnalysis(o){
+  var u=getCachedUserForOrder(o);
+  var role=normalizeRoleForAnalysis((u&&u.role)||o.vendedorRole||o.role||'');
+  if(role&&role!=='sin_rol')return role;
+  var ch=orderSalesChannel(o);
+  if(ch==='shopify')return 'admin';
+  if(ch==='whatsapp')return 'vendedor';
+  return 'sin_rol';
+}
+function inferOrderSalesChannelForAnalysis(o){
+  var ch=orderSalesChannel(o);
+  if(ch&&ch!=='sin_via')return ch;
+  var role=inferOrderRoleForAnalysis(o);
+  if(role==='admin'||role==='superuser')return 'shopify';
+  if(role==='vendedor')return 'whatsapp';
+  return 'sin_via';
+}
+function inferOrderStoreForAnalysis(o){
+  o=o||{};
+  var raw=getOrderStoreId(o);
+  if(raw)return raw;
+  var u=getCachedUserForOrder(o);
+  if(u){
+    var stores=getAllowedShopifyStores(u);
+    if(stores.length===1)return stores[0];
+  }
+  return 'sin_tienda';
+}
+function roleLabelForAnalysis(role){
+  role=normalizeRoleForAnalysis(role);
+  if(role==='superuser')return 'Super Admin';
+  if(role==='admin')return 'Administrador';
+  if(role==='vendedor')return 'Vendedor';
+  return 'Sin rol';
+}
+function channelIconForAnalysis(ch){
+  ch=String(ch||'').toLowerCase();
+  if(ch==='whatsapp')return '🟢';
+  if(ch==='shopify')return '🛍️';
+  return '⚪';
+}
+function channelLabelForAnalysis(ch){return salesChannelLabel(ch);}
+function buildStoreChannelAnalysis(list){
+  var storesMap={};
+  getAllSalesStores().forEach(function(s){
+    storesMap[s.id]={id:s.id,name:s.name,count:0,ingresos:0,ganancia:0,unidades:0,channels:{whatsapp:{count:0,ingresos:0,unidades:0},shopify:{count:0,ingresos:0,unidades:0},sin_via:{count:0,ingresos:0,unidades:0}},roles:{vendedor:{count:0,ingresos:0,unidades:0},admin:{count:0,ingresos:0,unidades:0},superuser:{count:0,ingresos:0,unidades:0},sin_rol:{count:0,ingresos:0,unidades:0}},people:{}};
+  });
+  list.filter(function(o){return o&&o.estado!=='anulado';}).forEach(function(o){
+    var storeId=inferOrderStoreForAnalysis(o)||'sin_tienda';
+    var storeName=storeId==='sin_tienda'?'Sin tienda':shopifyStoreDisplayName(storeId);
+    if(!storesMap[storeId])storesMap[storeId]={id:storeId,name:storeName,count:0,ingresos:0,ganancia:0,unidades:0,channels:{whatsapp:{count:0,ingresos:0,unidades:0},shopify:{count:0,ingresos:0,unidades:0},sin_via:{count:0,ingresos:0,unidades:0}},roles:{vendedor:{count:0,ingresos:0,unidades:0},admin:{count:0,ingresos:0,unidades:0},superuser:{count:0,ingresos:0,unidades:0},sin_rol:{count:0,ingresos:0,unidades:0}},people:{}};
+    var s=storesMap[storeId];
+    var amount=Number(o.cobrar||0)||0;
+    var units=Number(o.totalCantidad||1)||1;
+    var ch=inferOrderSalesChannelForAnalysis(o);
+    var role=inferOrderRoleForAnalysis(o);
+    var gan=0;try{gan=getCostoReal(o).ganancia||0;}catch(e){}
+    s.count++;s.ingresos+=amount;s.ganancia+=gan;s.unidades+=units;
+    if(!s.channels[ch])s.channels[ch]={count:0,ingresos:0,unidades:0};
+    s.channels[ch].count++;s.channels[ch].ingresos+=amount;s.channels[ch].unidades+=units;
+    if(!s.roles[role])s.roles[role]={count:0,ingresos:0,unidades:0};
+    s.roles[role].count++;s.roles[role].ingresos+=amount;s.roles[role].unidades+=units;
+    var person=o.vendedor||((getCachedUserForOrder(o)||{}).name)||'Sin vendedor';
+    if(!s.people[person])s.people[person]={count:0,ingresos:0,unidades:0,role:role,channels:{whatsapp:0,shopify:0,sin_via:0}};
+    s.people[person].count++;s.people[person].ingresos+=amount;s.people[person].unidades+=units;s.people[person].channels[ch]=(s.people[person].channels[ch]||0)+1;
+  });
+  return Object.keys(storesMap).map(function(k){return storesMap[k];}).filter(function(s){return s.count>0||s.id!=='sin_tienda';}).sort(function(a,b){
+    if(a.id==='sin_tienda')return 1;
+    if(b.id==='sin_tienda')return -1;
+    return (b.ingresos||0)-(a.ingresos||0);
+  });
+}
+function renderStoreChannelCards(list,compact){
+  var arr=buildStoreChannelAnalysis(list||[]);
+  if(!arr.length)return '<div class="analysis-empty">Sin ventas por tienda en este período</div>';
+  var total=arr.reduce(function(s,x){return s+(x.ingresos||0);},0)||1;
+  return '<div class="store-analysis-list collapsible">'+arr.map(function(s,idx){
+    var pct=Math.max(4,Math.round((s.ingresos/total)*100));
+    var channels=['whatsapp','shopify','sin_via'].filter(function(ch){return s.channels&&s.channels[ch]&&s.channels[ch].count>0;});
+    if(!channels.length)channels=['whatsapp','shopify'];
+    var channelHtml=channels.map(function(ch){var c=s.channels[ch]||{count:0,ingresos:0,unidades:0};return '<div class="store-channel-box '+ch+'"><div class="store-channel-label">'+channelIconForAnalysis(ch)+' '+channelLabelForAnalysis(ch)+'</div><div class="store-channel-main">'+c.count+' pedidos</div><div class="store-channel-sub">'+(c.unidades||0)+' un. · '+fmtC0(c.ingresos||0)+'</div></div>';}).join('');
+    var roleHtml=['vendedor','admin','superuser','sin_rol'].filter(function(r){return s.roles&&s.roles[r]&&s.roles[r].count>0;}).map(function(r){var rr=s.roles[r];return '<div class="store-role-pill"><strong>'+roleLabelForAnalysis(r)+'</strong><span>'+rr.count+' · '+fmtC0(rr.ingresos||0)+'</span></div>';}).join('');
+    var people=Object.keys(s.people||{}).map(function(k){return Object.assign({name:k},s.people[k]);}).sort(function(a,b){return b.count-a.count;}).slice(0,compact?4:7).map(function(p){var chs=[];if(p.channels){if(p.channels.whatsapp)chs.push('WhatsApp '+p.channels.whatsapp);if(p.channels.shopify)chs.push('Shopify '+p.channels.shopify);if(p.channels.sin_via)chs.push('Sin vía '+p.channels.sin_via);}return '<div class="store-person-row"><span>'+shopifyHtml(p.name)+' <small>'+roleLabelForAnalysis(p.role)+(chs.length?' · '+chs.join(' / '):'')+'</small></span><strong>'+p.count+' · '+fmtC0(p.ingresos||0)+'</strong></div>';}).join('');
+    var detailHint='<span class="store-detail-hint">Ver detalle</span>';
+    return '<details class="store-analysis-card store-analysis-detail '+(s.id==='sin_tienda'?'missing':'')+'">'+
+      '<summary class="store-analysis-summary">'+
+        '<div class="store-analysis-head"><div><div class="store-analysis-name">'+shopifyHtml(s.name)+'</div><div class="store-analysis-sub">'+s.count+' pedidos · '+s.unidades+' un. · '+detailHint+'</div></div><strong>'+fmtC0(s.ingresos)+'</strong><span class="store-analysis-arrow">⌄</span></div>'+
+        '<div class="store-progress"><span style="width:'+pct+'%"></span></div>'+
+      '</summary>'+
+      '<div class="store-analysis-body">'+
+        '<div class="store-channel-grid">'+channelHtml+'</div>'+ 
+        (roleHtml?'<div class="store-role-grid">'+roleHtml+'</div>':'')+
+        (people?'<div class="store-people-list">'+people+'</div>':'')+
+      '</div>'+ 
+    '</details>';
+  }).join('')+'</div>';
+}
+
 
 // ═══ LISTENERS ═══
 function startListeners(){
   listeners.forEach(u=>u());listeners=[];
   // Orders - vendedor only sees own, admins see all
   let q=db.collection('orders');
-  if(isVendedor())q=q.where('vendedorId','==',cu.id);
+  if(!isSuper())q=q.where('vendedorId','==',cu.id);
   const u1=q.onSnapshot(snap=>{
     orders=snap.docs.map(d=>{
       const dat=d.data();
@@ -738,16 +1570,19 @@ function statusBadge(s){
 function renderVentas(){
   const el=$('ventas-list');
   $('ventas-av').textContent=cu?.ini||'?';
-  var bell=document.getElementById('notif-bell');
-  if(bell&&(isAdmin()||isSuper()))bell.style.display='flex';
   $('ventas-title').textContent=isAdmin()?'Todas las ventas':'Mis ventas';
   $('ventas-sub').textContent=cu?.name||'';
   const {start:vStart,end:vEnd}=getVentasDateRange();
+  const hasSearch = String(ventasSearch || '').trim().length > 0;
   const filtered=orders
-    .filter(o=>curFilt==='all'||o.estado===curFilt)
-    .filter(o=>ventasDatePeriod==='all'||(o.fv>=vStart&&o.fv<=vEnd))
+    // Si hay búsqueda, busca en todo el historial permitido por el rol.
+    // Si no hay búsqueda, respeta filtros de estado y fecha como antes.
+    .filter(o=>hasSearch ? true : (curFilt==='all'||o.estado===curFilt))
+    .filter(o=>hasSearch ? true : (ventasDatePeriod==='all'||(o.fv>=vStart&&o.fv<=vEnd)))
+    .filter(o=>orderMatchesVentasSearch(o,ventasSearch))
     .sort((a,b)=>b.ts-a.ts);
-  if(!filtered.length){el.innerHTML=`<div class="empty"><div style="font-size:32px;margin-bottom:8px">📋</div><p>Sin ventas registradas</p></div>`;return;}
+  checkCelebrationFromVentas();
+  if(!filtered.length){el.innerHTML=`<div class="empty"><div style="font-size:32px;margin-bottom:8px">📋</div><p>${ventasSearch?'Sin resultados para tu búsqueda':'Sin ventas registradas'}</p></div>`;return;}
   el.innerHTML=filtered.map(o=>`
     <div class="card" onclick="openDetalle('${o.id}')" style="cursor:pointer">
       <div class="row">
@@ -1000,6 +1835,8 @@ function openNueva(){
   if($('nv-zona'))$('nv-zona').value='Lima';
   if($('nv-err'))$('nv-err').style.display='none';
   if(document.getElementById('nv-nota'))document.getElementById('nv-nota').value='';
+  if(document.getElementById('nv-tienda'))document.getElementById('nv-tienda').innerHTML=buildSalesStoreOptions(getDefaultSalesStore(cu),cu);
+  if(document.getElementById('nv-venta-via'))document.getElementById('nv-venta-via').value=salesChannelLabel(getSalesChannelByRole(cu));
   // Reset product lines
   prodLineCount=0;
   var list=$('nv-productos-list');
@@ -1065,12 +1902,21 @@ $('btn-nueva').onclick=async function(){
     const _dni=(document.getElementById('nv-dni')?.value||'').trim();
     const _contra=document.getElementById('nv-contraentrega')?.checked||false;
     const _saldo=Math.max(0,cobrar-_adelanto);
+    const _tienda=normalizeShopifyStoreName(document.getElementById('nv-tienda')?.value)||getDefaultSalesStore(cu);
+    const _tiendaNombre=shopifyStoreDisplayName(_tienda);
+    const _ventaVia=getSalesChannelByRole(cu);
     const orderData={
       vendedorId:cu.id,
       vendedor:cu.name||cu.email,
       cliente:cliente,
       celular:celular,
       dni:_dni,
+      tienda:_tienda,
+      store:_tienda,
+      tiendaNombre:_tiendaNombre,
+      ventaVia:_ventaVia,
+      canalVenta:_ventaVia,
+      vendedorRole:(cu&&cu.role)||'',
       cobrar:cobrar,
       adelanto:_adelanto,
       saldo:_saldo,
@@ -1090,8 +1936,6 @@ $('btn-nueva').onclick=async function(){
     const savedOrder={id:ref.id,...orderData,fv:orderData.fechaMs};
     closeOv('ov-nueva');
     toast('✓ Venta registrada');
-    // Notify superadmins of new order
-    notifySuperAdminNewOrder(savedOrder).catch(function(e){console.log('notif:',e);});
     if(savedOrder.id)setTimeout(function(){openNotaModal(savedOrder);},300);
   }catch(e){
     console.error('Error registrando venta:',e);
@@ -1243,7 +2087,7 @@ function renderLineChart(data, data2){
   '</svg>';
 }
 
-function renderMeta(){
+function renderPersonalMeta(){
   var el=$('meta-body');
   if(!el)return;
   var range=getMetaRange(metaPeriod);
@@ -1337,9 +2181,268 @@ function renderMeta(){
       unitRows+'</div>';
   }
 
-  // Celebrate
-  checkCelebration(ventasSemana);
+  // Celebración semanal acumulada, independiente del filtro seleccionado.
+  checkCelebrationFromVentas();
   el.innerHTML=html;
+}
+
+// ═══ META EMPRESARIAL MÓVIL · FASE 3 ═══════════════════════
+let bizmFilter='month', bizmCustomFrom=0, bizmCustomTo=Date.now();
+
+function bizmNum(v){v=Number(v||0);return isNaN(v)?0:v;}
+function bizmEsc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function bizmMonthKey(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');}
+function bizmMonthLabel(d){d=d||new Date();return d.toLocaleDateString('es-PE',{month:'long',year:'numeric'});}
+function bizmMonthRange(d){
+  d=d||new Date();
+  var y=d.getFullYear(),m=d.getMonth();
+  var start=dayStart(y,m,1), end=dayEnd(y,m+1,0);
+  var today=dayEnd(d.getFullYear(),d.getMonth(),d.getDate());
+  return {start:start,end:end,actualEnd:Math.min(today,end)};
+}
+function bizmWeekRangesForMonth(d){
+  d=d||new Date();
+  var mr=bizmMonthRange(d);
+  var first=new Date(mr.start), day=first.getDay()||7;
+  first.setDate(first.getDate()-(day-1));first.setHours(0,0,0,0);
+  var weeks=[],cur=first.getTime(),idx=1;
+  while(cur<=mr.end){
+    var rawEnd=cur+7*86400000-1, s=Math.max(cur,mr.start), e=Math.min(rawEnd,mr.end);
+    if(e>=mr.start&&s<=mr.end){weeks.push({index:idx,start:s,end:e,label:'Semana '+idx});idx++;}
+    cur+=7*86400000;
+  }
+  return weeks;
+}
+function bizmCurrentWeekIndex(weeks){
+  var now=Date.now();
+  for(var i=0;i<weeks.length;i++){if(now>=weeks[i].start&&now<=weeks[i].end)return i;}
+  return Math.max(0,weeks.length-1);
+}
+function bizmDateShort(ts){return new Date(ts).toLocaleDateString('es-PE',{day:'2-digit',month:'2-digit'});}
+function bizmMoneyInput(id,label,value){
+  return '<div class="bizm-field"><label>'+label+'</label><input id="'+id+'" type="number" min="0" step="1" value="'+Math.round(bizmNum(value))+'"></div>';
+}
+function bizmCfgForMonth(key,weeksLen){
+  cfg.businessMeta=cfg.businessMeta||{};
+  var cur=(cfg.businessMeta||{})[key]||{};
+  var monthlyGoal=bizmNum(cur.monthlyGoal)||50000;
+  var defWeek=Math.round(monthlyGoal/(weeksLen||4));
+  var oldWeekly=cur.weeklyGoals||[];
+  var weeks=(cur.weeks||[]).slice(0,weeksLen).map(function(w,i){
+    w=w||{};
+    return {incomeGoal:bizmNum(w.incomeGoal)||bizmNum(oldWeekly[i])||defWeek,metaAds:bizmNum(w.metaAds),tiktokAds:bizmNum(w.tiktokAds),other:bizmNum(w.other),salaryOverrides:w.salaryOverrides||{}};
+  });
+  while(weeks.length<weeksLen)weeks.push({incomeGoal:defWeek,metaAds:0,tiktokAds:0,other:0,salaryOverrides:{}});
+  if(cur.expenses && !(cur.weeks&&cur.weeks.length)){
+    var m=bizmNum(cur.expenses.metaAds),t=bizmNum(cur.expenses.tiktokAds),o=bizmNum(cur.expenses.other);
+    weeks.forEach(function(w){w.metaAds=Math.round(m/weeksLen);w.tiktokAds=Math.round(t/weeksLen);w.other=Math.round(o/weeksLen);});
+  }
+  return {monthlyGoal:monthlyGoal,weeks:weeks};
+}
+function bizmValidOrders(start,end){
+  return orders.filter(function(o){var t=o.fv||o.fechaMs||o.ts;return o.estado!=='anulado'&&t>=start&&t<=end;});
+}
+function bizmOrderCost(o){
+  if(!o||o.estado==='anulado')return {ingresos:0,productCost:0,delivery:0};
+  var ingresos=bizmNum(o.cobrar),qty=bizmNum(o.totalCantidad)||1,productCost=0;
+  if(Array.isArray(o.productos)&&o.productos.length){
+    o.productos.forEach(function(p){
+      var name=p.nombre||p.producto||p.title||'',q=bizmNum(p.cantidad||p.qty||1)||1;
+      var prod=(cfg.productos||[]).find(function(x){return String(x.nombre||'').toLowerCase()===String(name||'').toLowerCase();});
+      productCost+=bizmNum(prod&&prod.costo)*q;
+    });
+  }else{
+    var prod=(cfg.productos||[]).find(function(x){return String(x.nombre||'').toLowerCase()===String(o.producto||'').toLowerCase();});
+    productCost=bizmNum(prod&&prod.costo)*qty;
+  }
+  return {ingresos:ingresos,productCost:productCost,delivery:getDelivery(o.zona)};
+}
+function bizmFinancial(list){
+  var ingresos=0,productCost=0,delivery=0,units=0;
+  list.forEach(function(o){var c=bizmOrderCost(o);ingresos+=c.ingresos;productCost+=c.productCost;delivery+=c.delivery;units+=(bizmNum(o.totalCantidad)||1);});
+  return {ingresos:ingresos,productCost:productCost,delivery:delivery,units:units,orders:list.length};
+}
+function bizmSalaryLevel(eq){
+  var scale=[...(salaryScale||[])].sort(function(a,b){return bizmNum(a.ventas)-bizmNum(b.ventas);});
+  var best={ventas:0,sueldo:0};
+  scale.forEach(function(l){if(eq>=bizmNum(l.ventas))best={ventas:bizmNum(l.ventas),sueldo:bizmNum(l.sueldo)};});
+  return best;
+}
+function bizmWeekSellerGroups(start,end){
+  var groups={};
+  bizmValidOrders(start,end).forEach(function(o){
+    var key=o.vendedorId||o.vendedor||'sin-vendedor';
+    if(!groups[key])groups[key]={key:key,name:o.vendedor||'Sin vendedor',orders:0,units:0,ingresos:0};
+    groups[key].orders++;groups[key].units+=(bizmNum(o.totalCantidad)||1);groups[key].ingresos+=bizmNum(o.cobrar);
+  });
+  return groups;
+}
+function bizmWeekSalaryData(week,weekCfg,untilTs){
+  var end=Math.min(week.end,untilTs||week.end),groups=bizmWeekSellerGroups(week.start,end),rows=[],total=0;
+  Object.keys(groups).forEach(function(k){
+    var g=groups[k],eq=Math.max(g.orders,g.units),suggest=bizmSalaryLevel(eq),ov=(weekCfg.salaryOverrides||{})[k]||{};
+    var applied=ov.appliedVentas!==undefined?bizmNum(ov.appliedVentas):(suggest.ventas||g.orders);
+    var salary=ov.salary!==undefined?bizmNum(ov.salary):(suggest.sueldo||calcSueldo(g.orders));
+    total+=salary;
+    rows.push({key:k,name:g.name,orders:g.orders,units:g.units,ingresos:g.ingresos,suggestedVentas:suggest.ventas||g.orders,suggestedSalary:suggest.sueldo||calcSueldo(g.orders),appliedVentas:applied,salary:salary});
+  });
+  rows.sort(function(a,b){return b.salary-a.salary||b.orders-a.orders;});
+  return {rows:rows,total:total};
+}
+function bizmMonthSalaryData(weeks,bm,untilTs){
+  var total=0,sellers={};
+  weeks.forEach(function(w,i){
+    var data=bizmWeekSalaryData(w,bm.weeks[i]||{},Math.min(w.end,untilTs||w.end));
+    total+=data.total;
+    data.rows.forEach(function(r){
+      if(!sellers[r.key])sellers[r.key]={name:r.name,total:0,orders:0,units:0,weeks:[]};
+      sellers[r.key].total+=r.salary;sellers[r.key].orders+=r.orders;sellers[r.key].units+=r.units;sellers[r.key].weeks.push({week:i+1,salary:r.salary,orders:r.orders,units:r.units,appliedVentas:r.appliedVentas});
+    });
+  });
+  return {total:total,sellers:sellers};
+}
+function bizmExpenses(bm,indexes){
+  return indexes.reduce(function(a,i){var w=bm.weeks[i]||{};a.metaAds+=bizmNum(w.metaAds);a.tiktokAds+=bizmNum(w.tiktokAds);a.other+=bizmNum(w.other);return a;},{metaAds:0,tiktokAds:0,other:0});
+}
+function bizmRange(){
+  var now=new Date(),mr=bizmMonthRange(now),weeks=bizmWeekRangesForMonth(now),cur=bizmCurrentWeekIndex(weeks);
+  if(bizmFilter==='month')return {label:'Mes actual',start:mr.start,end:mr.actualEnd,weekIndexes:weeks.map(function(_,i){return i;})};
+  if(bizmFilter==='week_current'){var cw=weeks[cur];return {label:'Semana actual',start:cw.start,end:Math.min(cw.end,Date.now()),weekIndexes:[cur]};}
+  if(/^week_/.test(bizmFilter)){var idx=parseInt(bizmFilter.split('_')[1]);var w=weeks[idx];return {label:'Semana '+(idx+1),start:w.start,end:Math.min(w.end,Date.now()),weekIndexes:[idx]};}
+  if(bizmFilter==='custom')return {label:'Personalizado',start:bizmCustomFrom||mr.start,end:bizmCustomTo||Date.now(),weekIndexes:[]};
+  return {label:'Mes actual',start:mr.start,end:mr.actualEnd,weekIndexes:weeks.map(function(_,i){return i;})};
+}
+function setBizmFilter(f){
+  bizmFilter=f;
+  var c=$('bizm-custom');
+  if(c)c.style.display=f==='custom'?'block':'none';
+  renderBusinessMetaMobile();
+}
+function applyBizmCustom(){
+  var f=($('bizm-from')||{}).value,t=($('bizm-to')||{}).value;
+  if(!f||!t){toast('Selecciona fechas');return;}
+  bizmCustomFrom=new Date(f+'T00:00:00').getTime();
+  bizmCustomTo=new Date(t+'T23:59:59').getTime();
+  bizmFilter='custom';
+  renderBusinessMetaMobile();
+}
+function bizmRecalcSalary(inp){
+  var item=inp.closest('.bizm-salary-item'); if(!item)return;
+  var salary=item.querySelector('.bizm-sal-salary'); if(!salary)return;
+  var lvl=bizmSalaryLevel(bizmNum(inp.value));
+  salary.value=Math.round(lvl.sueldo||0);
+}
+function bizmTopProduct(list){
+  var map={};
+  list.forEach(function(o){
+    var total=bizmNum(o.cobrar),qty=bizmNum(o.totalCantidad)||1;
+    if(Array.isArray(o.productos)&&o.productos.length){
+      o.productos.forEach(function(p){var n=p.nombre||p.producto||'Producto';var q=bizmNum(p.cantidad||1)||1;map[n]=(map[n]||0)+(total*(q/qty));});
+    }else if(o.producto){map[o.producto]=(map[o.producto]||0)+total;}
+  });
+  var arr=Object.keys(map).map(function(k){return {name:k,ingresos:map[k]};}).sort(function(a,b){return b.ingresos-a.ingresos;});
+  return arr[0]||null;
+}
+function bizmInsights(ctx){
+  var margin=ctx.ingresos>0?(ctx.net/ctx.ingresos)*100:0,adsPct=ctx.ingresos>0?(((ctx.exp.metaAds+ctx.exp.tiktokAds)/ctx.ingresos)*100):0,items=[];
+  items.push(ctx.ingresos>=ctx.pace?{icon:'✅',title:'Buen ritmo mensual',body:'Vas al ritmo o por encima de la meta.'}:{icon:'⚠️',title:'Ritmo bajo',body:'Necesitas aprox. '+fmtC0(ctx.dailyNeed)+' diarios para llegar.'});
+  items.push(margin>=15?{icon:'💰',title:'Margen saludable',body:'Margen neto estimado '+margin.toFixed(1)+'%.'}:{icon:'📊',title:'Margen en revisión',body:'Margen neto estimado '+margin.toFixed(1)+'%.'});
+  items.push(adsPct>25?{icon:'📣',title:'Publicidad alta',body:'Publicidad representa '+adsPct.toFixed(1)+'% de ingresos.'}:{icon:'📣',title:'Publicidad controlada',body:'Publicidad representa '+adsPct.toFixed(1)+'% de ingresos.'});
+  if(ctx.top)items.push({icon:'🏆',title:'Producto líder',body:ctx.top.name+' lidera con '+fmtC0(ctx.top.ingresos)+'.'});
+  return items.map(function(x){return '<div class="bizm-insight"><div class="bizm-insight-icon">'+x.icon+'</div><div><div class="bizm-insight-title">'+x.title+'</div><div class="bizm-insight-body">'+x.body+'</div></div></div>';}).join('');
+}
+async function saveBusinessMetaMobile(){
+  if(!isSuper())return;
+  var now=new Date(),key=bizmMonthKey(now),weeks=bizmWeekRangesForMonth(now);
+  cfg.businessMeta=cfg.businessMeta||{};
+  var data={monthlyGoal:bizmNum($('bizm-monthly-goal')&&$('bizm-monthly-goal').value)||50000,weeks:[],updatedAt:Date.now()};
+  weeks.forEach(function(w,i){
+    var week={incomeGoal:bizmNum($('bizm-w'+i+'-goal')&&$('bizm-w'+i+'-goal').value),metaAds:bizmNum($('bizm-w'+i+'-meta')&&$('bizm-w'+i+'-meta').value),tiktokAds:bizmNum($('bizm-w'+i+'-tiktok')&&$('bizm-w'+i+'-tiktok').value),other:bizmNum($('bizm-w'+i+'-other')&&$('bizm-w'+i+'-other').value),salaryOverrides:{}};
+    document.querySelectorAll('.bizm-sal-count[data-week="'+i+'"]').forEach(function(inp){
+      var item=inp.closest('.bizm-salary-item'),key2=inp.getAttribute('data-seller'),name=inp.getAttribute('data-name')||key2;
+      var salary=item?item.querySelector('.bizm-sal-salary'):null;
+      week.salaryOverrides[key2]={name:name,appliedVentas:bizmNum(inp.value),salary:bizmNum(salary&&salary.value)};
+    });
+    data.weeks.push(week);
+  });
+  cfg.businessMeta[key]=data;
+  try{
+    await db.collection('config').doc('ventas').set({businessMeta:cfg.businessMeta},{merge:true});
+    toast('✓ Meta empresarial guardada');
+    renderBusinessMetaMobile();
+  }catch(e){toast('Error: '+e.message);}
+}
+function renderBusinessMetaMobile(){
+  var el=$('meta-body'); if(!el)return;
+  var now=new Date(),key=bizmMonthKey(now),mr=bizmMonthRange(now),weeks=bizmWeekRangesForMonth(now),curIdx=bizmCurrentWeekIndex(weeks),bm=bizmCfgForMonth(key,weeks.length);
+  var monthOrders=bizmValidOrders(mr.start,mr.actualEnd),monthFin=bizmFinancial(monthOrders),monthSalary=bizmMonthSalaryData(weeks,bm,mr.actualEnd),monthExp=bizmExpenses(bm,weeks.map(function(_,i){return i;}));
+  var expTotal=monthExp.metaAds+monthExp.tiktokAds+monthExp.other,net=monthFin.ingresos-monthFin.productCost-monthFin.delivery-monthSalary.total-expTotal;
+  var progress=bm.monthlyGoal>0?Math.min(100,Math.round((monthFin.ingresos/bm.monthlyGoal)*100)):0,missing=Math.max(0,bm.monthlyGoal-monthFin.ingresos);
+  var daysInMonth=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(),daysLeft=Math.max(1,daysInMonth-now.getDate()+1),dailyNeed=missing/daysLeft,pace=bm.monthlyGoal*(now.getDate()/daysInMonth);
+  var sel=bizmRange(),selOrders=bizmValidOrders(sel.start,sel.end),selFin=bizmFinancial(selOrders),selExp=sel.weekIndexes.length?bizmExpenses(bm,sel.weekIndexes):{metaAds:0,tiktokAds:0,other:0};
+  var selSalary=0;
+  if(sel.weekIndexes.length){sel.weekIndexes.forEach(function(i){selSalary+=bizmWeekSalaryData(weeks[i],bm.weeks[i]||{},sel.end).total;});}
+  else{selSalary=bizmWeekSalaryData({start:sel.start,end:sel.end},{salaryOverrides:{}},sel.end).total;}
+  var selNet=selFin.ingresos-selFin.productCost-selFin.delivery-selSalary-selExp.metaAds-selExp.tiktokAds-selExp.other,selMargin=selFin.ingresos>0?(selNet/selFin.ingresos)*100:0;
+  var top=bizmTopProduct(monthOrders),alert=monthFin.ingresos>=pace?'✅ Vas al ritmo o por encima de la meta mensual.':'⚠️ Necesitas aprox. '+fmtC0(dailyNeed)+' diarios para llegar.';
+  var filter='<div class="bizm-filter">'+
+    '<button class="bf '+(bizmFilter==='month'?'on':'')+'" onclick="setBizmFilter(&quot;month&quot;)">Mes actual</button>'+
+    '<button class="bf '+(bizmFilter==='week_current'?'on':'')+'" onclick="setBizmFilter(&quot;week_current&quot;)">Semana actual</button>'+
+    weeks.map(function(w,i){return '<button class="bf '+(bizmFilter==='week_'+i?'on':'')+'" onclick="setBizmFilter(&quot;week_'+i+'&quot;)">S'+(i+1)+'</button>';}).join('')+
+    '<button class="bf '+(bizmFilter==='custom'?'on':'')+'" onclick="setBizmFilter(&quot;custom&quot;)">Personalizado</button></div>'+
+    '<div class="bizm-custom" id="bizm-custom" style="display:'+(bizmFilter==='custom'?'block':'none')+'"><div class="row"><input type="date" id="bizm-from"><input type="date" id="bizm-to"><button onclick="applyBizmCustom()">Ver</button></div></div>';
+  var weekEditors=weeks.map(function(w,i){
+    var wc=bm.weeks[i]||{},ordersW=bizmValidOrders(w.start,Math.min(w.end,mr.actualEnd)),finW=bizmFinancial(ordersW),salW=bizmWeekSalaryData(w,wc,Math.min(w.end,mr.actualEnd));
+    var expW=bizmNum(wc.metaAds)+bizmNum(wc.tiktokAds)+bizmNum(wc.other),netW=finW.ingresos-finW.productCost-finW.delivery-salW.total-expW,pct=bizmNum(wc.incomeGoal)>0?Math.min(100,Math.round((finW.ingresos/bizmNum(wc.incomeGoal))*100)):0;
+    var salaries=salW.rows.map(function(r){
+      return '<div class="bizm-salary-item">'+
+        '<div class="bizm-salary-name">'+bizmEsc(r.name)+'</div><div class="bizm-salary-meta">'+r.orders+' pedidos · '+r.units+' unidades · '+fmtC0(r.ingresos)+'<br>Sugerido: '+r.suggestedVentas+' ventas · '+fmtC0(r.suggestedSalary)+'</div>'+
+        '<div class="bizm-salary-controls">'+
+          '<div class="bizm-field"><label>Nivel aplicado</label><input class="bizm-sal-count" data-week="'+i+'" data-seller="'+bizmEsc(r.key)+'" data-name="'+bizmEsc(r.name)+'" type="number" value="'+Math.round(r.appliedVentas)+'" oninput="bizmRecalcSalary(this)"></div>'+
+          '<div class="bizm-field"><label>Sueldo final</label><input class="bizm-sal-salary" type="number" value="'+Math.round(r.salary)+'"></div>'+
+        '</div></div>';
+    }).join('') || '<div class="empty" style="padding:14px">Sin vendedores esta semana</div>';
+    return '<details class="bizm-week bizm-week-details-mobile" '+(i===curIdx?'open':'')+'>'+ 
+      '<summary>'+ 
+        '<div class="bizm-week-left"><div class="bizm-week-name">Semana '+(i+1)+(i===curIdx?' · actual':'')+'</div><div class="bizm-week-date">'+bizmDateShort(w.start)+' al '+bizmDateShort(w.end)+'</div></div>'+ 
+        '<div class="bizm-week-right"><span class="bizm-chip">'+fmtC0(finW.ingresos)+' / '+fmtC0(wc.incomeGoal)+'</span><span class="bizm-chip">'+pct+'%</span><span class="bizm-chip">Neta '+fmtC0(netW)+'</span></div>'+ 
+      '</summary>'+ 
+      '<div class="bizm-week-body">'+
+        '<div class="bizm-input-grid">'+
+          bizmMoneyInput('bizm-w'+i+'-goal','Meta ingresos',wc.incomeGoal)+
+          bizmMoneyInput('bizm-w'+i+'-meta','Meta Ads',wc.metaAds)+
+          bizmMoneyInput('bizm-w'+i+'-tiktok','TikTok Ads',wc.tiktokAds)+
+          bizmMoneyInput('bizm-w'+i+'-other','Otros',wc.other)+
+        '</div>'+
+        '<div class="bizm-card" style="box-shadow:none;margin:12px 0 0">'+
+          '<div class="bizm-metric-row"><span>Ingresos</span><strong>'+fmtC0(finW.ingresos)+'</strong></div>'+
+          '<div class="bizm-metric-row bad"><span>Costos productos</span><strong>- '+fmtC0(finW.productCost)+'</strong></div>'+
+          '<div class="bizm-metric-row bad"><span>Delivery/envíos</span><strong>- '+fmtC0(finW.delivery)+'</strong></div>'+
+          '<div class="bizm-metric-row bad"><span>Sueldos</span><strong>- '+fmtC0(salW.total)+'</strong></div>'+
+          '<div class="bizm-metric-row total"><span>Neta semana</span><strong>'+fmtC0(netW)+'</strong></div>'+
+        '</div>'+
+        '<div class="bizm-editor-title">Sueldos editables</div>'+
+        salaries+        '<div class="bizm-note">Puedes redondear el nivel aplicado cuando el vendedor tenga pedidos de 2 o 3 unidades.</div>'+ 
+      '</div>'+ 
+    '</details>';
+  }).join('');
+  var sellers=Object.keys(monthSalary.sellers).map(function(k){return monthSalary.sellers[k];}).sort(function(a,b){return b.total-a.total;}).map(function(s){return '<div class="bizm-metric-row"><span>'+bizmEsc(s.name)+'<div class="bizm-mini">'+s.orders+' pedidos · '+s.units+' unidades</div></span><strong>'+fmtC0(s.total)+'</strong></div>';}).join('') || '<div class="empty" style="padding:14px">Sin pagos calculados</div>';
+  el.innerHTML='<div class="bizm-hero"><div class="bizm-title">Meta Empresarial</div><div class="bizm-sub">Control mensual y semanal con gastos, publicidad y sueldos editables.</div><span class="bizm-pill">'+bizmMonthLabel(now)+'</span><div class="bizm-progress"><div class="bizm-progress-fill" style="width:'+progress+'%"></div></div></div>'+
+    filter+'<div class="bizm-alert">'+alert+'</div>'+
+    '<div class="bizm-kpis"><div class="bizm-card"><div class="bizm-label">Meta mensual</div><div class="bizm-value">'+fmtC0(bm.monthlyGoal)+'</div><div class="bizm-mini">Editable</div></div><div class="bizm-card"><div class="bizm-label">Ingresos mes</div><div class="bizm-value green">'+fmtC0(monthFin.ingresos)+'</div><div class="bizm-mini">Faltan '+fmtC0(missing)+'</div></div><div class="bizm-card"><div class="bizm-label">Neta mes</div><div class="bizm-value green">'+fmtC0(net)+'</div><div class="bizm-mini">Con gastos y sueldos</div></div><div class="bizm-card"><div class="bizm-label">Prom. necesario</div><div class="bizm-value">'+fmtC0(dailyNeed)+'</div><div class="bizm-mini">Por día restante</div></div></div>'+
+    '<div class="bizm-card"><div class="bizm-editor-title">Métricas del filtro: '+sel.label+'</div><div class="bizm-mini" style="margin-bottom:8px">'+bizmDateShort(sel.start)+' al '+bizmDateShort(sel.end)+'</div><div class="bizm-metric-row"><span>Pedidos</span><strong>'+selFin.orders+'</strong></div><div class="bizm-metric-row"><span>Unidades</span><strong>'+selFin.units+' un.</strong></div><div class="bizm-metric-row"><span>Ingresos</span><strong>'+fmtC0(selFin.ingresos)+'</strong></div><div class="bizm-metric-row bad"><span>Costos productos</span><strong>- '+fmtC0(selFin.productCost)+'</strong></div><div class="bizm-metric-row bad"><span>Delivery/envíos</span><strong>- '+fmtC0(selFin.delivery)+'</strong></div><div class="bizm-metric-row bad"><span>Sueldos</span><strong>- '+fmtC0(selSalary)+'</strong></div><div class="bizm-metric-row bad"><span>Publicidad/otros</span><strong>- '+fmtC0(selExp.metaAds+selExp.tiktokAds+selExp.other)+'</strong></div><div class="bizm-metric-row total"><span>Ganancia neta</span><strong>'+fmtC0(selNet)+'</strong></div><div class="bizm-metric-row"><span>Margen neto</span><strong>'+selMargin.toFixed(1)+'%</strong></div></div>'+
+    bizmInsights({ingresos:monthFin.ingresos,net:net,exp:monthExp,pace:pace,dailyNeed:dailyNeed,top:top})+
+    '<div class="bizm-card bizm-editor-card-mobile"><div class="bizm-editor-title">Configuración editable mensual y semanal</div><div class="bizm-month-editor-mobile">'+bizmMoneyInput('bizm-monthly-goal','Meta mensual',bm.monthlyGoal)+'<button class="bizm-save" onclick="saveBusinessMetaMobile()">Guardar todo</button></div>'+
+    weekEditors+'<button class="bizm-save" onclick="saveBusinessMetaMobile()">Guardar meta empresarial</button></div>'+
+    '<div class="bizm-card"><div class="bizm-editor-title">Resumen mensual de pagos</div>'+sellers+'</div>';
+}
+function renderMeta(){
+  var h=document.querySelector('#tab-meta .tb h2'); if(h)h.textContent=isSuper()?'Meta Empresarial':'Mi meta';
+  var sub=$('meta-sub'); if(sub)sub.textContent=isSuper()?'Mensual y semanal':'Esta semana';
+  var f=document.querySelector('#tab-meta .meta-filter-bar'); if(f)f.style.display=isSuper()?'none':'flex';
+  var cd=$('meta-custom-date'); if(cd&&isSuper())cd.style.display='none';
+  if(isSuper())return renderBusinessMetaMobile();
+  return renderPersonalMeta();
 }
 
 
@@ -1466,6 +2569,8 @@ function renderResumen(){
     '<div class="dr"><span class="dl">⏳ Pendiente</span><span class="dv" style="color:#92400e">'+byStatus.pendiente+'</span></div>'+
     '<div class="dr"><span class="dl">✗ Anulado</span><span class="dv red">'+byStatus.anulado+'</span></div>'+
   '</div>';
+
+  hh+='<div class="card"><div class="section-label">Ventas por tienda y canal</div>'+renderStoreChannelCards(filtered,true)+'</div>';
 
   // ── PUNTO 2: Bloque acordeón por vendedor ──────────────────────────────
   var vendEntries=Object.entries(vendMap).sort(function(a,b){return b[1].ventas-a[1].ventas;});
@@ -1601,10 +2706,13 @@ function toggleVcard(bodyId){
 // ═══ HISTORIAL ═══
 function renderHistorial(){
   const el=$('hist-list');
+  var vendWrap=document.getElementById('vend-drop-wrap');
+  if(vendWrap)vendWrap.style.display=isSuper()?'inline-block':'none';
+  if(!isSuper())histVendedor='all';
   // Step 1: base source by role
-  let source=isVendedor()?orders.filter(o=>o.vendedorId===cu.id):[...orders];
+  let source=!isSuper()?orders.filter(o=>o.vendedorId===cu.id):[...orders];
   // Step 2: apply vendedor filter (admin/super only)
-  if(isAdmin()&&histVendedor!=='all'){
+  if(isSuper()&&histVendedor!=='all'){
     source=source.filter(o=>o.vendedor===histVendedor);
   }
   // Step 3: apply date filter using fv (fecha venta)
@@ -1638,7 +2746,14 @@ async function renderConfig(){
   const el=$('config-body');
   el.innerHTML=`
     <div class="card">
-      <div class="section-label">Productos y costos</div>
+      <div onclick="toggleConfigProducts()" style="display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer">
+        <div>
+          <div class="section-label" style="margin-bottom:2px">Productos y costos</div>
+          <div style="font-size:12px;color:var(--tx2);font-weight:600">${(cfg.productos||[]).length} productos configurados</div>
+        </div>
+        <span id="cfg-products-arrow" style="font-size:14px;color:var(--tx3);transition:transform .2s">▼</span>
+      </div>
+      <div id="cfg-products-body" style="display:none;padding-top:10px">
       ${(cfg.productos||[]).map(function(p,i){
         var ppc=p.preciosPorCantidad||{};
         var inpS='width:54px;padding:5px 6px;border:0.5px solid rgba(0,0,0,0.12);border-radius:6px;background:var(--bg2);color:var(--accent);font-size:12px;font-weight:600;text-align:center;font-family:inherit';
@@ -1673,6 +2788,8 @@ async function renderConfig(){
         '</div>';
       }).join('')||'<div style="font-size:13px;color:var(--tx3);padding:8px 0">Sin productos configurados</div>'}
       <button class="btn" style="margin-top:10px" onclick="openAddProd()">+ Agregar producto</button>
+
+      </div>
     </div>
     <div class="card">
       <div class="section-label">Costos de delivery</div>
@@ -1687,11 +2804,19 @@ async function renderConfig(){
       <button class="btn" style="margin-top:10px" onclick="saveDelivery()">Guardar costos</button>
     </div>
     <div class="card">
-      <div class="section-label">Escala de sueldos · Semanal</div>
-      <div id="scale-list" style="width:100%;overflow:hidden"></div>
-      <div style="display:flex;gap:8px;margin-top:10px">
-        <button class="btn out" style="flex:1;padding:10px;font-size:13px" onclick="addScaleRow()">+ Agregar nivel</button>
-        <button class="btn" style="flex:1;padding:10px;font-size:13px" onclick="saveScale()">Guardar</button>
+      <div onclick="toggleConfigSection('cfg-scale-body','cfg-scale-arrow')" style="display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer">
+        <div>
+          <div class="section-label" style="margin-bottom:2px">Escala de sueldos · Semanal</div>
+          <div style="font-size:12px;color:var(--tx2);font-weight:600">${(salaryScale||[]).length} niveles configurados</div>
+        </div>
+        <span id="cfg-scale-arrow" style="font-size:14px;color:var(--tx3);transition:transform .2s">▼</span>
+      </div>
+      <div id="cfg-scale-body" style="display:none;padding-top:10px">
+        <div id="scale-list" style="width:100%;overflow:hidden"></div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn out" style="flex:1;padding:10px;font-size:13px" onclick="addScaleRow()">+ Agregar nivel</button>
+          <button class="btn" style="flex:1;padding:10px;font-size:13px" onclick="saveScale()">Guardar</button>
+        </div>
       </div>
     </div>
     <div class="card">
@@ -1701,10 +2826,36 @@ async function renderConfig(){
       <button class="btn out" style="margin-top:10px;padding:10px;font-size:13px;width:100%" onclick="addTiendaPrompt()">+ Agregar tienda</button>
     </div>
     <div class="card">
+      <div onclick="toggleConfigSection('shopify-admin-perms-body','shopify-admin-perms-arrow')" style="display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer">
+        <div>
+          <div class="section-label" style="margin-bottom:2px">Permisos de tienda · Usuarios</div>
+          <div style="font-size:12px;color:var(--tx2);font-weight:600">Asignar tiendas a admins y vendedores</div>
+        </div>
+        <span id="shopify-admin-perms-arrow" style="font-size:14px;color:var(--tx3);transition:transform .2s">▼</span>
+      </div>
+      <div id="shopify-admin-perms-body" style="display:none;padding-top:10px">
+        <p style="font-size:12px;color:var(--tx2);margin-bottom:10px">Asigna a qué tienda pertenece cada vendedor o administrador. Si marcas todas, podrá trabajar con todas las tiendas configuradas.</p>
+        <div id="shopify-admin-perms"><div class="spin" style="margin:16px auto"></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div onclick="toggleConfigSection('users-role-body','users-role-arrow')" style="display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer">
+        <div>
+          <div class="section-label" style="margin-bottom:2px">Usuarios y roles</div>
+          <div style="font-size:12px;color:var(--tx2);font-weight:600">Editar nombre, correo y rol</div>
+        </div>
+        <span id="users-role-arrow" style="font-size:14px;color:var(--tx3);transition:transform .2s">▼</span>
+      </div>
+      <div id="users-role-body" style="display:none;padding-top:10px">
+        <p style="font-size:12px;color:var(--tx2);margin-bottom:10px">Cambia nombre, correo visible y rol de cada usuario. Solo Super Admin puede modificar estos permisos.</p>
+        <div id="users-role-list"><div class="spin" style="margin:16px auto"></div></div>
+      </div>
+    </div>
+    <div class="card">
       <div class="section-label">Nota de venta — Personalización</div>
       <div style="display:flex;flex-direction:column;gap:10px">
         <div class="fld"><label>Nombre de tienda</label>
-          <input id="cfg-sn" value="${cfg.storeName||''}" placeholder="Rooze" oninput="cfg.storeName=this.value">
+          <input id="cfg-sn" value="${cfg.storeName||''}" placeholder="VivirStar" oninput="cfg.storeName=this.value">
         </div>
         <div class="fld"><label>Teléfono / WhatsApp (pie de nota)</label>
           <input id="cfg-sp" value="${cfg.storePhone||cfg.whatsapp||''}" placeholder="+51 987 654 321" oninput="cfg.storePhone=this.value">
@@ -1767,6 +2918,142 @@ async function renderConfig(){
       <button class="btn gray" onclick="logout()">Cerrar sesión</button>
     </div>`;
   renderScaleList();
+  renderShopifyAdminPerms();
+  renderUsersRoleList();
+}
+
+
+function toggleConfigProducts(){
+  var body=document.getElementById('cfg-products-body');
+  var arrow=document.getElementById('cfg-products-arrow');
+  if(!body)return;
+  var open=body.style.display!=='none';
+  body.style.display=open?'none':'block';
+  if(arrow)arrow.style.transform=open?'':'rotate(180deg)';
+}
+
+function toggleConfigSection(bodyId, arrowId){
+  var body=document.getElementById(bodyId);
+  var arrow=document.getElementById(arrowId);
+  if(!body)return;
+  var open=body.style.display!=='none';
+  body.style.display=open?'none':'block';
+  if(arrow)arrow.style.transform=open?'':'rotate(180deg)';
+}
+
+function roleLabel(role){
+  if(role==='superuser')return 'Super Admin';
+  if(role==='admin')return 'Administrador';
+  return 'Vendedor';
+}
+
+
+function renderUsersRoleList(){
+  var el=document.getElementById('users-role-list');
+  if(!el||!isSuper())return;
+  db.collection('users').get().then(function(snap){
+    var docs=[];
+    snap.forEach(function(doc){docs.push({id:doc.id,data:doc.data()||{}});});
+    docs.sort(function(a,b){
+      var an=(a.data.name||a.data.email||'').toLowerCase();
+      var bn=(b.data.name||b.data.email||'').toLowerCase();
+      return an.localeCompare(bn);
+    });
+    if(!docs.length){el.innerHTML='<div style="font-size:12px;color:var(--tx3);padding:8px 0">No hay usuarios registrados.</div>';return;}
+    el.innerHTML=docs.map(function(row){
+      var u=row.data, uid=row.id, role=u.role||'vendedor';
+      return '<div style="background:var(--bg2);border:0.5px solid var(--bo2);border-radius:12px;padding:11px 12px;margin-bottom:8px">'
+        +'<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px">'
+          +'<div style="min-width:0">'
+            +'<div style="font-size:13px;font-weight:800;color:var(--tx)">'+shopifyHtml(u.name||u.displayName||u.email||uid)+'</div>'
+            +(u.email?'<div style="font-size:11px;color:var(--tx3);margin-top:2px">'+shopifyHtml(u.email)+'</div>':'')
+          +'</div>'
+          +'<span style="font-size:10px;font-weight:800;color:var(--accent);background:var(--accent2);border-radius:999px;padding:5px 8px;white-space:nowrap">'+roleLabel(role)+'</span>'
+        +'</div>'
+        +'<div style="display:flex;flex-direction:column;gap:8px">'
+          +'<input id="uname-'+uid+'" value="'+shopifyHtml(u.name||u.displayName||'')+'" placeholder="Nombre de usuario" style="background:var(--bg);border:0.5px solid var(--bo);border-radius:10px;padding:9px 10px;font-size:12px;color:var(--tx);font-family:inherit">'
+          +'<input id="uemail-'+uid+'" value="'+shopifyHtml(u.email||'')+'" placeholder="Correo visible" style="background:var(--bg);border:0.5px solid var(--bo);border-radius:10px;padding:9px 10px;font-size:12px;color:var(--tx);font-family:inherit">'
+          +'<div style="display:flex;align-items:center;gap:8px">'
+            +'<select id="role-'+uid+'" style="flex:1;background:var(--bg);border:0.5px solid var(--bo);border-radius:10px;padding:9px 10px;font-size:12px;color:var(--tx);font-family:inherit">'
+              +'<option value="superuser" '+(role==='superuser'?'selected':'')+'>Super Admin</option>'
+              +'<option value="admin" '+(role==='admin'?'selected':'')+'>Administrador</option>'
+              +'<option value="vendedor" '+(role==='vendedor'?'selected':'')+'>Vendedor</option>'
+            +'</select>'
+            +'<button onclick="saveUserRole(\''+uid+'\')" style="background:var(--accent);color:#fff;border:none;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:750;font-family:inherit">Guardar</button>'
+          +'</div>'
+        +'</div>'
+      +'</div>';
+    }).join('');
+  }).catch(function(e){
+    el.innerHTML='<div class="err" style="display:block">Error cargando usuarios: '+shopifyHtml(e.message)+'</div>';
+  });
+}
+
+async function saveUserRole(uid){
+  if(!isSuper())return toast('Solo Super Admin');
+  var sel=document.getElementById('role-'+uid);
+  var nameEl=document.getElementById('uname-'+uid);
+  var emailEl=document.getElementById('uemail-'+uid);
+  if(!sel)return;
+  var newRole=sel.value;
+  var newName=(nameEl&&nameEl.value||'').trim();
+  var newEmail=(emailEl&&emailEl.value||'').trim();
+  if(uid===cu.id && newRole!=='superuser'){
+    if(!confirm('Estás cambiando tu propio rol de Super Admin. Podrías perder acceso a configuración. ¿Continuar?'))return;
+  }
+  try{
+    var payload={role:newRole,name:newName,email:newEmail};
+    await db.collection('users').doc(uid).set(payload,{merge:true});
+    if(uid===cu.id){cu.name=newName;cu.email=newEmail;cu.role=newRole;}
+    toast('✓ Usuario actualizado');
+    renderUsersRoleList();
+    renderShopifyAdminPerms();
+    buildNav();
+  }catch(e){toast('Error: '+e.message);}
+}
+
+
+function renderShopifyAdminPerms(){
+  var el=document.getElementById('shopify-admin-perms');
+  if(!el||!isSuper())return;
+  db.collection('users').get().then(function(snap){
+    var docs=[];
+    snap.forEach(function(doc){
+      var u=doc.data()||{};
+      if(u.role!=='superuser')docs.push({id:doc.id,data:u});
+    });
+    if(!docs.length){el.innerHTML='<div style="font-size:12px;color:var(--tx3);padding:8px 0">No hay administradores ni vendedores registrados.</div>';return;}
+    var storeOptions=getAllSalesStores();
+    el.innerHTML=docs.map(function(row){
+      var u=Object.assign({id:row.id},row.data);
+      var stores=getAllowedShopifyStores(u);
+      var name=u.name||u.email||row.id;
+      var email=u.email?'<div style="font-size:10px;color:var(--tx3);margin-top:1px">'+shopifyHtml(u.email)+'</div>':'';
+      return '<div style="background:var(--bg2);border:0.5px solid var(--bo2);border-radius:12px;padding:11px 12px;margin-bottom:8px">'
+        +'<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">'
+          +'<div><div style="font-size:13px;font-weight:750;color:var(--tx)">'+shopifyHtml(name)+'</div>'+email+'</div>'
+          +'<span style="font-size:10px;font-weight:800;color:var(--accent);background:var(--accent2);border-radius:999px;padding:5px 8px;white-space:nowrap">'+roleLabel(u.role||'vendedor')+'</span>'
+        +'</div>'
+        +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:9px">'
+          +storeOptions.map(function(st){var checked=stores.indexOf(st.id)!==-1?'checked':'';return '<label style="display:flex;align-items:center;gap:6px;background:var(--bg);border:0.5px solid var(--bo);border-radius:999px;padding:7px 10px;font-size:12px;font-weight:700;color:var(--tx2)"><input type="checkbox" id="perm-'+row.id+'-'+st.id+'" '+checked+' style="accent-color:var(--accent)"> '+shopifyHtml(st.name)+'</label>';}).join('')
+          +'<button onclick="saveAdminShopifyStores(\''+row.id+'\')" style="margin-left:auto;background:var(--accent);color:#fff;border:none;border-radius:999px;padding:7px 12px;font-size:12px;font-weight:750;font-family:inherit">Guardar</button>'
+        +'</div>'
+        +'<div style="font-size:10.5px;color:var(--tx3);margin-top:7px;line-height:1.35">Vendedor: ventas como WhatsApp. Administrador: ventas como Shopify.</div>'
+      +'</div>';
+    }).join('');
+  }).catch(function(e){el.innerHTML='<div class="err" style="display:block">Error cargando permisos de tienda: '+shopifyHtml(e.message)+'</div>';});
+}
+async function saveAdminShopifyStores(uid){
+  if(!isSuper())return toast('Solo Super Admin');
+  var stores=[];
+  getAllSalesStores().forEach(function(st){
+    var el=document.getElementById('perm-'+uid+'-'+st.id);
+    if(el&&el.checked)stores.push(st.id);
+  });
+  try{
+    await db.collection('users').doc(uid).set({shopifyStores:stores},{merge:true});
+    toast('✓ Permisos de tienda guardados');
+  }catch(e){toast('Error: '+e.message);}
 }
 
 function openAddProd(){
@@ -2005,8 +3292,12 @@ function setHistVend(v,el){
 }
 
 function updateVendedoresList(){
-  if(!isAdmin())return;
   var wrap=document.getElementById('vend-drop-wrap');
+  if(!isSuper()){
+    if(wrap)wrap.style.display='none';
+    histVendedor='all';
+    return;
+  }
   if(wrap)wrap.style.display='inline-block';
   var drop=document.getElementById('vend-drop');
   if(!drop)return;
@@ -2054,19 +3345,40 @@ function applyCustomHist(){
 }
 
 // ═══ FCM ═══
+function vapidReady(){
+  return !!VAPID && VAPID.indexOf('REEMPLAZAR_') === -1 && VAPID.length > 40;
+}
+
 async function saveFCMToken(){
   try{
-    if('serviceWorker' in navigator&&Notification.permission==='granted'){
-      const reg=await navigator.serviceWorker.ready;
-      const msg=firebase.messaging();
-      const token=await msg.getToken({vapidKey:VAPID,serviceWorkerRegistration:reg});
-      if(token){
-        // Save as fcmTokenVentas so it doesn't overwrite fcmToken from stock app
-        await db.collection('users').doc(cu.id).update({fcmTokenVentas:token});
-        console.log('FCM token ventas saved');
-      }
+    // Mismo comportamiento que Rooze: no abre ventanas ni pide permiso automáticamente.
+    // Solo guarda el token cuando el permiso del navegador ya está en PERMITIR.
+    if(!cu || !cu.id) return;
+    if(!('Notification' in window) || Notification.permission !== 'granted') return;
+    if(!('serviceWorker' in navigator)) return;
+    if(!firebase.messaging || !vapidReady()) return;
+
+    let reg;
+    try{
+      reg = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {scope:'/'});
+    }catch(_e){
+      reg = await navigator.serviceWorker.ready;
     }
-  }catch(e){console.log('FCM:',e.message);}
+
+    const msg = firebase.messaging();
+    const token = await msg.getToken({vapidKey:VAPID, serviceWorkerRegistration:reg});
+    if(token){
+      await db.collection('users').doc(cu.id).update({
+        fcmTokenVentas: token,
+        fcmToken: token,
+        fcmTokenVentasUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      cu.fcmTokenVentas = token;
+      console.log('FCM token ventas saved');
+    }
+  }catch(e){
+    console.log('FCM:', e.message || e);
+  }
 }
 
 // ═══ LOGOUT ═══
@@ -2080,6 +3392,9 @@ function openEditOrder(id){
   document.getElementById('eo-order-id').value=id;
   document.getElementById('eo-cliente').value=o.cliente||'';
   document.getElementById('eo-celular').value=o.celular||'';
+  document.getElementById('eo-dni').value=o.dni||'';
+  if(document.getElementById('eo-tienda'))document.getElementById('eo-tienda').innerHTML=buildSalesStoreOptions(getOrderStoreId(o)||getDefaultSalesStore(cu),cu);
+  if(document.getElementById('eo-venta-via'))document.getElementById('eo-venta-via').value=salesChannelLabel(orderSalesChannel(o)==='sin_via'?getSalesChannelByRole(cu):orderSalesChannel(o));
   document.getElementById('eo-cobrar').value=o.cobrar||'';
   document.getElementById('eo-zona').value=o.zona||'Lima';
   document.getElementById('eo-ciudad').value=o.ciudad||'';
@@ -2099,8 +3414,13 @@ document.getElementById('btn-edit-order').onclick=async function(){
   err.style.display='none';
   var cliente=(document.getElementById('eo-cliente').value||'').trim();
   var celular=(document.getElementById('eo-celular').value||'').trim();
+  var dni=(document.getElementById('eo-dni').value||'').trim();
   var cobrar=parseFloat(document.getElementById('eo-cobrar').value)||0;
   var producto=document.getElementById('eo-producto').value;
+  var tienda=normalizeShopifyStoreName(document.getElementById('eo-tienda')?.value)||getDefaultSalesStore(cu);
+  var tiendaNombre=shopifyStoreDisplayName(tienda);
+  var existingOrder=orders.find(function(x){return x.id===id;})||{};
+  var ventaVia=(orderSalesChannel(existingOrder)!=='sin_via')?orderSalesChannel(existingOrder):getSalesChannelByRole(cu);
   var zona=document.getElementById('eo-zona').value||'Lima';
   var ciudad=(document.getElementById('eo-ciudad').value||'').trim();
   var fechaVenta=document.getElementById('eo-fecha').value||new Date().toISOString().split('T')[0];
@@ -2111,7 +3431,7 @@ document.getElementById('btn-edit-order').onclick=async function(){
   btn.disabled=true;btn.textContent='Guardando...';
   try{
     await db.collection('orders').doc(id).update({
-      cliente:cliente, celular:celular, cobrar:cobrar,
+      cliente:cliente, celular:celular, dni:dni, tienda:tienda, store:tienda, tiendaNombre:tiendaNombre, ventaVia:ventaVia, canalVenta:ventaVia, vendedorRole:existingOrder.vendedorRole||((cu&&cu.role)||''), cobrar:cobrar,
       producto:producto, zona:zona, ciudad:ciudad,
       fechaVenta:fechaVenta, fechaMs:fechaMs
     });
@@ -2143,8 +3463,39 @@ const CEL_MSGS=[
 ];
 let lastCelVentas=0;
 
+function getCelebrationLevel(n){
+  n=Number(n||0);
+  var preset=CEL_MSGS.find(function(c){return Number(c.ventas)===n;});
+  var level=(salaryScale||[]).find(function(l){return Number(l.ventas||0)===n;});
+  if(preset)return preset;
+  if(level){
+    return {
+      ventas:n,
+      emoji:'🏆',
+      title:'¡Meta alcanzada!',
+      msg:'Llegaste al nivel de '+n+' ventas esta semana. ¡Excelente trabajo!'
+    };
+  }
+  return null;
+}
+function getCelebrationVentasCount(){
+  // Siempre calcula la meta por semana completa acumulada.
+  // Ejemplo: lunes 5 + martes 5 = 10 ventas; miércoles +5 = 15 ventas.
+  // No depende del filtro visual de Ventas ni del filtro de Mi Meta.
+  if(!cu||isSuper())return 0;
+  var n=new Date(), Y=n.getFullYear(), M=n.getMonth(), D=n.getDate();
+  var range={start:weekStart(),end:dayEnd(Y,M,D)};
+  return orders.filter(function(o){
+    return o.vendedorId===cu.id && o.estado!=='anulado' && o.fv>=range.start && o.fv<=range.end;
+  }).length;
+}
+function checkCelebrationFromVentas(){
+  checkCelebration(getCelebrationVentasCount());
+}
 function checkCelebration(n){
-  const cel=CEL_MSGS.find(c=>c.ventas===n);
+  if(isSuper())return;
+  n=Number(n||0);
+  const cel=getCelebrationLevel(n);
   if(cel&&n>lastCelVentas){lastCelVentas=n;showCelebration(cel,n);}
 }
 function showCelebration(cel,n){
@@ -2181,7 +3532,7 @@ function buildNotaHTML(o, tiendaCfg){
   var hdr   = C.notaHeaderBg==='color' ? acc
             : C.notaHeaderBg==='gradient' ? '#1e293b'
             : '#0f172a';
-  var store  = C.storeName || 'Rooze';
+  var store  = C.storeName || 'VivirStar';
   var tel    = C.storePhone||C.whatsapp||C.phone||'';
   var footer = C.notaFooter||(tel?'Consultas: '+tel:'Gracias por tu compra!');
   var logo   = C.logoUrl||'';
@@ -2255,7 +3606,7 @@ function buildNotaHTML(o, tiendaCfg){
   }
 
   var ceHtml=o.contraEntrega
-    ?'<div style="margin-top:8px;text-align:center"><span style="background:#fef3c7;color:#92400e;padding:4px 14px;border-radius:20px;font-size:10px;font-weight:700;font-family:Arial,sans-serif;display:inline-block">Pago contra entrega</span></div>'
+    ?'<div style="margin-top:8px;text-align:center"><span style="background:#ccfbf1;color:#0f766e;padding:4px 14px;border-radius:20px;font-size:10px;font-weight:700;font-family:Arial,sans-serif;display:inline-block">Pago contra entrega</span></div>'
     :'';
 
   var cpnHtml='';
@@ -2503,7 +3854,7 @@ function openNotaModal(orderId){
       +(o.fechaVenta?'<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:0.5px solid var(--bo)"><span style="color:var(--tx2);font-size:13px">Fecha</span><span style="font-size:13px">'+o.fechaVenta+'</span></div>':'')
       +(o.ciudad?'<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:0.5px solid var(--bo)"><span style="color:var(--tx2);font-size:13px">Ciudad</span><span style="font-size:13px">'+o.ciudad+' · '+o.zona+'</span></div>':'')
       +'<div style="display:flex;justify-content:space-between;padding:5px 0"><span style="color:var(--tx2);font-size:13px">Estado</span><span style="font-size:13px">'+o.estado+'</span></div>'
-      +(o.contraEntrega?'<div style="background:#fef3c7;color:#92400e;padding:5px 10px;border-radius:8px;font-size:12px;font-weight:700;text-align:center;margin-top:6px">Pago contra entrega</div>':'');
+      +(o.contraEntrega?'<div style="background:#ccfbf1;color:#0f766e;padding:5px 10px;border-radius:8px;font-size:12px;font-weight:700;text-align:center;margin-top:6px">Pago contra entrega</div>':'');
     sum.innerHTML=rows;
   }
   var sel=document.getElementById('nota-tienda-sel');
@@ -2695,92 +4046,919 @@ function loadNotaLogoFile(inp){
 }
 
 
-// ═══ NOTIFICACIONES SUPERADMIN ══════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════════════════
+// SHOPIFY MODULE — reads from Firestore (populated by Cloud Functions)
+// ════════════════════════════════════════════════════════════════════════════
 
-// Request notification permission when superadmin/admin logs in
-async function requestNotifPermission(){
-  if(!('Notification' in window))return;
-  if(Notification.permission==='default'){
-    const perm=await Notification.requestPermission();
-    if(perm==='granted') await saveFCMToken();
-  } else if(Notification.permission==='granted'){
-    await saveFCMToken();
+var curShopifyStore = 'all'; // 'all' | 'vivirstar' | 'zoma'
+
+function applyShopifyStorePermissionsUI(){
+  var allowed=getAllowedShopifyStores();
+  var btnAll=document.getElementById('ss-all');
+  var btnR=document.getElementById('ss-vivirstar');
+  var btnD=document.getElementById('ss-zoma');
+
+  if(isSuper()){
+    [btnAll,btnR,btnD].forEach(function(b){if(b)b.style.display='';});
+    if(!curShopifyStore)curShopifyStore='all';
+  }else{
+    // Administrador: ahora también puede usar "Todas".
+    // "Todas" muestra únicamente las tiendas que tenga asignadas.
+    if(btnAll)btnAll.style.display=allowed.length?'':'none';
+    if(btnR)btnR.style.display=allowed.indexOf('vivirstar')!==-1?'':'none';
+    if(btnD)btnD.style.display=allowed.indexOf('zoma')!==-1?'':'none';
+    if(curShopifyStore==='all' && allowed.length){
+      curShopifyStore='all';
+    }else if(allowed.indexOf(curShopifyStore)===-1){
+      curShopifyStore=allowed.length?'all':'';
+    }
+  }
+
+  document.querySelectorAll('.sst').forEach(function(b){b.classList.remove('on');});
+  var el=document.getElementById('ss-'+curShopifyStore);
+  if(el)el.classList.add('on');
+}
+
+function setShopifyStore(store){
+  var allowed=getAllowedShopifyStores();
+  if(!isSuper() && store!=='all' && allowed.indexOf(store)===-1){
+    toast('No tienes permiso para esa tienda');
+    return;
+  }
+  if(!isSuper() && store==='all' && !allowed.length){
+    toast('No tienes tiendas asignadas');
+    return;
+  }
+  curShopifyStore = store;
+  applyShopifyStorePermissionsUI();
+  renderShopifyContent();
+}
+
+function filterByStore(arr){
+  arr = arr || [];
+  var list = arr;
+  if(!isSuper()){
+    var allowed = getAllowedShopifyStores();
+    if(curShopifyStore==='all'){
+      list = list.filter(function(item){ return allowed.indexOf(normalizeShopifyStoreName(item.store || 'vivirstar'))!==-1; });
+      return list.filter(shopifyPassesDate);
+    }
+    if(allowed.indexOf(curShopifyStore) === -1) curShopifyStore = allowed.length ? 'all' : '';
+  }
+  if(curShopifyStore !== 'all'){
+    if(!curShopifyStore) return [];
+    list = list.filter(function(item){ return normalizeShopifyStoreName(item.store || 'vivirstar') === curShopifyStore; });
+  }
+  return list.filter(shopifyPassesDate);
+}
+
+
+function filterByStoreOnly(list){
+  list=list||[];
+  var out=list;
+  if(!isSuper()){
+    var allowed=getAllowedShopifyStores();
+    if(curShopifyStore==='all')return out.filter(function(x){return allowed.indexOf(normalizeShopifyStoreName(x.store||'vivirstar'))!==-1;});
+    if(allowed.indexOf(curShopifyStore)===-1)return [];
+  }
+  if(curShopifyStore!=='all')out=out.filter(function(x){return normalizeShopifyStoreName(x.store||'vivirstar')===curShopifyStore;});
+  return out;
+}
+function shopifyDateValue(v){
+  if(!v)return 0;
+  if(v&&typeof v.toMillis==='function')return v.toMillis();
+  if(v&&typeof v.seconds==='number')return v.seconds*1000;
+  if(typeof v==='number')return v;
+  if(typeof v==='string'){var t=Date.parse(v);return isNaN(t)?0:t;}
+  return 0;
+}
+function shopifyDraftRecovered(d){
+  d=d||{};var p=d.payload||{};
+  var st=String(d.manualDraftStatus||d.draftStatus||d.status||p.status||'').toLowerCase();
+  return d.draftRecovered===true||d.recovered===true||d.preliminarComprado===true||st==='recovered'||st==='comprado'||st==='purchased'||st==='completed'||!!d.completedAt||!!p.completed_at;
+}
+function shopifyDraftRecoveredTime(d){
+  d=d||{};var p=d.payload||{};
+  return shopifyDateValue(d.draftRecoveredAt)||shopifyDateValue(d.recoveredAt)||shopifyDateValue(d.completedAt)||shopifyDateValue(p.completed_at)||shopifyDateValue(d.manualDraftStatusUpdatedAt)||shopifyTime(d);
+}
+function shopifyDraftRecoveredInRange(d){
+  if(!shopifyDraftRecovered(d))return false;
+  if(curShopifyDatePeriod==='all')return true;
+  var t=shopifyDraftRecoveredTime(d);if(!t)return false;
+  var r=getShopifyDateRange();return t>=r.start&&t<=r.end;
+}
+function shopifyCurrentTabListForCount(){
+  if(curShopifyTab==='orders')return filterShopifySearch(filterByStore(shopifyData.orders),'pedidos');
+  if(curShopifyTab==='clientes')return filterShopifySearch(filterByStore(shopifyData.customers),'clientes');
+  if(curShopifyTab==='abandoned')return filterShopifySearch(filterByStore(shopifyData.abandoned),'abandonados');
+  if(curShopifyTab==='drafts')return filterShopifySearch(filterByStore(shopifyData.drafts),'preliminares');
+  return [];
+}
+function shopifyTabCountLabel(){
+  var map={orders:'pedidos',clientes:'clientes',abandoned:'abandonados',drafts:'preliminares'};
+  return map[curShopifyTab]||'registros';
+}
+function updateShopifyCountUI(){
+  var el=document.getElementById('shopify-count-chip');if(!el)return;
+  if(curShopifyTab==='analytics'){el.style.display='none';return;}
+  var n=shopifyCurrentTabListForCount().length;
+  el.textContent=n+' '+shopifyTabCountLabel();
+  el.style.display='inline-flex';
+}
+function shopifyCustomerSummaryHTML(o, cls){
+  o=o||{};cls=cls||'sc-sub';
+  var name=o.customerName||o.customer_name||o.firstName||o.name||o.email||'Sin nombre';
+  if(o.lastName&&String(name).indexOf(o.lastName)===-1)name=(name+' '+o.lastName).trim();
+  var t=shopifyTime(o),hour=t?new Date(t).toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'}):'';
+  var fecha=shopifyDateTime(o),province=shopifyProvince(o),tel=o.phone||o.customer_phone||o.shippingPhone||'';
+  var orderRef=o.orderNumber||o.name||o.id||'';
+  var addressBlock=shopifyAddressBlock(o,cls);
+  return '<details style="border:0.5px solid var(--bo);border-radius:11px;padding:8px 10px;background:var(--bg2);width:100%">'+
+    '<summary style="cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:8px;align-items:center;font-weight:750;color:var(--tx);font-size:13px">'+
+      '<span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+shopifyHtml(name)+'</span>'+(hour?'<span style="color:var(--accent);font-size:11px;white-space:nowrap">'+shopifyHtml(hour)+'</span>':'')+
+    '</summary>'+
+    '<div style="margin-top:7px;border-top:0.5px solid var(--bo);padding-top:7px">'+
+      (tel?'<div class="'+cls+'">📱 '+shopifyHtml(tel)+'</div>':'')+
+      (orderRef?'<div class="'+cls+'">Pedido '+shopifyHtml(orderRef)+'</div>':'')+
+      (province?'<div class="'+cls+'">Provincia/Ciudad: '+shopifyHtml(province)+'</div>':'')+
+      (fecha?'<div class="'+cls+'">Hora: '+shopifyHtml(fecha)+'</div>':'')+addressBlock+
+    '</div></details>';
+}
+async function setShopifyDraftRecovered(draftId,recovered){
+  if(!draftId||!db)return;
+  var localDraft=(shopifyData.drafts||[]).find(function(d){return d.id===draftId;});
+  if(!isSuper()&&localDraft&&!hasShopifyStoreAccess(localDraft.store)){toast('No tienes permiso para modificar esta tienda');return;}
+  try{
+    await db.collection('shopify_drafts').doc(draftId).update({
+      draftRecovered:!!recovered,
+      manualDraftStatus:recovered?'recovered':'pending',
+      manualDraftStatusUpdatedAt:firebase.firestore.FieldValue.serverTimestamp(),
+      manualDraftStatusUpdatedBy:(cu&&cu.id)||(auth.currentUser&&auth.currentUser.uid)||'',
+      manualDraftStatusUpdatedByName:(cu&&cu.name)||'',
+      draftRecoveredAt:recovered?firebase.firestore.FieldValue.serverTimestamp():null,
+      draftRecoveredBy:recovered?((cu&&cu.id)||(auth.currentUser&&auth.currentUser.uid)||''):null,
+      draftRecoveredByName:recovered?((cu&&cu.name)||''):null
+    });
+    toast(recovered?'Preliminar marcado como compra recuperada':'Preliminar marcado como pendiente');
+  }catch(e){console.error(e);toast('No se pudo actualizar preliminar: '+e.message);}
+}
+function shopifyDraftRecoveredActions(d){
+  var rec=shopifyDraftRecovered(d);
+  return '<div class="shopify-status-actions" style="margin-top:9px">'+
+    '<button class="shopify-status-btn confirmed'+(rec?' active':'')+'" onclick="event.stopPropagation();setShopifyDraftRecovered(\''+shopifyJs(d.id)+'\',true)">Compró</button>'+ 
+    '<button class="shopify-status-btn pending'+(!rec?' active':'')+'" onclick="event.stopPropagation();setShopifyDraftRecovered(\''+shopifyJs(d.id)+'\',false)">Pendiente</button>'+ 
+  '</div>';
+}
+function shopifyAbandonedRecovered(a){
+  a=a||{};var st=String(a.manualAbandonedStatus||a.abandonedStatus||a.status||'').toLowerCase();
+  return a.abandonedRecovered===true||a.recovered===true||a.checkoutRecovered===true||st==='recovered'||st==='recuperado'||st==='completed'||!!a.completedAt||!!((a.payload||{}).completed_at);
+}
+async function setShopifyAbandonedRecovered(abandonedId,recovered){
+  if(!abandonedId||!db)return;
+  var local=(shopifyData.abandoned||[]).find(function(a){return a.id===abandonedId;});
+  if(!isSuper()&&local&&!hasShopifyStoreAccess(local.store)){toast('No tienes permiso para modificar esta tienda');return;}
+  try{
+    await db.collection('shopify_abandoned').doc(abandonedId).update({
+      abandonedRecovered:!!recovered,
+      manualAbandonedStatus:recovered?'recovered':'pending',
+      manualAbandonedStatusUpdatedAt:firebase.firestore.FieldValue.serverTimestamp(),
+      manualAbandonedStatusUpdatedBy:(cu&&cu.id)||(auth.currentUser&&auth.currentUser.uid)||'',
+      manualAbandonedStatusUpdatedByName:(cu&&cu.name)||'',
+      abandonedRecoveredAt:recovered?firebase.firestore.FieldValue.serverTimestamp():null,
+      abandonedRecoveredBy:recovered?((cu&&cu.id)||(auth.currentUser&&auth.currentUser.uid)||''):null,
+      abandonedRecoveredByName:recovered?((cu&&cu.name)||''):null
+    });
+    toast(recovered?'Abandonado marcado como recuperado':'Abandonado marcado como pendiente');
+  }catch(e){console.error(e);toast('No se pudo actualizar abandonado: '+e.message);}
+}
+function shopifyAbandonedRecoveredActions(a){
+  var rec=shopifyAbandonedRecovered(a);
+  return '<div class="shopify-status-actions" style="margin-top:9px">'+
+    '<button class="shopify-status-btn confirmed'+(rec?' active':'')+'" onclick="event.stopPropagation();setShopifyAbandonedRecovered(\''+shopifyJs(a.id)+'\',true)">Recuperado</button>'+
+    '<button class="shopify-status-btn pending'+(!rec?' active':'')+'" onclick="event.stopPropagation();setShopifyAbandonedRecovered(\''+shopifyJs(a.id)+'\',false)">Pendiente</button>'+
+  '</div>';
+}
+function shopifyWaButtonOrDisabled(url,label){
+  if(url)return shopifyWaLink(url,label);
+  return '<span class="shopify-wa" title="Sin celular" style="background:#d1d5db;box-shadow:none;opacity:.65;cursor:not-allowed">'+shopifyWaIcon()+'</span>';
+}
+var shopifyData = {
+  orders:[],
+  customers:[],
+  abandoned:[],
+  drafts:[]
+};
+var curShopifyTab = 'analytics';
+var curShopifySearch = '';
+var curShopifyDatePeriod = 'all';
+var shopifyCustomFrom = 0;
+var shopifyCustomTo = Date.now();
+var _shopifyListeners = [];
+
+// Normaliza documentos que llegan desde Cloud Functions.
+// Los webhooks guardan receivedAt / createdAtShopify / totalPrice,
+// mientras que la interfaz usa createdAt / total / customerName.
+function shopifyTime(item){
+  if(!item) return 0;
+  var v = item.receivedAt || item.createdAt || item.createdAtShopify || item.updatedAtShopify || item.completedAt || 0;
+  if(v && typeof v.toMillis === 'function') return v.toMillis();
+  if(v && typeof v.seconds === 'number') return v.seconds * 1000;
+  if(typeof v === 'number') return v;
+  if(typeof v === 'string'){
+    var t = Date.parse(v);
+    return isNaN(t) ? 0 : t;
+  }
+  return 0;
+}
+function shopifyDate(item){
+  var t = shopifyTime(item);
+  return t ? new Date(t).toLocaleDateString('es-PE') : '';
+}
+function shopifyShortDate(item){
+  var t = shopifyTime(item);
+  if(!t) return '';
+  var d = new Date(t);
+  var dd = String(d.getDate()).padStart(2,'0');
+  var mm = String(d.getMonth()+1).padStart(2,'0');
+  var yy = String(d.getFullYear()).slice(-2);
+  return dd+'-'+mm+'-'+yy;
+}
+function shopifyDateTime(item){
+  var t = shopifyTime(item);
+  if(!t) return '';
+  var d = new Date(t);
+  var dd = String(d.getDate()).padStart(2,'0');
+  var mm = String(d.getMonth()+1).padStart(2,'0');
+  var yy = String(d.getFullYear()).slice(-2);
+  var hh = d.toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});
+  return dd+'-'+mm+'-'+yy+' · '+hh;
+}
+
+function shopifyDayStartFromDate(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(); }
+function shopifyDayEndFromDate(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999).getTime(); }
+function getShopifyDateRange(){
+  var n = new Date();
+  if(curShopifyDatePeriod === 'all') return {start:0, end:Infinity};
+  if(curShopifyDatePeriod === 'today') return {start:shopifyDayStartFromDate(n), end:shopifyDayEndFromDate(n)};
+  if(curShopifyDatePeriod === 'yesterday'){
+    var y = new Date(n); y.setDate(n.getDate()-1);
+    return {start:shopifyDayStartFromDate(y), end:shopifyDayEndFromDate(y)};
+  }
+  if(curShopifyDatePeriod === 'week'){
+    var w = new Date(n); w.setDate(n.getDate()-((n.getDay()+6)%7));
+    return {start:shopifyDayStartFromDate(w), end:shopifyDayEndFromDate(n)};
+  }
+  if(curShopifyDatePeriod === '15days'){
+    var f = new Date(n); f.setDate(n.getDate()-15);
+    return {start:shopifyDayStartFromDate(f), end:shopifyDayEndFromDate(n)};
+  }
+  if(curShopifyDatePeriod === 'month'){
+    return {start:new Date(n.getFullYear(), n.getMonth(), 1).getTime(), end:shopifyDayEndFromDate(n)};
+  }
+  if(curShopifyDatePeriod === 'custom') return {start:shopifyCustomFrom || 0, end:shopifyCustomTo || Infinity};
+  return {start:0, end:Infinity};
+}
+function shopifyPassesDate(item){
+  if(curShopifyDatePeriod === 'all') return true;
+  var t = shopifyTime(item);
+  if(!t) return false;
+  var r = getShopifyDateRange();
+  return t >= r.start && t <= r.end;
+}
+function toggleShopifyDateDrop(){
+  var d = document.getElementById('shopify-date-drop');
+  if(d) d.classList.toggle('open');
+}
+function setShopifyDatePeriod(p,label,el){
+  curShopifyDatePeriod = p;
+  var drop = document.getElementById('shopify-date-drop');
+  if(drop){
+    drop.classList.remove('open');
+    drop.querySelectorAll('.di').forEach(function(x){x.classList.remove('on');});
+  }
+  if(el) el.classList.add('on');
+  var lbl = document.getElementById('shopify-date-label');
+  if(lbl) lbl.textContent = label || 'Todo';
+  var custom = document.getElementById('shopify-date-custom');
+  if(custom) custom.style.display = p === 'custom' ? 'flex' : 'none';
+  if(p !== 'custom') renderShopifyContent();
+}
+function applyShopifyCustomDate(){
+  var f = (document.getElementById('shopify-date-from') || {}).value;
+  var t = (document.getElementById('shopify-date-to') || {}).value;
+  if(!f || !t){ toast('Selecciona fechas'); return; }
+  shopifyCustomFrom = new Date(f + 'T00:00:00').getTime();
+  shopifyCustomTo = new Date(t + 'T23:59:59').getTime();
+  var lbl = document.getElementById('shopify-date-label');
+  if(lbl) lbl.textContent = 'Personalizado';
+  renderShopifyContent();
+}
+
+function shopifyProvince(item){
+  if(!item) return '';
+  var p = item.payload || {};
+  var picks = [
+    item.province,
+    item.city,
+    item.region,
+    item.shippingProvince,
+    item.shippingCity,
+    item.billingProvince,
+    item.billingCity,
+    p.province,
+    p.city,
+    p.region,
+    p.shipping_province,
+    p.shipping_city,
+    p.billing_province,
+    p.billing_city,
+    p.shipping_address && p.shipping_address.province,
+    p.shipping_address && p.shipping_address.city,
+    p.billing_address && p.billing_address.province,
+    p.billing_address && p.billing_address.city,
+    p.customer && p.customer.default_address && p.customer.default_address.province,
+    p.customer && p.customer.default_address && p.customer.default_address.city
+  ];
+  for(var i=0;i<picks.length;i++){
+    var v = picks[i];
+    if(v && String(v).trim()) return String(v).trim();
+  }
+  return '';
+}
+function shopifyMoney(item){
+  if(!item) return 0;
+  var v = item.total;
+  if(v === undefined || v === null || v === '') v = item.totalPrice;
+  if(v === undefined || v === null || v === '') v = item.total_price;
+  if(v === undefined || v === null || v === '') v = item.subtotal_price;
+  var n = parseFloat(v || 0);
+  return isNaN(n) ? 0 : n;
+}
+function shopifyVariantText(li){
+  li=li||{};
+  var parts=[];
+  function add(v){v=String(v==null?'':v).trim();if(!v||v.toLowerCase()==='default title')return;if(parts.indexOf(v)===-1)parts.push(v);}
+  add(li.variant_title||li.variantTitle||li.variant||li.option_title||li.optionTitle);
+  add(li.size||li.talla||li.color||li.sku);
+  if(Array.isArray(li.options_with_values)){
+    li.options_with_values.forEach(function(op){
+      var name=op.name||op.option_name||'';var val=op.value||op.option_value||'';
+      if(val&&String(val).toLowerCase()!=='default title')add((name&&String(name).toLowerCase()!=='title'?name+': ':'')+val);
+    });
+  }
+  if(Array.isArray(li.properties)){
+    li.properties.forEach(function(pr){
+      var name=pr.name||pr.key||'';var val=pr.value||'';
+      if(val&&String(val).toLowerCase()!=='default title')add((name?name+': ':'')+val);
+    });
+  }
+  return parts.join(' · ');
+}
+function shopifyLineItems(payload){
+  try{
+    var items=(payload&&payload.line_items)|| (payload&&payload.lineItems) || (payload&&payload.items) || [];
+    if(!items||!items.length)return '';
+    return items.map(function(li){
+      var qty=li.quantity||li.qty||1;
+      var name=li.title||li.name||li.product_title||li.productTitle||'Producto';
+      var variant=shopifyVariantText(li);
+      return (qty?(qty+'× '):'')+name+(variant?' · '+variant:'');
+    }).join(', ');
+  }catch(e){return '';}
+}
+function shopifyPlain(v){return String(v==null?'':v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
+function shopifySearchText(item,type){
+  item=item||{};var p=item.payload||{};var a=shopifyAddressData(item);var chunks=[];
+  function push(v){if(v!==undefined&&v!==null&&String(v).trim())chunks.push(String(v));}
+  push(type);push(item.id);push(item.store);push(item.name);push(item.orderNumber);push(item.shopifyId);push(item.customerName);push(item.customer_name);push(item.firstName);push(item.lastName);push(item.email);push(item.customerEmail);push(item.phone);push(item.customer_phone);push(item.dni);push(item.document);push(item.documentNumber);
+  push(item.province);push(item.city);push(item.region);push(item.state);push(item.items);push(shopifyLineItems(p));
+  push(a.address);push(a.address2);push(a.city);push(a.state);push(a.country);push(a.zip);
+  if(p.customer){push(p.customer.first_name);push(p.customer.last_name);push(p.customer.email);push(p.customer.phone);push(p.customer.dni);}
+  if(p.shipping_address){push(p.shipping_address.name);push(p.shipping_address.phone);push(p.shipping_address.address1);push(p.shipping_address.address2);push(p.shipping_address.city);push(p.shipping_address.province);push(p.shipping_address.country);push(p.shipping_address.zip);}
+  if(p.billing_address){push(p.billing_address.name);push(p.billing_address.phone);push(p.billing_address.address1);push(p.billing_address.address2);push(p.billing_address.city);push(p.billing_address.province);push(p.billing_address.country);push(p.billing_address.zip);}
+  return shopifyPlain(chunks.join(' '));
+}
+function filterShopifySearch(list,type){
+  var q=shopifyPlain(curShopifySearch||'').trim();
+  if(!q)return list;
+  return (list||[]).filter(function(item){return shopifySearchText(item,type).indexOf(q)!==-1;});
+}
+function setShopifySearch(q){
+  curShopifySearch=String(q||'').trim();
+  renderShopifyContent();
+}
+function shopifyEmptySearchMsg(label){return '<div class="empty">Sin resultados para la búsqueda en '+shopifyHtml(label||'Shopify')+'</div>';}
+function updateShopifySearchUI(){
+  var wrap=document.getElementById('shopify-search-wrap')||document.getElementById('shopify-search-wrap-pc');
+  var inp=document.getElementById('shopify-search-input')||document.getElementById('shopify-search-input-pc');
+  if(wrap)wrap.style.display=(curShopifyTab==='analytics')?'none':'block';
+  if(inp&&inp.value!==curShopifySearch)inp.value=curShopifySearch||'';
+}
+
+
+function shopifyPickField(obj, keys){
+  if(!obj)return '';
+  for(var i=0;i<keys.length;i++){
+    var v=obj[keys[i]];
+    if(v!==undefined&&v!==null&&String(v).trim())return String(v).trim();
+  }
+  return '';
+}
+function shopifyAddressData(item){
+  item=item||{};var p=item.payload||{};
+  var sources=[];
+  if(p.shipping_address)sources.push(p.shipping_address);
+  if(p.billing_address)sources.push(p.billing_address);
+  if(p.customer&&p.customer.default_address)sources.push(p.customer.default_address);
+  if(p.default_address)sources.push(p.default_address);
+  if(Array.isArray(p.addresses)&&p.addresses.length)sources.push(p.addresses[0]);
+  if(item.shipping_address)sources.push(item.shipping_address);
+  if(item.billing_address)sources.push(item.billing_address);
+  if(item.shippingAddress)sources.push(item.shippingAddress);
+  if(item.billingAddress)sources.push(item.billingAddress);
+  if(item.default_address)sources.push(item.default_address);
+  if(item.defaultAddress)sources.push(item.defaultAddress);
+  if(item.address)sources.push(item.address);
+  sources.push(item);sources.push(p);
+  var out={address:'',address2:'',city:'',state:'',country:'',zip:''};
+  sources.forEach(function(s){
+    if(!s)return;
+    if(!out.address)out.address=shopifyPickField(s,['address1','address_1','address','street','direccion','line1','line_1']);
+    if(!out.address2)out.address2=shopifyPickField(s,['address2','address_2','apartment','departamento','interior','reference','referencia','line2','line_2']);
+    if(!out.city)out.city=shopifyPickField(s,['city','ciudad','town','locality','district','distrito']);
+    if(!out.state)out.state=shopifyPickField(s,['province','state','estado','region','department','departamento','county']);
+    if(!out.country)out.country=shopifyPickField(s,['country','country_name','countryName','pais']);
+    if(!out.zip)out.zip=shopifyPickField(s,['zip','postal_code','postalCode','postcode','codigoPostal']);
+  });
+  if(out.address2&&out.address2.toLowerCase()===out.address.toLowerCase())out.address2='';
+  return out;
+}
+function shopifyAddressBlock(item, cls){
+  var a=shopifyAddressData(item);cls=cls||'shopify-sub-line';
+  var dir=[a.address,a.address2].filter(Boolean).join(', ');
+  var loc=[];
+  if(a.city)loc.push('Ciudad: '+a.city);
+  if(a.state)loc.push('Estado: '+a.state);
+  if(a.country)loc.push(a.country);
+  if(a.zip)loc.push('CP: '+a.zip);
+  if(!dir&&!loc.length)return '';
+  var html='';
+  if(dir)html+='<div class="'+cls+'" style="white-space:normal;line-height:1.35;margin-top:4px"><strong>📍 Dirección:</strong> '+shopifyHtml(dir)+'</div>';
+  if(loc.length)html+='<div class="'+cls+'" style="white-space:normal;line-height:1.35;margin-top:2px"><strong>Ubicación:</strong> '+shopifyHtml(loc.join(' · '))+'</div>';
+  return html;
+}
+function normalizeShopifyDoc(doc,type){
+  var raw = doc.data ? doc.data() : {};
+  var d = Object.assign({id:doc.id}, raw);
+
+  // Si por algún motivo faltara store, lo inferimos por el ID del documento.
+  if(!d.store && d.id){
+    if(String(d.id).indexOf('vivirstar_') === 0) d.store = 'vivirstar';
+    if(String(d.id).indexOf('zoma_') === 0) d.store = 'zoma';
+  }
+
+  d.total = shopifyMoney(d);
+  d.createdAt = d.receivedAt || d.createdAt || d.createdAtShopify || d.updatedAtShopify || d.completedAt || null;
+
+  var p = d.payload || {};
+  if(!d.customerName){
+    if(p.customer && (p.customer.first_name || p.customer.last_name)){
+      d.customerName = ((p.customer.first_name || '') + ' ' + (p.customer.last_name || '')).trim();
+    }else{
+      d.customerName = d.name || d.email || '';
+    }
+  }
+  if(!d.firstName && p.first_name) d.firstName = p.first_name;
+  if(!d.lastName && p.last_name) d.lastName = p.last_name;
+  if(!d.email) d.email = p.email || p.contact_email || '';
+  if(!d.customerEmail) d.customerEmail = d.email || '';
+  if(!d.phone){
+    d.phone = p.phone ||
+      (p.customer && p.customer.phone) ||
+      (p.shipping_address && p.shipping_address.phone) ||
+      (p.billing_address && p.billing_address.phone) ||
+      '';
+  }
+  if(!d.shopifyId && p.id) d.shopifyId = p.id;
+  if(!d.customerId && p.customer && p.customer.id) d.customerId = p.customer.id;
+  if(!d.customerEmail){
+    d.customerEmail =
+      (p.customer && p.customer.email) ||
+      p.email ||
+      p.contact_email ||
+      d.email ||
+      '';
+  }
+  var enhancedItems = shopifyLineItems(p) || shopifyLineItems(d);
+  if(enhancedItems) d.items = enhancedItems;
+  else if(!d.items) d.items = '';
+  if(!d.orderNumber && p.order_number) d.orderNumber = p.order_number;
+  if(!d.name && p.name) d.name = p.name;
+  if(!d.province){
+    d.province =
+      (p.shipping_address && (p.shipping_address.province || p.shipping_address.city)) ||
+      (p.billing_address && (p.billing_address.province || p.billing_address.city)) ||
+      (p.customer && p.customer.default_address && (p.customer.default_address.province || p.customer.default_address.city)) ||
+      p.province || p.city || '';
+  }
+  if(!d.status && d.cancelledAt) d.status = 'cancelled';
+  return d;
+}
+
+function setShopifyTab(tab){
+  curShopifyTab = tab;
+  document.querySelectorAll('.sht').forEach(function(b){b.classList.remove('on');});
+  var el = document.getElementById('sht-'+tab);
+  if(el) el.classList.add('on');
+  renderShopifyContent();
+}
+
+function renderShopify(){
+  var el=document.getElementById('shopify-content');
+  if(!canUseShopify()){
+    if(el)el.innerHTML = '<div class="empty"><p>Shopify solo disponible para Admin y Super Admin</p></div>';
+    return;
+  }
+  applyShopifyStorePermissionsUI();
+  if(!isSuper() && !getAllowedShopifyStores().length){
+    if(el)el.innerHTML = '<div class="empty"><p>No tienes tienda Shopify asignada.</p><p style="font-size:12px">Pide al Super Admin asignarte VIVIRSTAR o ZOMA en Configuración.</p></div>';
+    return;
+  }
+  loadShopifyData();
+}
+
+function loadShopifyData(){
+  var el = document.getElementById('shopify-content');
+  if(el) el.innerHTML = '<div class="spin" style="margin:40px auto"></div>';
+
+  applyShopifyStorePermissionsUI();
+
+  if(!canUseShopify()){
+    if(el)el.innerHTML='<div class="empty"><p>Shopify solo disponible para Admin y Super Admin</p></div>';
+    return;
+  }
+
+  var allowedStores=getAllowedShopifyStores();
+  if(!isSuper() && !allowedStores.length){
+    if(el)el.innerHTML='<div class="empty"><p>No tienes tienda Shopify asignada.</p><p style="font-size:12px">Pide al Super Admin asignarte VIVIRSTAR o ZOMA.</p></div>';
+    return;
+  }
+
+  // Stop previous listeners
+  _shopifyListeners.forEach(function(u){try{u();}catch(e){}});
+  _shopifyListeners = [];
+  shopifyData._errors = [];
+
+  var loaded = {orders:false, customers:false, abandoned:false, drafts:false};
+  function checkReady(){
+    if(loaded.orders && loaded.customers && loaded.abandoned && loaded.drafts){
+      renderShopifyContent();
+    }
+  }
+
+  function sortShopifyList(list){
+    return list.sort(function(a,b){ return shopifyTime(b) - shopifyTime(a); });
+  }
+
+  function baseShopifyQuery(collectionName, limitNum){
+    var q=db.collection(collectionName);
+    if(!isSuper()){
+      if(allowedStores.length===1) q=q.where('store','==',allowedStores[0]);
+      else q=q.where('store','in',allowedStores.slice(0,10));
+    }
+    return q.limit(limitNum);
+  }
+
+  function listenShopifyCollection(collectionName, targetKey, type, limitNum){
+    return baseShopifyQuery(collectionName,limitNum).onSnapshot(function(s){
+      shopifyData[targetKey] = sortShopifyList(s.docs.map(function(d){
+        return normalizeShopifyDoc(d,type);
+      }));
+      loaded[targetKey] = true;
+      checkReady();
+    }, function(err){
+      console.error('Error leyendo '+collectionName, err);
+      shopifyData[targetKey] = [];
+      shopifyData._errors.push(collectionName+': '+(err && err.message ? err.message : 'Error desconocido'));
+      loaded[targetKey] = true;
+      checkReady();
+    });
+  }
+
+  _shopifyListeners.push(listenShopifyCollection('shopify_orders', 'orders', 'order', 200));
+  _shopifyListeners.push(listenShopifyCollection('shopify_customers', 'customers', 'customer', 300));
+  _shopifyListeners.push(listenShopifyCollection('shopify_abandoned', 'abandoned', 'abandoned', 100));
+  _shopifyListeners.push(listenShopifyCollection('shopify_drafts', 'drafts', 'draft', 100));
+}
+
+function renderShopifyContent(){
+  var el = document.getElementById('shopify-content');
+  if(!el) return;
+  updateShopifySearchUI();
+  updateShopifyCountUI();
+  if(curShopifyTab === 'analytics') el.innerHTML = buildShopifyAnalytics();
+  else if(curShopifyTab === 'orders')   el.innerHTML = buildShopifyOrders();
+  else if(curShopifyTab === 'clientes') el.innerHTML = buildShopifyClientes();
+  else if(curShopifyTab === 'abandoned') el.innerHTML = buildShopifyAbandoned();
+  else if(curShopifyTab === 'drafts')  el.innerHTML = buildShopifyDrafts();
+}
+
+
+function shopifyEffectiveStatus(o){
+  var manual = String((o && o.manualStatus) || '').toLowerCase();
+  if(manual === 'confirmed' || manual === 'confirmado') return 'confirmed';
+  if(manual === 'pending' || manual === 'pendiente') return 'pending';
+  if(manual === 'cancelled' || manual === 'canceled' || manual === 'cancelado') return 'cancelled';
+  if(o && (o.cancelledAt || o.eventType === 'order_cancelled' || o.status === 'cancelled')) return 'cancelled';
+  var fs = String((o && o.financialStatus) || '').toLowerCase();
+  if(fs === 'paid' || fs === 'partially_paid') return 'confirmed';
+  if(fs === 'voided' || fs === 'refunded') return 'cancelled';
+  return 'pending';
+}
+
+function shopifyStatusMeta(o){
+  var st = shopifyEffectiveStatus(o);
+  if(st === 'confirmed') return {key:'confirmed', label:'Confirmado', cls:'sh-confirmed', icon:'✓'};
+  if(st === 'cancelled') return {key:'cancelled', label:'Cancelado', cls:'sh-cancelled', icon:'×'};
+  return {key:'pending', label:'Pendiente', cls:'sh-pending', icon:'!'};
+}
+
+function shopifyHtml(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function shopifyJs(s){
+  return String(s == null ? '' : s).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+}
+
+function shopifyWaIcon(){
+  return '<svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">'
+    +'<path fill="#fff" d="M16.02 3.2c-7.05 0-12.78 5.72-12.78 12.76 0 2.25.59 4.45 1.7 6.38L3.13 29l6.82-1.79a12.7 12.7 0 0 0 6.07 1.55h.01c7.04 0 12.77-5.72 12.77-12.76S23.07 3.2 16.02 3.2Zm0 23.4h-.01c-1.93 0-3.82-.52-5.47-1.5l-.39-.23-4.05 1.06 1.08-3.95-.25-.41a10.55 10.55 0 0 1-1.62-5.61c0-5.88 4.8-10.65 10.7-10.65 2.86 0 5.55 1.11 7.57 3.13a10.6 10.6 0 0 1 3.13 7.56c0 5.88-4.8 10.66-10.69 10.66Zm5.86-7.98c-.32-.16-1.9-.94-2.2-1.04-.3-.11-.52-.16-.74.16-.21.32-.84 1.04-1.03 1.26-.19.21-.38.24-.7.08-.32-.16-1.36-.5-2.59-1.6-.96-.85-1.6-1.91-1.79-2.23-.19-.32-.02-.5.14-.66.14-.14.32-.38.48-.56.16-.19.21-.32.32-.54.11-.21.05-.4-.03-.56-.08-.16-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56h-.63c-.21 0-.56.08-.85.4-.29.32-1.12 1.09-1.12 2.66s1.15 3.09 1.31 3.3c.16.21 2.26 3.45 5.47 4.84.76.33 1.36.53 1.82.67.76.24 1.46.21 2.01.13.61-.09 1.9-.78 2.17-1.53.27-.75.27-1.39.19-1.53-.08-.13-.29-.21-.61-.37Z"/>'
+    +'</svg>';
+}
+
+function shopifyWaLink(url,label){
+  if(!url) return '';
+  return '<a class="shopify-wa" href="'+url+'" target="_blank" rel="noopener" aria-label="'+shopifyHtml(label||'Abrir WhatsApp')+'" title="'+shopifyHtml(label||'Abrir WhatsApp')+'">'+shopifyWaIcon()+'</a>';
+}
+
+async function setShopifyOrderStatus(orderId,status){
+  if(!orderId || !db) return;
+  var localOrder=(shopifyData.orders||[]).find(function(o){return o.id===orderId;});
+  if(!isSuper() && localOrder && !hasShopifyStoreAccess(localOrder.store)){
+    toast('No tienes permiso para modificar esta tienda');
+    return;
+  }
+  try{
+    var label = status === 'confirmed' ? 'confirmado' : status === 'pending' ? 'pendiente' : 'cancelado';
+    await db.collection('shopify_orders').doc(orderId).update({
+      manualStatus: status,
+      manualStatusUpdatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      manualStatusUpdatedBy: (cu && cu.id) || (auth.currentUser && auth.currentUser.uid) || '',
+      manualStatusUpdatedByName: (cu && cu.name) || ''
+    });
+    toast('Pedido marcado como '+label);
+  }catch(e){
+    console.error(e);
+    toast('No se pudo cambiar estado: '+e.message);
   }
 }
 
-// Save new order notification to Firestore so superadmins see it
-async function notifySuperAdminNewOrder(order){
-  try{
-    // Write notification document — superadmin listener picks this up
-    await db.collection('notifications').add({
-      type:'nueva_venta',
-      title:'🛍️ Nueva venta registrada',
-      body:(order.vendedor||'Vendedor')+' · '+order.cliente+' · S/ '+(order.cobrar||0).toFixed(2)+' · '+(order.zona||'Lima'),
-      orderId:order.id,
-      vendedor:order.vendedor||'',
-      cliente:order.cliente||'',
-      cobrar:order.cobrar||0,
-      zona:order.zona||'',
-      createdAt:firebase.firestore.FieldValue.serverTimestamp(),
-      read:false
+// ── ANALYTICS TAB ─────────────────────────────────────────────────────────
+function buildShopifyAnalytics(){
+  var orders    = filterByStore(shopifyData.orders);
+  var _abandoned = filterByStore(shopifyData.abandoned);
+  var _drafts    = filterByStore(shopifyData.drafts);
+  var allDraftsForRecovered = filterByStoreOnly(shopifyData.drafts);
+  var recoveredDrafts = allDraftsForRecovered.filter(shopifyDraftRecoveredInRange);
+  var recoveredRevenue = recoveredDrafts.reduce(function(s,d){return s+shopifyMoney(d);},0);
+  var total = orders.length;
+  var confirmed = orders.filter(function(o){return shopifyEffectiveStatus(o)==='confirmed';}).length;
+  var pending   = orders.filter(function(o){return shopifyEffectiveStatus(o)==='pending';}).length;
+  var cancelled = orders.filter(function(o){return shopifyEffectiveStatus(o)==='cancelled';}).length;
+  var revenue   = orders.filter(function(o){return shopifyEffectiveStatus(o)==='confirmed';})
+                        .reduce(function(s,o){return s+shopifyMoney(o);},0);
+  var avgTicket = confirmed>0?(revenue/confirmed):0;
+  var closePct  = total>0?Math.round(confirmed/total*100):0;
+  var abandoned = _abandoned.length;
+  var drafts    = _drafts.length;
+
+  var now = Date.now();
+  var week = 7*86400000;
+  var revWeek = orders.filter(function(o){
+    var ts = shopifyTime(o);
+    return ts > now-week && shopifyEffectiveStatus(o)==='confirmed';
+  }).reduce(function(s,o){return s+shopifyMoney(o);},0);
+
+  var errorMsg = shopifyData._errors && shopifyData._errors.length
+    ? '<div style="margin-top:16px;padding:14px;background:#fee2e2;border-radius:12px;border:0.5px solid #fca5a5;text-align:left">'
+      +'<p style="font-size:13px;color:#991b1b;margin:0;font-weight:700">Error leyendo Shopify en Firestore</p>'
+      +'<p style="font-size:11px;color:#991b1b;margin:6px 0 0">'+shopifyData._errors.join('<br>')+'</p>'
+    +'</div>' : '';
+
+  var noDataMsg = total===0 && !errorMsg
+    ? '<div style="margin-top:16px;padding:14px;background:var(--bg2);border-radius:12px;border:0.5px solid var(--bo2);text-align:center">'
+      +'<p style="font-size:13px;color:var(--tx2);margin:0">Sin datos de Shopify aún.</p>'
+      +'<p style="font-size:11px;color:var(--tx3);margin:6px 0 0">Los documentos existen, pero esta vista no encontró pedidos para el filtro seleccionado.</p>'
+    +'</div>' : '';
+
+  return '<div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:12px">'+(curShopifyStore==="all"?"📊 Todas las tiendas":curShopifyStore==="vivirstar"?"📊 VIVIRSTAR":"📊 ZOMA")+"</div>"+'<div class="shopify-kpi-grid">'
+    +'<div class="shopify-kpi"><div class="lbl">Total pedidos</div><div class="val">'+total+'</div><div class="sub">Según filtro de fecha</div></div>'
+    +'<div class="shopify-kpi"><div class="lbl">Confirmados</div><div class="val" style="color:#059669">'+confirmed+'</div><div class="sub">Pagados</div></div>'
+    +'<div class="shopify-kpi"><div class="lbl">Por confirmar</div><div class="val" style="color:#d97706">'+pending+'</div><div class="sub">Pendientes</div></div>'
+    +'<div class="shopify-kpi"><div class="lbl">% Cierre</div><div class="val" style="color:var(--accent)">'+closePct+'%</div><div class="sub">Tasa de conversión</div></div>'
+    +'<div class="shopify-kpi"><div class="lbl">Ticket promedio</div><div class="val">S/ '+avgTicket.toFixed(0)+'</div><div class="sub">Por pedido pagado</div></div>'
+    +'<div class="shopify-kpi"><div class="lbl">Ingresos (7 días)</div><div class="val" style="color:var(--accent)">S/ '+revWeek.toFixed(0)+'</div><div class="sub">Esta semana</div></div>'
+    +'<div class="shopify-kpi"><div class="lbl">Preliminares recuperados</div><div class="val" style="color:#059669">'+recoveredDrafts.length+'</div><div class="sub">S/ '+recoveredRevenue.toFixed(0)+' recuperados</div></div>'
+    +'<div class="shopify-kpi"><div class="lbl">Abandonados / preliminares</div><div class="val">'+abandoned+' / '+drafts+'</div><div class="sub">Según fecha filtrada</div></div>'
+  +'</div>'
+  + buildShopifyRevenueBar(orders)
+  + errorMsg
+  + noDataMsg;
+}
+
+function buildShopifyRevenueBar(orders){
+  if(!orders.length) return '';
+  var days = [];
+  for(var i=6;i>=0;i--){
+    var d = new Date(); d.setDate(d.getDate()-i);
+    var label = String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0');
+    var dayStart = new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime();
+    var dayEnd   = dayStart+86400000;
+    var rev = orders.filter(function(o){
+      var ts = shopifyTime(o);
+      return ts>=dayStart&&ts<dayEnd&&shopifyEffectiveStatus(o)==='confirmed';
+    }).reduce(function(s,o){return s+shopifyMoney(o);},0);
+    days.push({label:label,rev:rev});
+  }
+  var max = Math.max.apply(null, days.map(function(d){return d.rev;}))||1;
+  var bars = days.map(function(d){
+    var h = Math.round(d.rev/max*60)||2;
+    return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1">'
+      +'<div style="font-size:9px;color:var(--tx3)">S/'+Math.round(d.rev)+'</div>'
+      +'<div style="height:'+h+'px;background:var(--accent);border-radius:4px 4px 0 0;width:100%;min-height:2px"></div>'
+      +'<div style="font-size:9px;color:var(--tx3)">'+d.label+'</div>'
+    +'</div>';
+  }).join('');
+  return '<div style="background:var(--bg2);border-radius:12px;padding:14px;border:0.5px solid var(--bo2);margin-bottom:16px">'
+    +'<div style="font-size:12px;font-weight:700;color:var(--tx);margin-bottom:12px">Ingresos últimos 7 días</div>'
+    +'<div style="display:flex;align-items:flex-end;gap:4px;height:80px">'+bars+'</div>'
+  +'</div>';
+}
+
+// ── ORDERS TAB ────────────────────────────────────────────────────────────
+function buildShopifyOrders(){
+  var base = filterByStore(shopifyData.orders);
+  var orders=filterShopifySearch(base,'pedidos');
+  if(!base.length) return '<div class="empty"><p>Sin pedidos de Shopify</p><p style="font-size:12px">Cuando Shopify envíe pedidos, aparecerán aquí</p></div>';
+  if(!orders.length) return shopifyEmptySearchMsg('pedidos');
+  return orders.slice(0,50).map(function(o){
+    var meta = shopifyStatusMeta(o);
+    var tel = (o.phone || o.customer_phone || '').replace(/\D/g,'');
+    var cel = tel.length===9?'51'+tel:tel.length===11&&tel.slice(0,2)==='51'?tel:tel;
+    var product = o.items || shopifyLineItems(o.payload) || 'Producto sin detalle';
+    var name = o.customerName || o.customer_name || 'Sin nombre';
+    var orderRef = o.orderNumber || o.name || o.id || '';
+    var firstName = String(name).split(' ')[0] || '';
+    var msg = 'Hola '+firstName+' 👋 Te escribimos de '+(o.store==='zoma'?'ZOMA':'VivirStar')+' para confirmar tu pedido '+(orderRef?('#'+orderRef):'')+'. ¿Nos confirmas tus datos por favor?';
+    var waUrl = cel ? ('https://wa.me/'+cel+'?text='+encodeURIComponent(msg)) : '';
+    var states = [
+      {key:'pending', label:'Pendiente', cls:'pending'},
+      {key:'confirmed', label:'Confirmado', cls:'confirmed'},
+      {key:'cancelled', label:'Cancelado', cls:'cancelled'}
+    ];
+    var statusAction = '<div class="shopify-status-actions">'+states.map(function(s){
+      var active = meta.key === s.key ? ' active' : '';
+      return '<button class="shopify-status-btn '+s.cls+active+'" onclick="event.stopPropagation();setShopifyOrderStatus(\''+shopifyJs(o.id)+'\',\''+s.key+'\')">'+s.label+'</button>';
+    }).join('')+'</div>';
+    var note = o.manualStatusUpdatedAt ? '<div class="shopify-manual-note">↻ Estado actualizado manualmente</div>' : '';
+    return '<div class="shopify-card">'
+      +'<div class="shopify-order-head">'
+        +'<div class="shopify-order-left">'+shopifyCustomerSummaryHTML(o,'sc-sub')+note+'</div>'
+        +'<div class="shopify-order-tags">'
+          +'<span class="shopify-badge '+meta.cls+'"><span>'+meta.icon+'</span>'+meta.label+'</span>'
+          +(o.store?'<span class="shopify-store-pill">'+(o.store==='vivirstar'?'VIVIRSTAR':'ZOMA')+'</span>':'')
+        +'</div>'
+      +'</div>'
+      +'<div class="shopify-order-product" style="white-space:normal">'+shopifyHtml(product)+'</div>'
+      +'<div class="shopify-order-footer">'
+        +'<div class="shopify-order-footer-right" style="display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:auto">'
+          +statusAction+'<div class="shopify-order-money">S/ '+shopifyMoney(o).toFixed(2)+'</div>'+shopifyWaLink(waUrl,'Escribir por WhatsApp')
+        +'</div>'
+      +'</div>'
+    +'</div>';
+  }).join('');
+}
+
+// ── CLIENTES TAB ──────────────────────────────────────────────────────────
+function buildShopifyClientes(){
+  var base = filterByStore(shopifyData.customers);
+  if(!base.length) return '<div class="empty"><p>Sin clientes de Shopify</p></div>';
+  function cleanPhone(v){ return String(v||'').replace(/\D/g,''); }
+  function sameText(a,b){
+    a = String(a||'').trim().toLowerCase();
+    b = String(b||'').trim().toLowerCase();
+    return !!a && !!b && a === b;
+  }
+  function ordersForClient(c){
+    var cid = c.shopifyId || c.customerId || '';
+    var email = c.email || c.customerEmail || '';
+    var phone = cleanPhone(c.phone);
+    return filterByStore(shopifyData.orders).filter(function(o){
+      var oid = o.customerId || (o.payload && o.payload.customer && o.payload.customer.id) || '';
+      var oemail = o.customerEmail || o.email || (o.payload && o.payload.customer && o.payload.customer.email) || '';
+      var ophone = cleanPhone(o.phone || (o.payload && o.payload.customer && o.payload.customer.phone) || '');
+      return (!!cid && !!oid && String(cid) === String(oid)) || sameText(email,oemail) || (!!phone && !!ophone && phone === ophone);
     });
-  }catch(e){console.log('Notif write error:',e);}
+  }
+  var q=shopifyPlain(curShopifySearch||'').trim();
+  var clientes=q?base.filter(function(c){var related=ordersForClient(c).map(function(o){return shopifySearchText(o,'pedido cliente');}).join(' ');return (shopifySearchText(c,'cliente')+' '+related).indexOf(q)!==-1;}):base;
+  if(!clientes.length) return shopifyEmptySearchMsg('clientes');
+  return '<div id="shopify-clients-list">'
+  +clientes.slice(0,80).map(function(c){
+    var tel=cleanPhone(c.phone||'');
+    var cel=tel.length===9?'51'+tel:tel.length===11&&tel.slice(0,2)==='51'?tel:tel;
+    var orders=ordersForClient(c);
+    var spent=orders.filter(function(o){return shopifyEffectiveStatus(o)==='confirmed';}).reduce(function(s,o){return s+shopifyMoney(o);},0);
+    var fullName = ((c.firstName||'')+(c.lastName?' '+c.lastName:'')).trim() || c.customerName || c.name || c.email || 'Cliente sin nombre';
+    var addressBlock = shopifyAddressBlock(c,'sc-sub');
+    return '<div class="shopify-card">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center">'
+        +'<div style="flex:1;min-width:0">'
+          +'<div class="sc-name">'+shopifyHtml(fullName)+'</div>'
+          +(c.email?'<div class="sc-sub">'+shopifyHtml(c.email)+'</div>':'')
+          +(c.phone?'<div class="sc-sub">📱 '+shopifyHtml(c.phone)+'</div>':'')
+          +addressBlock+'<div style="font-size:11px;color:var(--tx3);margin-top:3px">'+orders.length+' pedido'+(orders.length!==1?'s':'')+' · S/ '+spent.toFixed(0)+' gastado</div>'
+        +'</div>'+(cel?shopifyWaLink('https://wa.me/'+cel,'Abrir WhatsApp del cliente'):'')+'</div>'
+    +'</div>';
+  }).join('')+'</div>';
 }
 
-// Listen for new notifications (superadmin/admin only)
-var _notifListener=null;
-var _notifCount=0;
-
-function startNotifListener(){
-  if(_notifListener)return; // already running
-  if(!isAdmin()&&!isSuper())return; // only for admin roles
-  // Listen for unread notifications from the last 24h
-  var since=new Date(Date.now()-86400000);
-  _notifListener=db.collection('notifications')
-    .where('read','==',false)
-    .onSnapshot(function(snap){
-      var newDocs=snap.docChanges().filter(function(ch){return ch.type==='added';});
-      newDocs.forEach(function(ch){
-        var d=ch.doc.data();
-        // Don't notify if it's our own sale
-        if(d.vendedor===cu.name||d.vendedor===cu.email)return;
-        // Show browser notification
-        if(Notification.permission==='granted'){
-          var n=new Notification(d.title||'Nueva venta',{
-            body:d.body||'',
-            icon:'https://cdn.shopify.com/s/files/1/0744/2300/9452/files/vsr.jpg?v=1777677364',
-            badge:'https://cdn.shopify.com/s/files/1/0744/2300/9452/files/vsr.jpg?v=1777677364',
-            tag:'venta-'+ch.doc.id,
-            requireInteraction:false,
-            silent:false
-          });
-          n.onclick=function(){window.focus();n.close();};
-        }
-        // Update badge count
-        _notifCount++;
-        updateNotifBadge();
-        toast('🛍️ '+d.body,'info');
-      });
-    },function(e){console.log('Notif listener:',e);});
-  listeners.push(_notifListener);
+function filterShopifyClients(q){
+  q=q.toLowerCase();
+  var list=document.getElementById('shopify-clients-list');if(!list)return;
+  var cards=list.querySelectorAll('.shopify-card');
+  cards.forEach(function(card){
+    var txt=card.textContent.toLowerCase();
+    card.style.display=txt.includes(q)?'':'none';
+  });
 }
 
-function updateNotifBadge(){
-  var badge=document.getElementById('notif-badge');
-  if(!badge)return;
-  badge.textContent=_notifCount>9?'9+':String(_notifCount);
-  badge.style.display=_notifCount>0?'flex':'none';
+// ── ABANDONED TAB ─────────────────────────────────────────────────────────
+function buildShopifyAbandoned(){
+  var base=filterByStore(shopifyData.abandoned);
+  var abandoned=filterShopifySearch(base,'abandonados');
+  if(!base.length) return '<div class="empty"><p>Sin checkouts abandonados</p><p style="font-size:12px">Aparecerán checkouts no completados de Shopify</p></div>';
+  if(!abandoned.length) return shopifyEmptySearchMsg('abandonados');
+  return abandoned.slice(0,50).map(function(a){
+    var tel=(a.phone||a.shippingPhone||'').replace(/\D/g,'');
+    var cel=tel.length===9?'51'+tel:tel.length===11&&tel.slice(0,2)==='51'?tel:tel;
+    var fecha=shopifyDateTime(a);
+    var addressBlock=shopifyAddressBlock(a,'sc-sub');
+    var product=a.items||shopifyLineItems(a.payload)||'';
+    var rec=shopifyAbandonedRecovered(a);
+    var msg='Hola '+(a.firstName||a.customerName||'')+' 👋 Notamos que dejaste artículos en tu carrito. ¿Te podemos ayudar a completar tu compra? 🛍️';
+    var waUrl=cel?'https://wa.me/'+cel+'?text='+encodeURIComponent(msg):'';
+    return '<div class="shopify-card">'
+      +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px">'
+        +'<div style="min-width:0;flex:1">'
+          +'<div class="sc-name">'+shopifyHtml(a.firstName||a.customerName||a.email||'Visitante')+(a.lastName?' '+shopifyHtml(a.lastName):'')+'</div>'
+          +(a.email?'<div class="sc-sub">'+shopifyHtml(a.email)+'</div>':'')
+          +(a.phone?'<div class="sc-sub">📱 '+shopifyHtml(a.phone)+'</div>':'')
+          +addressBlock+'<div style="font-size:11px;color:var(--tx3)">'+shopifyHtml(fecha)+'</div>'
+          +(product?'<div class="shopify-order-product" style="font-size:12px;margin-top:7px;white-space:normal">'+shopifyHtml(product)+'</div>':'')
+          +shopifyAbandonedRecoveredActions(a)
+        +'</div><span class="shopify-badge '+(rec?'sh-confirmed':'sh-abandoned')+'">'+(rec?'Recuperado':'Abandonado')+'</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center">'
+        +'<div style="font-size:15px;font-weight:700;color:'+(rec?'#059669':'#dc2626')+'">S/ '+shopifyMoney(a).toFixed(2)+'</div>'
+        +shopifyWaButtonOrDisabled(waUrl,'Recuperar venta')
+      +'</div></div>';
+  }).join('');
 }
 
-function clearNotifBadge(){
-  _notifCount=0;
-  updateNotifBadge();
-  // Mark all as read
-  db.collection('notifications').where('read','==',false).get().then(function(snap){
-    var batch=db.batch();
-    snap.docs.forEach(function(d){batch.update(d.ref,{read:true});});
-    return batch.commit();
-  }).catch(function(e){console.log('mark read:',e);});
+// ── DRAFT ORDERS TAB ──────────────────────────────────────────────────────
+function buildShopifyDrafts(){
+  var base=filterByStore(shopifyData.drafts);
+  var drafts=filterShopifySearch(base,'preliminares');
+  if(!base.length) return '<div class="empty"><p>Sin pedidos preliminares</p><p style="font-size:12px">Los draft orders de Shopify aparecerán aquí</p></div>';
+  if(!drafts.length) return shopifyEmptySearchMsg('preliminares');
+  return drafts.slice(0,50).map(function(d){
+    var tel=(d.phone||d.shippingPhone||'').replace(/\D/g,'');
+    var cel=tel.length===9?'51'+tel:tel.length===11&&tel.slice(0,2)==='51'?tel:tel;
+    var product=d.items||shopifyLineItems(d.payload)||'';
+    var rec=shopifyDraftRecovered(d);
+    return '<div class="shopify-card">'
+      +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;gap:8px">'
+        +'<div style="flex:1;min-width:0">'+shopifyCustomerSummaryHTML(d,'sc-sub')+'</div>'
+        +'<span class="shopify-badge '+(rec?'sh-confirmed':'sh-draft')+'">'+(rec?'Compró':'Preliminar')+'</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;gap:8px">'
+        +'<div style="min-width:0;flex:1"><div style="font-size:15px;font-weight:700;color:'+(rec?'#059669':'#6366f1')+'">S/ '+shopifyMoney(d).toFixed(2)+'</div>'
+          +(product?'<div class="shopify-order-product" style="font-size:12px;color:var(--tx3);white-space:normal">'+shopifyHtml(product)+'</div>':'')+shopifyDraftRecoveredActions(d)+'</div>'
+        +(cel?'<a href="https://wa.me/'+cel+'" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;background:#25D366;border-radius:50%;text-decoration:none">'+shopifyWaIcon()+'</a>':'')
+      +'</div></div>';
+  }).join('');
 }
 
 
@@ -2813,6 +4991,203 @@ function clearNotifBadge(){
     <button id="btn-nota-wa" onclick="confirmSendNota()" style="width:100%;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:0.3px">GENERAR NOTA</button>
   </div>
 </div>
+
+
+<div class="ov" id="ov-shopify-reminder" style="z-index:360">
+  <div class="sheet">
+    <button onclick="closeShopifyReminder()" style="position:absolute;top:12px;right:14px;background:none;border:none;font-size:22px;color:var(--tx3);cursor:pointer;line-height:1;padding:0;z-index:1">✕</button>
+    <div class="sh"></div>
+    <h3 id="sr-title">Agregar recordatorio</h3>
+    <div id="sr-summary" style="background:var(--bg2);border:0.5px solid var(--bo);border-radius:12px;padding:12px;margin-bottom:12px;font-size:13px;line-height:1.45"></div>
+    <div class="fld" style="margin-bottom:10px"><label>Cuándo llamar</label><select id="sr-preset" onchange="toggleReminderCustom()"><option value="2h">En 2 horas</option><option value="tomorrow">Mañana 9:00 a.m.</option><option value="custom">Elegir fecha y hora</option></select></div>
+    <div class="fld" style="margin-bottom:10px"><input id="sr-custom" type="datetime-local" style="display:none"></div>
+    <div class="fld" style="margin-bottom:12px"><label>Nota interna</label><textarea id="sr-note" rows="3" placeholder="Ej: Cliente pidió que lo llamen luego..."></textarea></div>
+    <button class="btn" onclick="saveShopifyReminder()">Guardar recordatorio</button>
+    <button class="btn gray" onclick="closeShopifyReminder()" style="margin-top:8px">Cancelar</button>
+  </div>
+</div>
+
+<script>
+// ═══ VIVIRSTAR SAFE UPDATE · Recordatorios / duplicados / filtros extra ═══
+(function(){
+  window.ventasZonaFilt = window.ventasZonaFilt || 'all';
+
+  window.vivirstarZoneBadge = function(zona){
+    var z=String(zona||'').toLowerCase();
+    var isLima=z==='lima';
+    var bg=isLima?'#ccfbf1':'#ede9fe';
+    var tx=isLima?'#0f766e':'#6d28d9';
+    var label=isLima?'Lima':'Provincia';
+    return '<span style="display:inline-flex;align-items:center;padding:3px 8px;border-radius:999px;background:'+bg+';color:'+tx+';font-size:10.5px;font-weight:800;white-space:nowrap">'+label+'</span>';
+  };
+
+  window.setVentasZonaFilt = function(z, el){
+    window.ventasZonaFilt = (window.ventasZonaFilt===z && z!=='all') ? 'all' : z;
+    document.querySelectorAll('#ventas-zona-filter .fbtn, #ventas-zona-filter button, .ventas-zona-filter button').forEach(function(b){b.classList.remove('on');b.style.opacity='0.65';});
+    var activeId='fz-'+(window.ventasZonaFilt==='Provincia'?'prov':String(window.ventasZonaFilt).toLowerCase());
+    var active=document.getElementById(activeId);
+    if(active){active.classList.add('on');active.style.opacity='1';}
+    if(typeof renderVentas==='function')renderVentas();
+  };
+
+  window.shopifyIsDuplicate=function(x){x=x||{};var st=String(x.duplicateStatus||x.manualDuplicateStatus||'').toLowerCase();return x.isDuplicate===true||x.duplicate===true||st==='duplicate'||st==='duplicado';};
+  window.shopifyDuplicateBadge=function(x){return shopifyIsDuplicate(x)?'<span class="shopify-badge sh-cancelled" style="margin-left:4px">Duplicado</span>':'';};
+  window.shopifySourceCollection=function(type){return type==='order'?'shopify_orders':type==='abandoned'?'shopify_abandoned':type==='draft'?'shopify_drafts':type==='customer'?'shopify_customers':'';};
+  window.shopifyFindByType=function(type,id){
+    var list= type==='order'?shopifyData.orders: type==='abandoned'?shopifyData.abandoned: type==='draft'?shopifyData.drafts: type==='customer'?shopifyData.customers: [];
+    return (list||[]).find(function(x){return x.id===id;})||null;
+  };
+  window.shopifyFriendlySource=function(type){return {order:'Pedido',abandoned:'Abandonado',draft:'Preliminar',customer:'Cliente'}[type]||'Shopify';};
+  window.shopifyCustomerNameSafe=function(x){x=x||{};return x.customerName||x.customer_name||x.firstName||x.name||x.email||'Cliente';};
+
+  window.setShopifyDuplicate=async function(type,id,dup){
+    if(!id||!db)return;
+    var item=shopifyFindByType(type,id)||{};
+    if(!isSuper()&&item.store&&!hasShopifyStoreAccess(item.store)){toast('No tienes permiso para esta tienda');return;}
+    var col=shopifySourceCollection(type);if(!col){toast('Colección no válida');return;}
+    try{
+      var data={
+        isDuplicate:!!dup,
+        duplicateStatus:dup?'duplicate':'valid',
+        duplicateUpdatedAt:firebase.firestore.FieldValue.serverTimestamp(),
+        duplicateUpdatedBy:(cu&&cu.id)||(auth.currentUser&&auth.currentUser.uid)||'',
+        duplicateUpdatedByName:(cu&&cu.name)||''
+      };
+      if(dup){
+        data.duplicateMarkedAt=firebase.firestore.FieldValue.serverTimestamp();
+        data.duplicateMarkedBy=(cu&&cu.id)||(auth.currentUser&&auth.currentUser.uid)||'';
+        data.duplicateMarkedByName=(cu&&cu.name)||'';
+      }else{
+        data.duplicateClearedAt=firebase.firestore.FieldValue.serverTimestamp();
+        data.duplicateClearedBy=(cu&&cu.id)||(auth.currentUser&&auth.currentUser.uid)||'';
+        data.duplicateClearedByName=(cu&&cu.name)||'';
+      }
+      await db.collection(col).doc(id).update(data);
+      toast(dup?'Marcado como pedido duplicado':'Marcado como registro válido');
+    }catch(e){console.error(e);toast('No se pudo actualizar duplicado: '+e.message);}
+  };
+
+  window.shopifyDuplicateAction=function(type,item){
+    var dup=shopifyIsDuplicate(item);
+    return '<button class="shopify-status-btn duplicate'+(dup?' active':'')+'" onclick="event.stopPropagation();setShopifyDuplicate(\''+shopifyJs(type)+'\',\''+shopifyJs(item.id)+'\','+(!dup)+')">'+(dup?'Quitar duplicado':'Pedido duplicado')+'</button>';
+  };
+
+  window.shopifyReminderAction=function(type,item){
+    return '<button class="shopify-status-btn reminder" onclick="event.stopPropagation();openShopifyReminder(\''+shopifyJs(type)+'\',\''+shopifyJs(item.id)+'\')">⏰ Recordatorio</button>';
+  };
+
+  window.openShopifyReminder=function(type,id){
+    var item=shopifyFindByType(type,id);if(!item){toast('No se encontró el cliente');return;}
+    if(!isSuper()&&item.store&&!hasShopifyStoreAccess(item.store)){toast('No tienes permiso para esta tienda');return;}
+    window._shopifyReminderCurrent={type:type,id:id,item:item};
+    var name=shopifyCustomerNameSafe(item), phone=item.phone||item.customer_phone||item.shippingPhone||'';
+    var title=document.getElementById('sr-title');if(title)title.textContent='Recordatorio · '+shopifyFriendlySource(type);
+    var sum=document.getElementById('sr-summary');
+    if(sum)sum.innerHTML='<strong>'+shopifyHtml(name)+'</strong><br><span style="color:var(--tx2)">'+shopifyHtml(phone||item.email||'Sin contacto')+'</span><br><span style="color:var(--tx3)">'+shopifyHtml(shopifyStoreDisplayName(item.store||''))+' · S/ '+shopifyMoney(item).toFixed(2)+'</span>';
+    var note=document.getElementById('sr-note');if(note)note.value='';
+    var preset=document.getElementById('sr-preset');if(preset)preset.value='2h';
+    var custom=document.getElementById('sr-custom');if(custom){custom.style.display='none';custom.value='';}
+    var ov=document.getElementById('ov-shopify-reminder');if(ov)ov.classList.add('open');
+  };
+
+  window.toggleReminderCustom=function(){var p=document.getElementById('sr-preset'),c=document.getElementById('sr-custom');if(c)c.style.display=(p&&p.value==='custom')?'block':'none';};
+
+  window.closeShopifyReminder=function(){var ov=document.getElementById('ov-shopify-reminder');if(ov)ov.classList.remove('open');};
+
+  window.saveShopifyReminder=async function(){
+    var cur=window._shopifyReminderCurrent;if(!cur||!cur.item){toast('Sin recordatorio activo');return;}
+    var item=cur.item,preset=(document.getElementById('sr-preset')||{}).value||'2h',note=(document.getElementById('sr-note')||{}).value||'';
+    var remindAt=new Date();
+    if(preset==='2h')remindAt=new Date(Date.now()+2*60*60*1000);
+    else if(preset==='tomorrow'){remindAt=new Date();remindAt.setDate(remindAt.getDate()+1);remindAt.setHours(9,0,0,0);}
+    else if(preset==='custom'){
+      var v=(document.getElementById('sr-custom')||{}).value;if(!v){toast('Elige fecha y hora');return;}
+      remindAt=new Date(v);if(isNaN(remindAt.getTime())){toast('Fecha inválida');return;}
+    }
+    try{
+      await db.collection('shopify_reminders').add({
+        store:item.store||'',
+        sourceType:cur.type,
+        sourceCollection:shopifySourceCollection(cur.type),
+        sourceId:cur.id,
+        customerName:shopifyCustomerNameSafe(item),
+        phone:item.phone||item.customer_phone||item.shippingPhone||'',
+        email:item.email||item.customerEmail||'',
+        orderRef:item.orderNumber||item.name||item.id||'',
+        product:item.items||shopifyLineItems(item.payload)||'',
+        total:shopifyMoney(item),
+        note:String(note||'').trim(),
+        remindAt:firebase.firestore.Timestamp.fromDate(remindAt),
+        reminderStatus:'pending',
+        status:'pending',
+        notified:false,
+        createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+        createdBy:(cu&&cu.id)||(auth.currentUser&&auth.currentUser.uid)||'',
+        createdByName:(cu&&cu.name)||''
+      });
+      toast('Recordatorio guardado');
+      closeShopifyReminder();
+    }catch(e){console.error(e);toast('No se pudo guardar recordatorio: '+e.message);}
+  };
+})();
+</script>
+
+<script>
+(function(){
+  function injectVentasZoneMobile(){
+    var pend=document.getElementById('f-pend');if(!pend)return;
+    var bar=pend.parentElement;if(!bar||document.getElementById('fz-lima'))return;
+    var all=document.createElement('button');all.id='f-all';all.textContent='Todos';all.setAttribute('onclick','setFilt(\'all\')');all.style.cssText='cursor:pointer;font-weight:700;background:var(--accent);color:var(--accent-tx);border:none;padding:6px 14px;border-radius:20px;font-size:12px;font-family:var(--fs);flex-shrink:0';bar.insertBefore(all,pend);
+    var sep=document.createElement('span');sep.style.cssText='width:1px;height:22px;background:var(--bo2);display:inline-block;flex-shrink:0;margin:0 2px';bar.appendChild(sep);
+    var zall=document.createElement('button');zall.id='fz-all';zall.textContent='Todas zonas';zall.setAttribute('onclick','setVentasZonaFilt(\'all\',this)');zall.className='on';zall.style.cssText='cursor:pointer;font-weight:700;background:var(--accent);color:#fff;border:none;padding:6px 12px;border-radius:20px;font-size:12px;font-family:var(--fs);flex-shrink:0';bar.appendChild(zall);
+    var zl=document.createElement('button');zl.id='fz-lima';zl.textContent='Lima';zl.setAttribute('onclick','setVentasZonaFilt(\'Lima\',this)');zl.style.cssText='cursor:pointer;font-weight:700;background:#ccfbf1;color:#0f766e;border:none;padding:6px 12px;border-radius:20px;font-size:12px;font-family:var(--fs);flex-shrink:0;opacity:.65';bar.appendChild(zl);
+    var zp=document.createElement('button');zp.id='fz-prov';zp.textContent='Provincia';zp.setAttribute('onclick','setVentasZonaFilt(\'Provincia\',this)');zp.style.cssText='cursor:pointer;font-weight:700;background:#ede9fe;color:#6d28d9;border:none;padding:6px 12px;border-radius:20px;font-size:12px;font-family:var(--fs);flex-shrink:0;opacity:.65';bar.appendChild(zp);
+  }
+  window.setFilt=function(f){
+    curFilt=(curFilt===f&&f!=='all')?'all':f;
+    const map={all:'f-all',pendiente:'f-pend',enviado:'f-env',entregado:'f-ent',anulado:'f-anul'};
+    Object.entries(map).forEach(function(pair){var key=pair[0],id=pair[1],b=$(id);if(!b)return;var c=FILT_COLORS[key]||FILT_COLORS.all;b.style.background=c.bg;b.style.color=c.tx;b.style.opacity=key===curFilt?'1':'0.55';b.style.fontWeight=key===curFilt?'700':'600';});
+    renderVentas();
+  };
+  window.renderVentas=function(){
+    injectVentasZoneMobile();
+    const el=$('ventas-list');
+    $('ventas-av').textContent=cu?.ini||'?';
+    $('ventas-title').textContent=isAdmin()?'Todas las ventas':'Mis ventas';
+    $('ventas-sub').textContent=cu?.name||'';
+    const {start:vStart,end:vEnd}=getVentasDateRange();
+    const hasSearch=String(ventasSearch||'').trim().length>0;
+    const filtered=orders.filter(o=>hasSearch?true:(curFilt==='all'||o.estado===curFilt)).filter(o=>hasSearch?true:(ventasDatePeriod==='all'||(o.fv>=vStart&&o.fv<=vEnd))).filter(o=>hasSearch?true:(!window.ventasZonaFilt||window.ventasZonaFilt==='all'||String(o.zona||'').toLowerCase()===String(window.ventasZonaFilt).toLowerCase())).filter(o=>orderMatchesVentasSearch(o,ventasSearch)).sort((a,b)=>b.ts-a.ts);
+    checkCelebrationFromVentas();
+    if(!filtered.length){el.innerHTML='<div class="empty"><div style="font-size:32px;margin-bottom:8px">📋</div><p>'+(ventasSearch?'Sin resultados para tu búsqueda':'Sin ventas registradas')+'</p></div>';return;}
+    el.innerHTML=filtered.map(function(o){return '<div class="card" onclick="openDetalle(\''+o.id+'\')" style="cursor:pointer"><div class="row"><div style="flex:1;min-width:0"><div class="card-title">'+(o.cliente||'—')+'</div><div class="card-sub" style="display:flex;align-items:center;gap:6px">📱 '+(o.celular||'—')+(o.celular?'<a href="https://wa.me/51'+o.celular.replace(/\D/g,'')+'" target="_blank" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:#25D366;border-radius:50%;text-decoration:none;flex-shrink:0"><svg viewBox="0 0 24 24" width="12" height="12" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg></a>':'')+'<button data-oid="'+o.id+'" onclick="event.stopPropagation();openNotaModal(this.dataset.oid)" style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:var(--accent);border-radius:50%;border:none;cursor:pointer;flex-shrink:0;margin-left:2px" title="Enviar nota">📄</button></div></div>'+statusBadge(o.estado||'pendiente')+'</div><div class="divider"></div><div class="tags"><span class="tag">'+(o.producto||'—')+'</span><span class="tag">'+vivirstarZoneBadge(o.zona)+' '+(o.ciudad||'—')+'</span><span class="tag">'+fmtC(o.cobrar||0)+'</span></div><div class="row" style="margin-top:8px"><span style="font-size:11px;color:var(--tx3)">'+(o.fechaVenta?formatFecha(o.fechaVenta)+' · ':'')+' '+ago(o.ts)+'</span>'+(isAdmin()?'<span style="font-size:11px;color:var(--accent);font-weight:600">'+(o.vendedor||'')+'</span>':'')+'</div></div>';}).join('');
+  };
+
+  window.buildShopifyAnalytics=function(){
+    var orders=filterByStore(shopifyData.orders),abandoned=filterByStore(shopifyData.abandoned),drafts=filterByStore(shopifyData.drafts);
+    var allDraftsForRecovered=filterByStoreOnly(shopifyData.drafts),recoveredDrafts=allDraftsForRecovered.filter(shopifyDraftRecoveredInRange),dup=orders.concat(abandoned).concat(drafts).filter(shopifyIsDuplicate).length,validOrders=orders.filter(function(o){return !shopifyIsDuplicate(o);});
+    var recoveredRevenue=recoveredDrafts.filter(function(d){return !shopifyIsDuplicate(d);}).reduce(function(s,d){return s+shopifyMoney(d);},0),total=validOrders.length,confirmed=validOrders.filter(function(o){return shopifyEffectiveStatus(o)==='confirmed';}).length,pending=validOrders.filter(function(o){return shopifyEffectiveStatus(o)==='pending';}).length,revenue=validOrders.filter(function(o){return shopifyEffectiveStatus(o)==='confirmed';}).reduce(function(s,o){return s+shopifyMoney(o);},0),avgTicket=confirmed>0?revenue/confirmed:0,closePct=total>0?Math.round(confirmed/total*100):0;
+    return '<div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:12px">'+(curShopifyStore==='all'?'📊 Todas las tiendas':curShopifyStore==='vivirstar'?'📊 VIVIRSTAR':'📊 ZOMA')+'</div><div class="shopify-kpi-grid"><div class="shopify-kpi"><div class="lbl">Total pedidos válidos</div><div class="val">'+total+'</div><div class="sub">No incluye duplicados</div></div><div class="shopify-kpi"><div class="lbl">Confirmados</div><div class="val" style="color:#059669">'+confirmed+'</div><div class="sub">Pagados</div></div><div class="shopify-kpi"><div class="lbl">Por confirmar</div><div class="val" style="color:#d97706">'+pending+'</div><div class="sub">Pendientes</div></div><div class="shopify-kpi"><div class="lbl">% Cierre</div><div class="val" style="color:var(--accent)">'+closePct+'%</div><div class="sub">Confirmados/válidos</div></div><div class="shopify-kpi"><div class="lbl">Ticket promedio</div><div class="val">S/ '+avgTicket.toFixed(0)+'</div><div class="sub">Por pedido pagado</div></div><div class="shopify-kpi"><div class="lbl">Preliminares recuperados</div><div class="val" style="color:#059669">'+recoveredDrafts.filter(function(d){return !shopifyIsDuplicate(d);}).length+'</div><div class="sub">S/ '+recoveredRevenue.toFixed(0)+' recuperados</div></div><div class="shopify-kpi"><div class="lbl">Duplicados</div><div class="val" style="color:#dc2626">'+dup+'</div><div class="sub">Marcados manualmente</div></div><div class="shopify-kpi"><div class="lbl">Abandonados / preliminares</div><div class="val">'+abandoned.length+' / '+drafts.length+'</div><div class="sub">Según fecha</div></div></div>'+buildShopifyRevenueBar(validOrders);
+  };
+
+  window.buildShopifyOrders=function(){
+    var base=filterByStore(shopifyData.orders),orders=filterShopifySearch(base,'pedidos');if(!base.length)return '<div class="empty"><p>Sin pedidos de Shopify</p></div>';if(!orders.length)return shopifyEmptySearchMsg('pedidos');
+    return orders.slice(0,50).map(function(o){var meta=shopifyStatusMeta(o),tel=(o.phone||o.customer_phone||'').replace(/\D/g,''),cel=tel.length===9?'51'+tel:tel.length===11&&tel.slice(0,2)==='51'?tel:tel,product=o.items||shopifyLineItems(o.payload)||'Producto sin detalle',name=o.customerName||o.customer_name||'Sin nombre',orderRef=o.orderNumber||o.name||o.id||'',firstName=String(name).split(' ')[0]||'',msg='Hola '+firstName+' 👋 Te escribimos de '+(o.store==='zoma'?'ZOMA':'VivirStar')+' para confirmar tu pedido '+(orderRef?('#'+orderRef):'')+'. ¿Nos confirmas tus datos por favor?',waUrl=cel?('https://wa.me/'+cel+'?text='+encodeURIComponent(msg)):'';var states=[{key:'pending',label:'Pendiente',cls:'pending'},{key:'confirmed',label:'Confirmado',cls:'confirmed'},{key:'cancelled',label:'Cancelado',cls:'cancelled'}];var statusAction='<div class="shopify-status-actions">'+states.map(function(s){var active=meta.key===s.key?' active':'';return '<button class="shopify-status-btn '+s.cls+active+'" onclick="event.stopPropagation();setShopifyOrderStatus(\''+shopifyJs(o.id)+'\',\''+s.key+'\')">'+s.label+'</button>';}).join('')+shopifyDuplicateAction('order',o)+shopifyReminderAction('order',o)+'</div>';var note=o.manualStatusUpdatedAt?'<div class="shopify-manual-note">↻ Estado actualizado manualmente</div>':'';return '<div class="shopify-card"><div class="shopify-order-head"><div class="shopify-order-left">'+shopifyCustomerSummaryHTML(o,'sc-sub')+note+'</div><div class="shopify-order-tags"><span class="shopify-badge '+meta.cls+'"><span>'+meta.icon+'</span>'+meta.label+'</span>'+shopifyDuplicateBadge(o)+(o.store?'<span class="shopify-store-pill">'+(o.store==='vivirstar'?'VIVIRSTAR':'ZOMA')+'</span>':'')+'</div></div><div class="shopify-order-product" style="white-space:normal">'+shopifyHtml(product)+'</div><div class="shopify-order-footer"><div class="shopify-order-footer-right" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex-shrink:0;margin-left:auto">'+statusAction+'<div class="shopify-order-money">S/ '+shopifyMoney(o).toFixed(2)+'</div>'+shopifyWaLink(waUrl,'Escribir por WhatsApp')+'</div></div></div>';}).join('');
+  };
+
+  window.buildShopifyClientes=function(){
+    var base=filterByStore(shopifyData.customers);if(!base.length)return '<div class="empty"><p>Sin clientes de Shopify</p></div>';function cleanPhone(v){return String(v||'').replace(/\D/g,'');}function sameText(a,b){a=String(a||'').trim().toLowerCase();b=String(b||'').trim().toLowerCase();return !!a&&!!b&&a===b;}function ordersForClient(c){var cid=c.shopifyId||c.customerId||'',email=c.email||c.customerEmail||'',phone=cleanPhone(c.phone);return filterByStore(shopifyData.orders).filter(function(o){var oid=o.customerId||(o.payload&&o.payload.customer&&o.payload.customer.id)||'',oemail=o.customerEmail||o.email||(o.payload&&o.payload.customer&&o.payload.customer.email)||'',ophone=cleanPhone(o.phone||(o.payload&&o.payload.customer&&o.payload.customer.phone)||'');return (!!cid&&!!oid&&String(cid)===String(oid))||sameText(email,oemail)||(!!phone&&!!ophone&&phone===ophone);});}var q=shopifyPlain(curShopifySearch||'').trim();var clientes=q?base.filter(function(c){var related=ordersForClient(c).map(function(o){return shopifySearchText(o,'pedido cliente');}).join(' ');return (shopifySearchText(c,'cliente')+' '+related).indexOf(q)!==-1;}):base;if(!clientes.length)return shopifyEmptySearchMsg('clientes');return '<div id="shopify-clients-list">'+clientes.slice(0,80).map(function(c){var tel=cleanPhone(c.phone||''),cel=tel.length===9?'51'+tel:tel.length===11&&tel.slice(0,2)==='51'?tel:tel,ords=ordersForClient(c),spent=ords.filter(function(o){return shopifyEffectiveStatus(o)==='confirmed'&&!shopifyIsDuplicate(o);}).reduce(function(s,o){return s+shopifyMoney(o);},0),fullName=((c.firstName||'')+(c.lastName?' '+c.lastName:'')).trim()||c.customerName||c.name||c.email||'Cliente sin nombre',addressBlock=shopifyAddressBlock(c,'sc-sub');return '<div class="shopify-card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="flex:1;min-width:0"><div class="sc-name">'+shopifyHtml(fullName)+'</div>'+(c.email?'<div class="sc-sub">'+shopifyHtml(c.email)+'</div>':'')+(c.phone?'<div class="sc-sub">📱 '+shopifyHtml(c.phone)+'</div>':'')+addressBlock+'<div style="font-size:11px;color:var(--tx3);margin-top:3px">'+ords.length+' pedido'+(ords.length!==1?'s':'')+' · S/ '+spent.toFixed(0)+' gastado</div></div><div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;justify-content:flex-end">'+(cel?shopifyWaLink('https://wa.me/'+cel,'Abrir WhatsApp del cliente'):'')+shopifyReminderAction('customer',c)+'</div></div></div>';}).join('')+'</div>';
+  };
+
+  window.buildShopifyAbandoned=function(){
+    var base=filterByStore(shopifyData.abandoned),abandoned=filterShopifySearch(base,'abandonados');if(!base.length)return '<div class="empty"><p>Sin checkouts abandonados</p></div>';if(!abandoned.length)return shopifyEmptySearchMsg('abandonados');return abandoned.slice(0,50).map(function(a){var tel=(a.phone||a.shippingPhone||'').replace(/\D/g,''),cel=tel.length===9?'51'+tel:tel.length===11&&tel.slice(0,2)==='51'?tel:tel,fecha=shopifyDateTime(a),addressBlock=shopifyAddressBlock(a,'sc-sub'),product=a.items||shopifyLineItems(a.payload)||'',rec=shopifyAbandonedRecovered(a),msg='Hola '+(a.firstName||a.customerName||'')+' 👋 Notamos que dejaste artículos en tu carrito. ¿Te podemos ayudar a completar tu compra? 🛍️',waUrl=cel?'https://wa.me/'+cel+'?text='+encodeURIComponent(msg):'';return '<div class="shopify-card"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px"><div style="min-width:0;flex:1"><div class="sc-name">'+shopifyHtml(a.firstName||a.customerName||a.email||'Visitante')+(a.lastName?' '+shopifyHtml(a.lastName):'')+'</div>'+(a.email?'<div class="sc-sub">'+shopifyHtml(a.email)+'</div>':'')+(a.phone?'<div class="sc-sub">📱 '+shopifyHtml(a.phone)+'</div>':'')+addressBlock+'<div style="font-size:11px;color:var(--tx3)">'+shopifyHtml(fecha)+'</div>'+(product?'<div class="shopify-order-product" style="font-size:12px;margin-top:7px;white-space:normal">'+shopifyHtml(product)+'</div>':'')+'<div class="shopify-status-actions" style="margin-top:9px">'+shopifyAbandonedRecoveredActions(a).replace('<div class="shopify-status-actions" style="margin-top:9px">','').replace('</div>','')+shopifyDuplicateAction('abandoned',a)+shopifyReminderAction('abandoned',a)+'</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px"><span class="shopify-badge '+(rec?'sh-confirmed':'sh-abandoned')+'">'+(rec?'Recuperado':'Abandonado')+'</span>'+shopifyDuplicateBadge(a)+'</div></div><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:15px;font-weight:700;color:'+(rec?'#059669':'#dc2626')+'">S/ '+shopifyMoney(a).toFixed(2)+'</div>'+shopifyWaButtonOrDisabled(waUrl,'Recuperar venta')+'</div></div>';}).join('');
+  };
+  window.buildShopifyDrafts=function(){
+    var base=filterByStore(shopifyData.drafts),drafts=filterShopifySearch(base,'preliminares');if(!base.length)return '<div class="empty"><p>Sin pedidos preliminares</p></div>';if(!drafts.length)return shopifyEmptySearchMsg('preliminares');return drafts.slice(0,50).map(function(d){var tel=(d.phone||d.shippingPhone||'').replace(/\D/g,''),cel=tel.length===9?'51'+tel:tel.length===11&&tel.slice(0,2)==='51'?tel:tel,product=d.items||shopifyLineItems(d.payload)||'',rec=shopifyDraftRecovered(d);return '<div class="shopify-card"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;gap:8px"><div style="flex:1;min-width:0">'+shopifyCustomerSummaryHTML(d,'sc-sub')+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px"><span class="shopify-badge '+(rec?'sh-confirmed':'sh-draft')+'">'+(rec?'Compró':'Preliminar')+'</span>'+shopifyDuplicateBadge(d)+'</div></div><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="min-width:0;flex:1"><div style="font-size:15px;font-weight:700;color:'+(rec?'#059669':'#6366f1')+'">S/ '+shopifyMoney(d).toFixed(2)+'</div>'+(product?'<div class="shopify-order-product" style="font-size:12px;color:var(--tx3);white-space:normal">'+shopifyHtml(product)+'</div>':'')+'<div class="shopify-status-actions" style="margin-top:9px">'+shopifyDraftRecoveredActions(d).replace('<div class="shopify-status-actions" style="margin-top:9px">','').replace('</div>','')+shopifyDuplicateAction('draft',d)+shopifyReminderAction('draft',d)+'</div></div>'+(cel?shopifyWaLink('https://wa.me/'+cel,'Escribir por WhatsApp'):'')+'</div></div>';}).join('');
+  };
+  setTimeout(injectVentasZoneMobile,80);
+})();
+</script>
 
 </body>
 </html>
