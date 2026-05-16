@@ -654,6 +654,12 @@ details.bizm-week.bizm-week-details-mobile[open]{border-color:rgba(45,122,79,.35
 
 .login-logo{box-shadow:0 10px 24px rgba(9,94,54,.12);background:#fff!important}
 
+.push-mini-btn{padding:6px 9px;border-radius:10px;background:#ecfdf5;color:#047857;border:0.5px solid #a7f3d0;font-size:14px;font-weight:800;cursor:pointer;font-family:var(--fs);line-height:1;min-width:36px}
+.push-mini-btn.ok{background:#dcfce7;color:#166534;border-color:#86efac}
+.push-mini-btn.warn{background:#fff7ed;color:#c2410c;border-color:#fed7aa}
+.push-mini-btn.err{background:#fee2e2;color:#991b1b;border-color:#fecaca}
+.push-config-card{background:linear-gradient(180deg,#ecfdf5,#f0fdf4);border:0.5px solid #a7f3d0;border-radius:var(--r);padding:13px 14px}
+
 </style>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#087c46">
@@ -696,6 +702,7 @@ details.bizm-week.bizm-week-details-mobile[open]{border-color:rgba(45,122,79,.35
       <div class="row">
         <div><h2 id="ventas-title">Mis Ventas</h2><div class="tb-sub" id="ventas-sub">Cargando...</div></div>
         <div style="display:flex;align-items:center;gap:8px">
+          <button id="push-mini-btn" class="push-mini-btn warn" onclick="requestPushPermissionAndSave()" title="Activar notificaciones">🔔</button>
           <button onclick="logout()" style="padding:6px 12px;border-radius:8px;background:#fee2e2;color:#991b1b;border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--fs)">Salir</button>
           <div class="av" id="ventas-av"></div>
         </div>
@@ -1052,7 +1059,7 @@ const FBCFG={
   appId:'1:301272114212:web:1a846a62c935bb6e8524b1',
   measurementId:'G-NS9QZY5Z73'
 };
-const VAPID='BAQqIEvdcOSFJkMM69WWkaC2OnujtlmlXS26UwFKOOW-a9Vh1sUehV9AiALQIkQG3kyeQIOcD7F1e1zgy-MWX6U';
+const VAPID='BAQqIEvdc0SfJkMM69WWkaC20nujtImIxS26UwFK00W-a9Vh1sUehV9AiALQIkQG3kyeQIOcD7F1e1zgy-MWX6U';
 
 // ═══ SALARY SCALE (weekly - loaded from config) ═══
 const DEFAULT_SCALE=[
@@ -1147,7 +1154,7 @@ async function loadApp(fbUser){
     startListeners();
     showSc('sc-app');
     showTab('ventas');
-    saveFCMToken();
+    saveFCMToken().finally(updatePushButton);
   }catch(e){console.error(e);showSc('sc-login');}
 }
 
@@ -2914,6 +2921,11 @@ async function renderConfig(){
       </div>
     </div>
     <div class="card">
+      <div class="section-label">Notificaciones</div>
+      <p style="font-size:12px;color:var(--tx2);line-height:1.4;margin-bottom:10px">Activa las notificaciones desde aquí. No aparecerá ninguna ventana al iniciar sesión; solo se pedirá permiso cuando presiones el botón.</p>
+      <button class="btn out" style="padding:11px;font-size:13px;margin-bottom:8px" onclick="requestPushPermissionAndSave()">🔔 Activar notificaciones</button>
+    </div>
+    <div class="card">
       <div class="section-label">Sesión</div>
       <button class="btn gray" onclick="logout()">Cerrar sesión</button>
     </div>`;
@@ -3349,35 +3361,108 @@ function vapidReady(){
   return !!VAPID && VAPID.indexOf('REEMPLAZAR_') === -1 && VAPID.length > 40;
 }
 
+function updatePushButton(){
+  try{
+    var btn=document.getElementById('push-mini-btn');
+    if(!btn) return;
+    var perm=('Notification' in window)?Notification.permission:'unsupported';
+    if(cu && (cu.fcmTokenVentas||cu.fcmToken)){
+      btn.textContent='🔔✓'; btn.className='push-mini-btn ok'; btn.title='Notificaciones activas';
+    }else if(perm==='granted'){
+      btn.textContent='🔔'; btn.className='push-mini-btn warn'; btn.title='Guardar token de notificaciones';
+    }else if(perm==='denied'){
+      btn.textContent='🔕'; btn.className='push-mini-btn err'; btn.title='Notificaciones bloqueadas en Chrome';
+    }else{
+      btn.textContent='🔔'; btn.className='push-mini-btn warn'; btn.title='Activar notificaciones';
+    }
+  }catch(_e){}
+}
+
+async function getFCMTokenForCurrentBrowser(){
+  if(!cu || !cu.id) throw new Error('Primero inicia sesión.');
+  if(!('Notification' in window)) throw new Error('Este navegador no soporta notificaciones.');
+  if(!('serviceWorker' in navigator)) throw new Error('Este navegador no soporta Service Worker.');
+  if(!firebase.messaging || !vapidReady()) throw new Error('Firebase Messaging o VAPID no está configurado.');
+
+  let reg;
+  try{
+    reg = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {scope:'/'});
+  }catch(_e){
+    reg = await navigator.serviceWorker.ready;
+  }
+
+  const msg = firebase.messaging();
+  return await msg.getToken({vapidKey:VAPID, serviceWorkerRegistration:reg});
+}
+
+async function saveTokenToUser(token){
+  if(!token) throw new Error('Firebase no devolvió token.');
+  await db.collection('users').doc(cu.id).update({
+    fcmTokenVentas: token,
+    fcmToken: token,
+    fcmTokenVentasUpdatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    pushLastError: firebase.firestore.FieldValue.delete(),
+    pushLastErrorAt: firebase.firestore.FieldValue.delete()
+  });
+  cu.fcmTokenVentas = token;
+  cu.fcmToken = token;
+  updatePushButton();
+}
+
+async function requestPushPermissionAndSave(){
+  try{
+    if(!cu || !cu.id){toast('Primero inicia sesión');return;}
+    if(!('Notification' in window)){toast('Este navegador no soporta notificaciones');return;}
+
+    var perm = Notification.permission;
+    if(perm !== 'granted'){
+      perm = await Notification.requestPermission();
+    }
+    if(perm !== 'granted'){
+      await db.collection('users').doc(cu.id).update({
+        pushLastError:'Permiso de notificaciones no concedido: '+perm,
+        pushLastErrorAt: firebase.firestore.FieldValue.serverTimestamp()
+      }).catch(function(){});
+      updatePushButton();
+      toast('Permiso de notificaciones no activado');
+      return;
+    }
+
+    toast('Activando notificaciones...');
+    const token = await getFCMTokenForCurrentBrowser();
+    await saveTokenToUser(token);
+    toast('✓ Notificaciones activadas');
+  }catch(e){
+    console.error('FCM manual:', e);
+    if(cu && cu.id && db){
+      await db.collection('users').doc(cu.id).update({
+        pushLastError: String(e && (e.message || e)),
+        pushLastErrorAt: firebase.firestore.FieldValue.serverTimestamp()
+      }).catch(function(){});
+    }
+    updatePushButton();
+    toast('No se pudo activar notificaciones');
+  }
+}
+
 async function saveFCMToken(){
   try{
-    // Mismo comportamiento que Rooze: no abre ventanas ni pide permiso automáticamente.
-    // Solo guarda el token cuando el permiso del navegador ya está en PERMITIR.
+    // Modo Rooze: no abre ventanas ni pide permiso automáticamente.
+    // Si el navegador ya está en PERMITIR, guarda/renueva el token al iniciar sesión.
     if(!cu || !cu.id) return;
-    if(!('Notification' in window) || Notification.permission !== 'granted') return;
-    if(!('serviceWorker' in navigator)) return;
-    if(!firebase.messaging || !vapidReady()) return;
-
-    let reg;
-    try{
-      reg = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {scope:'/'});
-    }catch(_e){
-      reg = await navigator.serviceWorker.ready;
-    }
-
-    const msg = firebase.messaging();
-    const token = await msg.getToken({vapidKey:VAPID, serviceWorkerRegistration:reg});
-    if(token){
-      await db.collection('users').doc(cu.id).update({
-        fcmTokenVentas: token,
-        fcmToken: token,
-        fcmTokenVentasUpdatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      cu.fcmTokenVentas = token;
-      console.log('FCM token ventas saved');
-    }
+    if(!('Notification' in window) || Notification.permission !== 'granted') { updatePushButton(); return; }
+    const token = await getFCMTokenForCurrentBrowser();
+    await saveTokenToUser(token);
+    console.log('FCM token ventas saved');
   }catch(e){
-    console.log('FCM:', e.message || e);
+    console.log('FCM auto:', e.message || e);
+    if(cu && cu.id && db){
+      await db.collection('users').doc(cu.id).update({
+        pushLastError: String(e && (e.message || e)),
+        pushLastErrorAt: firebase.firestore.FieldValue.serverTimestamp()
+      }).catch(function(){});
+    }
+    updatePushButton();
   }
 }
 
