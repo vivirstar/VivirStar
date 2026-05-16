@@ -3384,18 +3384,29 @@ async function getFCMTokenForCurrentBrowser(){
   if(!('serviceWorker' in navigator)) throw new Error('Este navegador no soporta Service Worker.');
   if(!firebase.messaging || !vapidReady()) throw new Error('Firebase Messaging o VAPID no está configurado.');
 
-  // Registrar (o reusar) el Service Worker y esperar que esté activo
+  // Detectar el base path dinámicamente para funcionar en GitHub Pages subcarpeta
+  // Ej: https://usuario.github.io/vivirstar26/ventas.html → basePath = '/vivirstar26/'
+  var currentPath = window.location.pathname;
+  var basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+  var swUrl = basePath + 'firebase-messaging-sw.js';
+
+  // Registrar (o reusar) el Service Worker con el scope correcto
   let reg;
   try{
-    reg = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {scope:'/'});
-  }catch(_e){
-    // Si el registro falla (p.ej. archivo no encontrado) intentamos usar el SW existente
-    try{ reg = await navigator.serviceWorker.ready; }
-    catch(e2){ throw new Error('Service Worker no disponible: ' + (e2.message||e2)); }
+    reg = await navigator.serviceWorker.register(swUrl, {scope: basePath});
+  }catch(e1){
+    console.warn('SW register falló con basePath, intentando raíz:', e1.message);
+    try{
+      reg = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {scope:'/'});
+    }catch(e2){
+      // Último recurso: usar el SW que ya esté activo
+      try{ reg = await navigator.serviceWorker.ready; }
+      catch(e3){ throw new Error('Service Worker no disponible: ' + (e3.message||e3)); }
+    }
   }
 
   // Esperar a que el SW esté en estado activo (evita token-subscribe-failed)
-  if(reg.installing || reg.waiting){
+  if(reg && (reg.installing || reg.waiting)){
     await new Promise(function(resolve){
       var sw = reg.installing || reg.waiting;
       sw.addEventListener('statechange', function onStateChange(){
@@ -3404,12 +3415,12 @@ async function getFCMTokenForCurrentBrowser(){
           resolve();
         }
       });
-      // Timeout de seguridad: 8 segundos
-      setTimeout(resolve, 8000);
+      // Timeout de seguridad: 10 segundos
+      setTimeout(resolve, 10000);
     });
   }
 
-  // Reobtener el registro actualizado
+  // Reobtener el registro actualizado y confirmado como activo
   try{ reg = await navigator.serviceWorker.ready; }catch(_e){}
 
   const msg = firebase.messaging();

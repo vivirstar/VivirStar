@@ -424,12 +424,12 @@ async function sendNotifToRoles(roles, title, body, data = {}) {
     ),
     webpush: {
       notification: {
-        icon: "https://vivirstar26.web.app/icon-192.png",
-        badge: "https://vivirstar26.web.app/icon-192.png",
+        icon: "https://vivirstar.github.io/VivirStar/icon-192.png",
+        badge: "https://vivirstar.github.io/VivirStar/icon-192.png",
         requireInteraction: true,
       },
       fcmOptions: {
-        link: "https://vivirstar26.web.app/ventas.html",
+        link: "https://vivirstar.github.io/VivirStar/ventas.html",
       },
     },
   };
@@ -564,12 +564,12 @@ async function sendShopifyNotifToAllowedUsers(store, title, body, data = {}) {
     ),
     webpush: {
       notification: {
-        icon: "https://vivirstar26.web.app/icon-192.png",
-        badge: "https://vivirstar26.web.app/icon-192.png",
+        icon: "https://vivirstar.github.io/VivirStar/icon-192.png",
+        badge: "https://vivirstar.github.io/VivirStar/icon-192.png",
         requireInteraction: true,
       },
       fcmOptions: {
-        link: "https://vivirstar26.web.app/ventas.html",
+        link: "https://vivirstar.github.io/VivirStar/ventas.html",
       },
     },
   };
