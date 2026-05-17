@@ -545,20 +545,14 @@ tbody tr:hover{background:var(--bg2)}
 .store-detail-hint{color:var(--accent);font-weight:800}
 .store-analysis-detail[open] .store-detail-hint{color:var(--tx3)}
 
-
-.login-brand-logo{width:86px;height:86px;border-radius:24px;margin:0 auto 14px;background:#fff;box-shadow:0 12px 30px rgba(9,94,54,.13);display:flex;align-items:center;justify-content:center;overflow:hidden}.login-brand-logo img{width:100%;height:100%;object-fit:cover}
-
 </style>
-  <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#087c46">
-  <link rel="icon" href="/icon-192.png">
+<link rel="icon" href="/icon-192.png">
 </head>
 <body>
 
 <!-- LOGIN -->
 <div class="login-page" id="pg-login">
   <div class="login-box">
-    <div class="login-brand-logo"><img src="logo-vivirstar.png" onerror="this.onerror=null;this.src='icon-192.png'"></div>
     <h1>VivirStar/ZOMA Panel</h1>
     <p>Panel administrativo web — ingresa con tu cuenta</p>
     <div class="fld"><label>Correo</label><input type="email" id="li-email" placeholder="tu@correo.com" autocomplete="email"></div>
@@ -574,7 +568,7 @@ tbody tr:hover{background:var(--bg2)}
   <!-- SIDEBAR -->
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-logo">
-      <h1><img src="logo-vivirstar.png" onerror="this.style.display='none'" style="width:24px;height:24px;border-radius:8px;vertical-align:middle;margin-right:6px">VivirStar</h1>
+      <h1>🟢 VivirStar</h1>
       <span>Panel Administrativo</span>
     </div>
 
@@ -909,7 +903,7 @@ tbody tr:hover{background:var(--bg2)}
       <div class="fld"><label>Tienda de venta</label><select id="vf-tienda"></select></div>
     </div>
     <div class="fld-row">
-      <div class="fld"><label>Vía de venta</label><input id="vf-venta-via" readonly style="color:var(--accent);font-weight:700"></div>
+      <div class="fld"><label>Canal de venta</label><select id="vf-venta-via" style="color:var(--accent);font-weight:700"><option value="whatsapp">WhatsApp</option></select></div>
       <div class="fld"><label>Producto</label>
         <select id="vf-producto"></select>
       </div>
@@ -936,6 +930,7 @@ tbody tr:hover{background:var(--bg2)}
       <div class="fld"><label>Fecha de venta</label><input type="date" id="vf-fecha"></div>
       <div></div>
     </div>
+    <div class="fld"><label>Nota <span style="font-weight:400;color:var(--tx2)">(opcional)</span></label><textarea id="vf-nota" placeholder="Observaciones del pedido..." rows="3"></textarea></div>
     <div class="fld"><label>Estado</label>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
         <button class="sopt pendiente on" onclick="selectVfStatus('pendiente',this)">Pendiente</button>
@@ -1019,8 +1014,8 @@ function setVentasSearch(v){
 
 function normalizeShopifyStoreName(v){
   v=String(v||'').toLowerCase().trim();
-  if(v==='vivirstar'||v==='vivirstar')return'vivirstar';
-  if(v==='zoma'||v==='zoma')return'zoma';
+  if(v==='vivirstar'||v==='vivir'||v==='vivirstarperu'||v==='vivir_star'||v==='vivir-star'||v==='rooza')return'vivirstar';
+  if(v==='zoma'||v==='zoma peru'||v==='zomaperu'||v==='dana')return'zoma';
   return v.replace(/[^a-z0-9_-]/g,'');
 }
 function getAllowedShopifyStores(user){
@@ -1108,20 +1103,66 @@ function getSalesChannelByRole(user){
   if(user.role==='admin'||user.role==='superuser')return 'shopify';
   return 'whatsapp';
 }
+function canChooseSalesChannel(user){
+  user=user||cu||{};
+  return user.role==='admin'||user.role==='superuser';
+}
+function buildSalesChannelOptions(selected,user){
+  selected=normalizeSalesChannel(selected)||getSalesChannelByRole(user);
+  if(!canChooseSalesChannel(user)){
+    return '<option value="whatsapp" selected>WhatsApp</option>';
+  }
+  return '<option value="shopify" '+(selected==='shopify'?'selected':'')+'>Shopify</option><option value="whatsapp" '+(selected==='whatsapp'?'selected':'')+'>WhatsApp</option>';
+}
+function configureSalesChannelSelect(id,selected,user){
+  var el=document.getElementById(id);
+  if(!el)return;
+  user=user||cu||{};
+  selected=normalizeSalesChannel(selected)||getSalesChannelByRole(user);
+  el.innerHTML=buildSalesChannelOptions(selected,user);
+  if(!canChooseSalesChannel(user)){
+    el.value='whatsapp';
+    el.disabled=true;
+    el.title='Los vendedores registran sus ventas como WhatsApp';
+    el.style.opacity='0.9';
+    el.style.cursor='not-allowed';
+  }else{
+    el.disabled=false;
+    el.title='';
+    el.style.opacity='1';
+    el.style.cursor='pointer';
+  }
+}
+function readSalesChannelFromSelect(id,user,existingOrder){
+  user=user||cu||{};
+  if(!canChooseSalesChannel(user))return 'whatsapp';
+  var val=normalizeSalesChannel(document.getElementById(id)?.value);
+  if(val)return val;
+  if(existingOrder && orderSalesChannel(existingOrder)!=='sin_via')return orderSalesChannel(existingOrder);
+  return getSalesChannelByRole(user);
+}
+
+function normalizeSalesChannel(ch){
+  ch=String(ch||'').toLowerCase().trim();
+  if(ch==='wa'||ch==='wsp'||ch==='whatssap'||ch==='whatsaap'||ch==='whatsapp')return 'whatsapp';
+  if(ch==='shopify'||ch==='shopi'||ch==='shop')return 'shopify';
+  return '';
+}
 function salesChannelLabel(ch){
-  ch=String(ch||'').toLowerCase();
+  ch=normalizeSalesChannel(ch);
   if(ch==='shopify')return 'Shopify';
   if(ch==='whatsapp')return 'WhatsApp';
-  return 'Sin vía';
+  return 'Sin canal';
 }
 function orderSalesChannel(o){
   o=o||{};
-  var ch=String(o.ventaVia||o.canalVenta||o.salesChannel||o.origenVenta||'').toLowerCase().trim();
-  if(ch==='wa')ch='whatsapp';
-  if(ch==='shopify'||ch==='whatsapp')return ch;
   var r=String(o.vendedorRole||o.role||'').toLowerCase();
+  // Regla de control: todo pedido creado por rol vendedor siempre cuenta como WhatsApp.
+  // Así evitamos que una venta manual de vendedor contamine las estadísticas de Shopify.
+  if(r==='vendedor'||r==='seller')return 'whatsapp';
+  var ch=normalizeSalesChannel(o.ventaVia||o.canalVenta||o.salesChannel||o.origenVenta||'');
+  if(ch==='shopify'||ch==='whatsapp')return ch;
   if(r==='admin'||r==='superuser')return 'shopify';
-  if(r==='vendedor')return 'whatsapp';
   return 'sin_via';
 }
 function getOrderStoreId(o){
@@ -1153,21 +1194,67 @@ function getCachedUserForOrder(o){
 async function loadUsersCacheForAnalysis(){
   window._usersCacheById=window._usersCacheById||{};
   window._usersCacheByName=window._usersCacheByName||{};
+  window._usersCacheByEmail=window._usersCacheByEmail||{};
   try{
     var snap=await db.collection('users').get();
-    var byId={}, byName={};
+    var byId={}, byName={}, byEmail={};
     snap.forEach(function(doc){
       var u=Object.assign({id:doc.id},doc.data()||{});
       byId[doc.id]=u;
       var nk=normalizeSearchText(u.name||u.displayName||u.email||'');
       if(nk)byName[nk]=u;
+      var ek=normalizeSearchText(u.email||'');
+      if(ek)byEmail[ek]=u;
     });
     window._usersCacheById=byId;
     window._usersCacheByName=byName;
+    window._usersCacheByEmail=byEmail;
   }catch(e){
     console.warn('No se pudo cargar usuarios para análisis por tienda',e&&e.message?e.message:e);
   }
 }
+
+function vendedorUserFromOrder(o){
+  o=o||{};
+  var u=getCachedUserForOrder(o)||null;
+  if(!u&&window._usersCacheByEmail){
+    var ek=normalizeSearchText(o.vendedorEmail||o.emailVendedor||o.userEmail||'');
+    if(ek&&window._usersCacheByEmail[ek])u=window._usersCacheByEmail[ek];
+  }
+  return u;
+}
+function vendedorEmailFromOrder(o){
+  var u=vendedorUserFromOrder(o)||{};
+  return String(u.email||o.vendedorEmail||o.emailVendedor||o.userEmail||'').trim().toLowerCase();
+}
+function vendedorKeyFromOrder(o){
+  o=o||{};
+  var email=vendedorEmailFromOrder(o);
+  if(email)return 'email:'+email;
+  var uid=String(o.vendedorId||'').trim();
+  if(uid)return 'uid:'+uid;
+  var name=normalizeSearchText(o.vendedor||'');
+  return name?'name:'+name:'sin_vendedor';
+}
+function vendedorNameFromOrder(o){
+  var u=vendedorUserFromOrder(o)||{};
+  return String(u.name||u.displayName||o.vendedor||u.email||o.vendedorEmail||'Desconocido').trim()||'Desconocido';
+}
+function vendedorFinanceTotals(list){
+  var out={costoProductos:0,delivery:0,ganancia:0};
+  (list||[]).forEach(function(o){
+    var c=getCostoReal(o)||{};
+    out.costoProductos+=Number(c.costo||0);
+    out.delivery+=Number(c.delivery||0);
+    out.ganancia+=Number(c.ganancia||0);
+  });
+  return out;
+}
+function vendedorAliasNote(d){
+  if(!d||!d.aliases||d.aliases.length<2)return '';
+  return '<div style="font-size:10px;color:var(--tx3);margin-top:2px">También registrado como: '+d.aliases.slice(0,3).join(', ')+'</div>';
+}
+
 function inferOrderRoleForAnalysis(o){
   var u=getCachedUserForOrder(o);
   var role=normalizeRoleForAnalysis((u&&u.role)||o.vendedorRole||o.role||'');
@@ -1250,7 +1337,7 @@ function renderStoreChannelCards(list,compact){
     if(!channels.length)channels=['whatsapp','shopify'];
     var channelHtml=channels.map(function(ch){var c=s.channels[ch]||{count:0,ingresos:0,unidades:0};return '<div class="store-channel-box '+ch+'"><div class="store-channel-label">'+channelIconForAnalysis(ch)+' '+channelLabelForAnalysis(ch)+'</div><div class="store-channel-main">'+c.count+' pedidos</div><div class="store-channel-sub">'+(c.unidades||0)+' un. · '+fmtC0(c.ingresos||0)+'</div></div>';}).join('');
     var roleHtml=['vendedor','admin','superuser','sin_rol'].filter(function(r){return s.roles&&s.roles[r]&&s.roles[r].count>0;}).map(function(r){var rr=s.roles[r];return '<div class="store-role-pill"><strong>'+roleLabelForAnalysis(r)+'</strong><span>'+rr.count+' · '+fmtC0(rr.ingresos||0)+'</span></div>';}).join('');
-    var people=Object.keys(s.people||{}).map(function(k){return Object.assign({name:k},s.people[k]);}).sort(function(a,b){return b.count-a.count;}).slice(0,compact?4:7).map(function(p){var chs=[];if(p.channels){if(p.channels.whatsapp)chs.push('WhatsApp '+p.channels.whatsapp);if(p.channels.shopify)chs.push('Shopify '+p.channels.shopify);if(p.channels.sin_via)chs.push('Sin vía '+p.channels.sin_via);}return '<div class="store-person-row"><span>'+shopifyHtml(p.name)+' <small>'+roleLabelForAnalysis(p.role)+(chs.length?' · '+chs.join(' / '):'')+'</small></span><strong>'+p.count+' · '+fmtC0(p.ingresos||0)+'</strong></div>';}).join('');
+    var people=Object.keys(s.people||{}).map(function(k){return Object.assign({name:k},s.people[k]);}).sort(function(a,b){return b.count-a.count;}).slice(0,compact?4:7).map(function(p){var chs=[];if(p.channels){if(p.channels.whatsapp)chs.push('WhatsApp '+p.channels.whatsapp);if(p.channels.shopify)chs.push('Shopify '+p.channels.shopify);if(p.channels.sin_via)chs.push('Sin canal '+p.channels.sin_via);}return '<div class="store-person-row"><span>'+shopifyHtml(p.name)+' <small>'+roleLabelForAnalysis(p.role)+(chs.length?' · '+chs.join(' / '):'')+'</small></span><strong>'+p.count+' · '+fmtC0(p.ingresos||0)+'</strong></div>';}).join('');
     var detailHint='<span class="store-detail-hint">Ver detalle</span>';
     return '<details class="store-analysis-card store-analysis-detail '+(s.id==='sin_tienda'?'missing':'')+'">'+
       '<summary class="store-analysis-summary">'+
@@ -1976,6 +2063,7 @@ function openNuevaVenta(){
   $('vf-title').textContent='Nueva venta';
   $('vf-cliente').value='';$('vf-celular').value='';$('vf-dni').value='';
   $('vf-cobrar').value='';$('vf-ciudad').value='';
+  if($('vf-nota'))$('vf-nota').value='';
   if($('vf-adelanto'))$('vf-adelanto').value='0';
   if($('vf-contraentrega'))$('vf-contraentrega').checked=false;
   if($('vf-saldo-preview'))$('vf-saldo-preview').style.display='none';
@@ -1983,7 +2071,7 @@ function openNuevaVenta(){
   const today=new Date();
   $('vf-fecha').value=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
   if($('vf-tienda'))$('vf-tienda').innerHTML=buildSalesStoreOptions(getDefaultSalesStore(cu),cu);
-  if($('vf-venta-via'))$('vf-venta-via').value=salesChannelLabel(getSalesChannelByRole(cu));
+  configureSalesChannelSelect('vf-venta-via', getSalesChannelByRole(cu), cu);
   $('vf-producto').innerHTML='<option value="">Selecciona...</option>'+(cfg.productos||[]).map(p=>`<option value="${p.nombre}">${p.nombre}</option>`).join('');
   vfStatus='pendiente';
   document.querySelectorAll('#ov-venta-form .sopt').forEach(b=>b.classList.remove('on'));
@@ -2001,6 +2089,7 @@ function openEditVenta(id){
   $('vf-dni').value=o.dni||'';
   $('vf-cobrar').value=o.cobrar||'';
   $('vf-ciudad').value=o.ciudad||'';
+  if($('vf-nota'))$('vf-nota').value=o.nota||'';
   if($('vf-adelanto'))$('vf-adelanto').value=(o.adelanto!=null?o.adelanto:0);
   if($('vf-contraentrega'))$('vf-contraentrega').checked=!!o.contraEntrega;
   calcVfSaldo();
@@ -2008,7 +2097,7 @@ function openEditVenta(id){
   $('vf-zona').value=o.zona||'Lima';
   $('vf-fecha').value=o.fechaVenta||'';
   if($('vf-tienda'))$('vf-tienda').innerHTML=buildSalesStoreOptions(getOrderStoreId(o)||getDefaultSalesStore(cu),cu);
-  if($('vf-venta-via'))$('vf-venta-via').value=salesChannelLabel(orderSalesChannel(o)==='sin_via'?getSalesChannelByRole(cu):orderSalesChannel(o));
+  configureSalesChannelSelect('vf-venta-via', (orderSalesChannel(o)==='sin_via'?getSalesChannelByRole(cu):orderSalesChannel(o)), cu);
   $('vf-producto').innerHTML='<option value="">Selecciona...</option>'+(cfg.productos||[]).map(p=>`<option value="${p.nombre}"${p.nombre===o.producto?' selected':''}>${p.nombre}</option>`).join('');
   vfStatus=o.estado||'pendiente';
   document.querySelectorAll('#ov-venta-form .sopt').forEach(b=>b.classList.remove('on'));
@@ -2050,18 +2139,19 @@ $('btn-vf-save').onclick=async function(){
   const tienda=normalizeShopifyStoreName(document.getElementById('vf-tienda')?.value)||getDefaultSalesStore(cu);
   const tiendaNombre=shopifyStoreDisplayName(tienda);
   const existingOrder=editOrderId?orders.find(x=>x.id===editOrderId):null;
-  const ventaVia=(existingOrder&&orderSalesChannel(existingOrder)!=='sin_via')?orderSalesChannel(existingOrder):getSalesChannelByRole(cu);
+  const ventaVia=readSalesChannelFromSelect('vf-venta-via', cu, existingOrder);
   const zona=$('vf-zona').value||'Lima';
   const ciudad=($('vf-ciudad').value||'').trim();
   const fechaVenta=$('vf-fecha').value||new Date().toISOString().split('T')[0];
   const cantidad=parseInt($('vf-cantidad').value)||1;
+  const nota=(document.getElementById('vf-nota')?.value||'').trim();
   if(!cliente||!celular||!cobrar){err.textContent='Completa cliente, celular y monto.';err.style.display='block';return;}
   const parts=fechaVenta.split('-');
   const fechaMs=new Date(parseInt(parts[0]),parseInt(parts[1])-1,parseInt(parts[2]),12,0,0).getTime();
   const btn=$('btn-vf-save'); btn.disabled=true; btn.textContent='Guardando...';
   try{
     const data={cliente,celular,dni,cobrar,adelanto,saldo,contraEntrega,producto,tienda,store:tienda,tiendaNombre,ventaVia,canalVenta:ventaVia,vendedorRole:(existingOrder&&existingOrder.vendedorRole)||((cu&&cu.role)||''),zona,ciudad,fechaVenta,fechaMs,
-      totalCantidad:cantidad,estado:vfStatus,
+      totalCantidad:cantidad,estado:vfStatus,nota,
       productos:[{nombre:producto,cantidad}]};
     if(editOrderId){
       await db.collection('orders').doc(editOrderId).update(data);
@@ -2513,17 +2603,21 @@ function renderHistorial(){
 
 window._vData={};
   all.forEach(o=>{
-    const name=o.vendedor||'Desconocido';
-    if(!vendMap[name])vendMap[name]={ventas:0,cobrado:0,ganancia:0,productos:{},estados:{pendiente:0,enviado:0,entregado:0,anulado:0},allOrders:[]};
-    vendMap[name].ventas++;vendMap[name].cobrado+=(o.cobrar||0);
-    vendMap[name].allOrders.push(o);
-    if(vendMap[name].estados[o.estado]!==undefined)vendMap[name].estados[o.estado]++;
+    const key=vendedorKeyFromOrder(o);
+    const name=vendedorNameFromOrder(o);
+    const email=vendedorEmailFromOrder(o);
+    if(!vendMap[key])vendMap[key]={name:name,email:email,aliases:[],ventas:0,cobrado:0,ganancia:0,costoProductos:0,delivery:0,productos:{},estados:{pendiente:0,enviado:0,entregado:0,anulado:0},allOrders:[]};
+    if(name&&vendMap[key].aliases.indexOf(name)===-1)vendMap[key].aliases.push(name);
+    vendMap[key].name=(vendedorUserFromOrder(o)||{}).name||vendMap[key].name||name;
+    vendMap[key].ventas++;vendMap[key].cobrado+=(o.cobrar||0);
+    vendMap[key].allOrders.push(o);
+    if(vendMap[key].estados[o.estado]!==undefined)vendMap[key].estados[o.estado]++;
     if(o.estado!=='anulado'){
       const qty=o.totalCantidad||1;
-      if(o.productos?.length){o.productos.forEach(p=>{vendMap[name].productos[p.nombre]=(vendMap[name].productos[p.nombre]||0)+(p.cantidad||1);});}
-      else if(o.producto){vendMap[name].productos[o.producto]=(vendMap[name].productos[o.producto]||0)+qty;}
+      if(o.productos?.length){o.productos.forEach(p=>{vendMap[key].productos[p.nombre]=(vendMap[key].productos[p.nombre]||0)+(p.cantidad||1);});}
+      else if(o.producto){vendMap[key].productos[o.producto]=(vendMap[key].productos[o.producto]||0)+qty;}
     }
-    if(isSuper())vendMap[name].ganancia+=getCostoReal(o).ganancia;
+    if(isSuper()){const fin=getCostoReal(o);vendMap[key].ganancia+=fin.ganancia;vendMap[key].costoProductos+=fin.costo;vendMap[key].delivery+=fin.delivery;}
   });
   const totalPedidos=valid.length;
   let hh=`<div class="kpi-row" style="margin-bottom:16px">
@@ -2533,7 +2627,7 @@ window._vData={};
   </div>`;
   const entries=Object.entries(vendMap).sort((a,b)=>b[1].ventas-a[1].ventas);
   entries.forEach((entry,vi)=>{
-    const name=entry[0],d=entry[1];
+    const d=entry[1], name=d.name||entry[0];
     const vid='vp-'+vi;
     const ventasV=d.allOrders.filter(o=>o.estado!=='anulado').length;
     const sueldo=calcSueldo(ventasV);
@@ -2545,12 +2639,12 @@ window._vData={};
     const prodRows=Object.entries(d.productos).sort((a,b)=>b[1]-a[1]).map(([n,qty])=>
       `<div class="dr"><span style="font-size:13px">${n}</span><span style="font-weight:700;color:var(--accent)">${qty} un.</span></div>`
     ).join('');
-    window._vData[vid]={estados:d.estados,cantRows,prodRows,sueldo,ventasValidas:ventasV,ganancia:d.ganancia,showGan:isSuper()};
+    window._vData[vid]={estados:d.estados,cantRows,prodRows,sueldo,ventasValidas:ventasV,ganancia:d.ganancia,costoProductos:d.costoProductos||0,delivery:d.delivery||0,showGan:isSuper()};
     hh+=`<div class="vcard">
       <div class="vcard-hdr" data-vid="${vid}" onclick="toggleVP(this.dataset.vid)">
         <div>
           <div class="vcard-name">${name}</div>
-          <div class="vcard-sub">${d.ventas} ventas · S/ ${d.cobrado.toFixed(0)} cobrado${isSuper()?' · Gan: S/ '+d.ganancia.toFixed(0):''}</div>
+          <div class="vcard-sub">${d.ventas} ventas · S/ ${d.cobrado.toFixed(0)} cobrado${isSuper()?' · Gan: S/ '+d.ganancia.toFixed(0):''}</div>${vendedorAliasNote(d)}
         </div>
         <div style="display:flex;align-items:center;gap:12px">
           <span style="font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;background:${next?'#fef3c7':'#dcfce7'};color:${next?'#92400e':'#166534'}">${next?'🎯 −'+(next.ventas-ventasV):'✅ Meta'}</span>
@@ -2582,6 +2676,7 @@ function toggleVP(vid){
         </div>
         ${d.cantRows?`<div class="section-lbl">Ventas por cantidad</div><div style="background:var(--bg2);border-radius:9px;padding:4px 10px;margin-bottom:12px">${d.cantRows}</div>`:''}
         ${d.prodRows?`<div class="section-lbl">Productos vendidos</div><div style="background:var(--bg2);border-radius:9px;padding:4px 10px;margin-bottom:12px">${d.prodRows}</div>`:''}
+        ${d.showGan?`<div class="section-lbl">Detalle de costos</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px"><div class="fin-box" style="background:#fff7ed"><div class="l" style="color:#c2410c">COSTO PRODUCTOS</div><div class="n" style="color:#c2410c">${fmtC0(d.costoProductos||0)}</div></div><div class="fin-box" style="background:#eff6ff"><div class="l" style="color:#1e40af">DELIVERY / ENVÍO</div><div class="n" style="color:#1e40af">${fmtC0(d.delivery||0)}</div></div></div>`:''}
         <div class="fin-row">
           <div class="fin-box" style="background:var(--accent2)"><div class="l" style="color:var(--accent)">SUELDO PERÍODO</div><div class="n" style="color:var(--accent)">S/ ${d.sueldo}</div><div style="font-size:11px;color:var(--tx3);margin-top:2px">${d.ventasValidas} ventas válidas</div></div>
           ${d.showGan?`<div class="fin-box" style="background:#f0fdf4"><div class="l" style="color:#166534">GANANCIA REAL</div><div class="n" style="color:#166534">S/ ${d.ganancia.toFixed(0)}</div></div>`:''}
@@ -2701,6 +2796,7 @@ function roleLabel(role){
 }
 
 
+
 function renderUsersRoleListPC(){
   var el=document.getElementById('users-role-list-pc');
   if(!el||!isSuper())return;
@@ -2712,34 +2808,136 @@ function renderUsersRoleListPC(){
       var bn=(b.data.name||b.data.email||'').toLowerCase();
       return an.localeCompare(bn);
     });
-    if(!docs.length){el.innerHTML='<div style="font-size:12px;color:var(--tx3);padding:8px 0">No hay usuarios registrados.</div>';return;}
-    el.innerHTML=docs.map(function(row){
-      var u=row.data, uid=row.id, role=u.role||'vendedor';
-      return '<div class="shopify-admin-perm-row">'
-        +'<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px">'
-          +'<div style="min-width:0">'
-            +'<div style="font-size:13px;font-weight:750;color:var(--tx)">'+shopifyHtml(u.name||u.displayName||u.email||uid)+'</div>'
-            +(u.email?'<div style="font-size:10px;color:var(--tx3);margin-top:1px">'+shopifyHtml(u.email)+'</div>':'')
+    var createBox=buildCreateUserBoxPC();
+    var listHtml='';
+    if(!docs.length){
+      listHtml='<div style="font-size:12px;color:var(--tx3);padding:8px 0">No hay usuarios registrados.</div>';
+    }else{
+      listHtml=docs.map(function(row){
+        var u=row.data, uid=row.id, role=u.role||'vendedor';
+        var isMe=uid===cu.id;
+        return '<div class="shopify-admin-perm-row">'
+          +'<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px">'
+            +'<div style="min-width:0">'
+              +'<div style="font-size:13px;font-weight:750;color:var(--tx)">'+shopifyHtml(u.name||u.displayName||u.email||uid)+'</div>'
+              +(u.email?'<div style="font-size:10px;color:var(--tx3);margin-top:1px">'+shopifyHtml(u.email)+'</div>':'')
+            +'</div>'
+            +'<span style="font-size:10px;font-weight:800;color:var(--accent);background:var(--accent2);border-radius:999px;padding:5px 8px;white-space:nowrap">'+roleLabel(role)+'</span>'
           +'</div>'
-          +'<span style="font-size:10px;font-weight:800;color:var(--accent);background:var(--accent2);border-radius:999px;padding:5px 8px;white-space:nowrap">'+roleLabel(role)+'</span>'
-        +'</div>'
-        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">'
-          +'<input id="uname-pc-'+uid+'" value="'+shopifyHtml(u.name||u.displayName||'')+'" placeholder="Nombre de usuario" style="background:var(--bg);border:1px solid var(--bo);border-radius:10px;padding:8px 10px;font-size:12px;color:var(--tx);font-family:inherit">'
-          +'<input id="uemail-pc-'+uid+'" value="'+shopifyHtml(u.email||'')+'" placeholder="Correo visible" style="background:var(--bg);border:1px solid var(--bo);border-radius:10px;padding:8px 10px;font-size:12px;color:var(--tx);font-family:inherit">'
-        +'</div>'
-        +'<div class="shopify-admin-perm-actions">'
-          +'<select id="role-pc-'+uid+'" style="flex:1;min-width:160px;background:var(--bg);border:1px solid var(--bo);border-radius:999px;padding:7px 12px;font-size:12px;color:var(--tx);font-family:inherit">'
-            +'<option value="superuser" '+(role==='superuser'?'selected':'')+'>Super Admin</option>'
-            +'<option value="admin" '+(role==='admin'?'selected':'')+'>Administrador</option>'
-            +'<option value="vendedor" '+(role==='vendedor'?'selected':'')+'>Vendedor</option>'
-          +'</select>'
-          +'<button onclick="saveUserRolePC(\''+uid+'\')">Guardar</button>'
-        +'</div>'
-      +'</div>';
-    }).join('');
+          +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">'
+            +'<input id="uname-pc-'+uid+'" value="'+shopifyHtml(u.name||u.displayName||'')+'" placeholder="Nombre de usuario" style="background:var(--bg);border:1px solid var(--bo);border-radius:10px;padding:8px 10px;font-size:12px;color:var(--tx);font-family:inherit">'
+            +'<input id="uemail-pc-'+uid+'" value="'+shopifyHtml(u.email||'')+'" placeholder="Correo visible" style="background:var(--bg);border:1px solid var(--bo);border-radius:10px;padding:8px 10px;font-size:12px;color:var(--tx);font-family:inherit">'
+          +'</div>'
+          +'<div class="shopify-admin-perm-actions">'
+            +'<select id="role-pc-'+uid+'" style="flex:1;min-width:160px;background:var(--bg);border:1px solid var(--bo);border-radius:999px;padding:7px 12px;font-size:12px;color:var(--tx);font-family:inherit">'
+              +'<option value="superuser" '+(role==='superuser'?'selected':'')+'>Super Admin</option>'
+              +'<option value="admin" '+(role==='admin'?'selected':'')+'>Administrador</option>'
+              +'<option value="vendedor" '+(role==='vendedor'?'selected':'')+'>Vendedor</option>'
+            +'</select>'
+            +'<button onclick="saveUserRolePC(\''+uid+'\')">Guardar</button>'
+            +'<button onclick="deleteUserAccessPC(\''+uid+'\')" '+(isMe?'disabled title="No puedes eliminar tu propio usuario"':'')+' style="background:#fee2e2;color:#991b1b">Eliminar</button>'
+          +'</div>'
+        +'</div>';
+      }).join('');
+    }
+    el.innerHTML=createBox+listHtml;
   }).catch(function(e){
     el.innerHTML='<div class="err" style="display:block">Error cargando usuarios: '+shopifyHtml(e.message)+'</div>';
   });
+}
+
+function buildCreateUserBoxPC(){
+  var stores=getAllSalesStores();
+  var storesHtml=stores.map(function(st){
+    return '<label style="display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--bo);border-radius:999px;padding:7px 10px;font-size:12px;font-weight:700;color:var(--tx2)"><input type="checkbox" id="new-user-store-pc-'+st.id+'" style="accent-color:var(--accent)"> '+shopifyHtml(st.name)+'</label>';
+  }).join('');
+  return '<div class="shopify-admin-perm-row" style="border:1px dashed var(--accent);background:var(--accent2);margin-bottom:12px">'
+    +'<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px">'
+      +'<div><div style="font-size:13px;font-weight:850;color:var(--accent)">Agregar nuevo usuario</div><div style="font-size:11px;color:var(--tx2);margin-top:2px">Crea su acceso de login y perfil interno de la app.</div></div>'
+      +'<span style="font-size:18px">👤</span>'
+    +'</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">'
+      +'<input id="new-user-name-pc" placeholder="Nombre" style="background:var(--bg);border:1px solid var(--bo);border-radius:10px;padding:8px 10px;font-size:12px;color:var(--tx);font-family:inherit">'
+      +'<input id="new-user-email-pc" type="email" placeholder="correo@empresa.com" style="background:var(--bg);border:1px solid var(--bo);border-radius:10px;padding:8px 10px;font-size:12px;color:var(--tx);font-family:inherit">'
+      +'<input id="new-user-pass-pc" type="text" placeholder="Contraseña inicial mínimo 6" style="background:var(--bg);border:1px solid var(--bo);border-radius:10px;padding:8px 10px;font-size:12px;color:var(--tx);font-family:inherit">'
+      +'<select id="new-user-role-pc" style="background:var(--bg);border:1px solid var(--bo);border-radius:10px;padding:8px 10px;font-size:12px;color:var(--tx);font-family:inherit">'
+        +'<option value="vendedor">Vendedor</option><option value="admin">Administrador</option><option value="superuser">Super Admin</option>'
+      +'</select>'
+    +'</div>'
+    +'<div style="font-size:10.5px;color:var(--tx3);font-weight:800;text-transform:uppercase;margin:6px 0 6px">Tiendas asignadas</div>'
+    +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">'+storesHtml+'</div>'
+    +'<div style="display:flex;gap:8px;align-items:center">'
+      +'<button onclick="createUserAccessPC()" style="background:var(--accent);color:#fff;border:none;border-radius:999px;padding:8px 14px;font-size:12px;font-weight:800;font-family:inherit;cursor:pointer">Agregar usuario</button>'
+      +'<div style="font-size:10.5px;color:var(--tx2);line-height:1.35">Si el correo ya existe en la app, se actualiza ese usuario y no se duplica.</div>'
+    +'</div>'
+  +'</div>';
+}
+
+function getNewUserStoresPC(role){
+  var stores=[];
+  getAllSalesStores().forEach(function(st){
+    var el=document.getElementById('new-user-store-pc-'+st.id);
+    if(el&&el.checked)stores.push(st.id);
+  });
+  if(role==='superuser'&&!stores.length)stores=getAllSalesStores().map(function(st){return st.id;});
+  return stores;
+}
+
+function getSecondaryUserAuthPC(){
+  var app;
+  try{app=firebase.app('vivirstarUserCreatePC');}
+  catch(e){app=firebase.initializeApp(FBCFG,'vivirstarUserCreatePC');}
+  return app.auth();
+}
+
+async function findUserDocByEmailPC(email){
+  email=String(email||'').trim().toLowerCase();
+  if(!email)return null;
+  var snap=await db.collection('users').get();
+  var found=null;
+  snap.forEach(function(doc){
+    var u=doc.data()||{};
+    if(String(u.email||'').trim().toLowerCase()===email&&!found)found={id:doc.id,data:u};
+  });
+  return found;
+}
+
+async function createUserAccessPC(){
+  if(!isSuper())return toast('Solo Super Admin');
+  var name=(document.getElementById('new-user-name-pc')||{}).value||'';
+  var email=(document.getElementById('new-user-email-pc')||{}).value||'';
+  var pass=(document.getElementById('new-user-pass-pc')||{}).value||'';
+  var role=((document.getElementById('new-user-role-pc')||{}).value)||'vendedor';
+  name=name.trim(); email=email.trim().toLowerCase(); pass=pass.trim();
+  if(!name||!email)return toast('Completa nombre y correo');
+  if(!/^\S+@\S+\.\S+$/.test(email))return toast('Correo no válido');
+  var stores=getNewUserStoresPC(role);
+  var payload={name:name,displayName:name,email:email,role:role,ini:(name||email).substring(0,1).toUpperCase(),shopifyStores:stores,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:cu.id,updatedByName:cu.name||cu.email||''};
+  try{
+    var existing=await findUserDocByEmailPC(email);
+    if(existing){
+      await db.collection('users').doc(existing.id).set(payload,{merge:true});
+      toast('✓ Usuario existente actualizado');
+    }else{
+      if(pass.length<6)return toast('La contraseña debe tener mínimo 6 caracteres');
+      var secondaryAuth=getSecondaryUserAuthPC();
+      var cred=await secondaryAuth.createUserWithEmailAndPassword(email,pass);
+      var uid=cred.user.uid;
+      try{await cred.user.updateProfile({displayName:name});}catch(_e){}
+      payload.createdAt=firebase.firestore.FieldValue.serverTimestamp();
+      payload.createdBy=cu.id;
+      payload.createdByName=cu.name||cu.email||'';
+      await db.collection('users').doc(uid).set(payload,{merge:true});
+      try{await secondaryAuth.signOut();}catch(_e){}
+      toast('✓ Usuario creado');
+    }
+    renderUsersRoleListPC();
+    renderShopifyAdminPerms();
+    await loadUsersCacheForAnalysis();
+  }catch(e){
+    var msg=e&&e.code==='auth/email-already-in-use'?'Ese correo ya existe en Authentication. Crea o corrige su documento users con el UID correcto desde Firebase.':(e.message||e);
+    toast('Error: '+msg);
+  }
 }
 
 async function saveUserRolePC(uid){
@@ -2750,18 +2948,43 @@ async function saveUserRolePC(uid){
   if(!sel)return;
   var newRole=sel.value;
   var newName=(nameEl&&nameEl.value||'').trim();
-  var newEmail=(emailEl&&emailEl.value||'').trim();
+  var newEmail=(emailEl&&emailEl.value||'').trim().toLowerCase();
+  if(!newName||!newEmail)return toast('Completa nombre y correo');
   if(uid===cu.id && newRole!=='superuser'){
     if(!confirm('Estás cambiando tu propio rol de Super Admin. Podrías perder acceso a configuración. ¿Continuar?'))return;
   }
   try{
-    var payload={role:newRole,name:newName,email:newEmail};
-    await db.collection('users').doc(uid).set(payload,{merge:true});
-    if(uid===cu.id){cu.name=newName;cu.email=newEmail;cu.role=newRole;}
-    toast('✓ Usuario actualizado');
+    var existing=await findUserDocByEmailPC(newEmail);
+    if(existing&&existing.id!==uid){
+      if(!confirm('Ya existe otro usuario con este mismo correo. Para evitar duplicados, se actualizará ese usuario. Este registro seguirá visible hasta que lo elimines manualmente. ¿Continuar?'))return;
+      await db.collection('users').doc(existing.id).set({role:newRole,name:newName,displayName:newName,email:newEmail,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:cu.id},{merge:true});
+      toast('✓ Usuario existente actualizado por correo');
+    }else{
+      await db.collection('users').doc(uid).set({role:newRole,name:newName,displayName:newName,email:newEmail,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:cu.id},{merge:true});
+      if(uid===cu.id){cu.name=newName;cu.email=newEmail;cu.role=newRole;}
+      toast('✓ Usuario actualizado');
+    }
     renderUsersRoleListPC();
     renderShopifyAdminPerms();
+    await loadUsersCacheForAnalysis();
     applyRoleNav();
+  }catch(e){toast('Error: '+e.message);}
+}
+
+async function deleteUserAccessPC(uid){
+  if(!isSuper())return toast('Solo Super Admin');
+  if(uid===cu.id)return toast('No puedes eliminar tu propio usuario');
+  var ref=db.collection('users').doc(uid);
+  try{
+    var doc=await ref.get();
+    var u=doc.exists?(doc.data()||{}):{};
+    var label=u.name||u.email||uid;
+    if(!confirm('¿Eliminar el acceso de '+label+'?\n\nEsto elimina su perfil dentro de la app. Sus ventas históricas se mantienen.'))return;
+    await ref.delete();
+    toast('✓ Usuario eliminado de la app');
+    renderUsersRoleListPC();
+    renderShopifyAdminPerms();
+    await loadUsersCacheForAnalysis();
   }catch(e){toast('Error: '+e.message);}
 }
 
@@ -4779,6 +5002,191 @@ function pcBuildVendorSelect(){}  // no longer needed, built in renderMeta
   };
 
   setTimeout(injectVentasZonePC,50);
+})();
+</script>
+
+
+
+<!-- VIVIRSTAR/ZOMA · Fix permisos de tienda para notas y ventas manuales -->
+<script>
+(function(){
+  if(window.__vivStorePermissionNotaFixV2)return;
+  window.__vivStorePermissionNotaFixV2=true;
+
+  function vzNorm(v){
+    v=String(v||'').toLowerCase().trim();
+    if(['vivirstar','vivir','vivirstarperu','vivir_star','vivir-star','vivir star'].indexOf(v)!==-1)return 'vivirstar';
+    if(['zoma','zoma peru','zomaperu'].indexOf(v)!==-1)return 'zoma';
+    return v.replace(/[^a-z0-9_-]/g,'');
+  }
+  function vzEsc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
+  function vzAllStores(){
+    var map={}, arr=[];
+    function add(id,name,src){
+      id=vzNorm(id); name=String(name||id||'').trim();
+      var nameKey=vzNorm(name);
+      if((!id||id==='default'||/^t\d+$/i.test(id)||id==='tienda'||id==='store')&&nameKey)id=nameKey;
+      if(!id)return;
+      if(!name)name=id.toUpperCase();
+      if(map[id]){
+        Object.assign(map[id], src||{});
+        if(name && (!map[id].name || map[id].name===map[id].id.toUpperCase()))map[id].name=name;
+        return;
+      }
+      var t=Object.assign({},src||{}, {id:id, name:name});
+      map[id]=t; arr.push(t);
+    }
+    try{
+      if(window.cfg && Array.isArray(cfg.tiendas)){
+        cfg.tiendas.forEach(function(t){
+          var rawId=t.shopifyStore||t.shopifyId||t.storeId||t.key||t.slug||t.id||t.name;
+          var rawName=t.name||t.nombre||t.label||rawId;
+          add(rawId,rawName,t);
+        });
+      }
+    }catch(e){}
+    add('vivirstar','VIVIRSTAR',{color:'#2d7a4f'});
+    add('zoma','ZOMA',{color:'#2d7a4f'});
+    return arr;
+  }
+
+  function vzAllowedIds(user){
+    user=user||window.cu||{};
+    var all=vzAllStores();
+    if(user.role==='superuser')return all.map(function(s){return s.id;});
+    var raw=user.shopifyStores||user.shopifyStore||user.tiendaShopify||user.shopify_store||user.storePermission||user.storePermissions||user.tiendasPermitidas||user.allowedStores||[];
+    if(typeof raw==='string')raw=[raw];
+    if(!Array.isArray(raw))raw=[];
+    var out=[];
+    raw.forEach(function(s){s=vzNorm(s); if(s&&out.indexOf(s)===-1)out.push(s);});
+    return out;
+  }
+
+  function vzAllowedStores(user){
+    user=user||window.cu||{};
+    var all=vzAllStores();
+    if(user.role==='superuser')return all;
+    var ids=vzAllowedIds(user);
+    if(!ids.length)return [];
+    return all.filter(function(s){return ids.indexOf(s.id)!==-1;});
+  }
+
+  function vzStoreName(store){
+    var s=vzAllStores().find(function(x){return x.id===vzNorm(store);});
+    return (s&&s.name)||String(store||'Tienda').toUpperCase();
+  }
+
+  // Reemplaza la lógica de tiendas para registrar / editar venta manual.
+  window.getUserSalesStores=function(user){return vzAllowedStores(user);};
+  window.buildSalesStoreOptions=function(selected,user){
+    var stores=vzAllowedStores(user);
+    if(!stores.length)return '<option value="">Sin tienda asignada</option>';
+    var sel=vzNorm(selected||stores[0].id);
+    if(!stores.some(function(s){return s.id===sel;}))sel=stores[0].id;
+    return stores.map(function(s){return '<option value="'+vzEsc(s.id)+'" '+(s.id===sel?'selected':'')+'>'+vzEsc(s.name||s.id.toUpperCase())+'</option>';}).join('');
+  };
+  window.getDefaultSalesStore=function(user){
+    var stores=vzAllowedStores(user);
+    return (stores[0]&&stores[0].id)||'';
+  };
+  window.shopifyStoreDisplayName=function(store){return vzStoreName(store);};
+
+  // Para panel.html, openNotaModal usa getNotaTiendasPC(). Aquí lo filtramos por permisos.
+  try{
+    window.getNotaTiendasPC=function(){return vzAllowedStores(window.cu||{});};
+    getNotaTiendasPC=window.getNotaTiendasPC;
+  }catch(e){}
+
+  function vzConfigureNotaSelector(order){
+    var sel=document.getElementById('nota-tienda-sel');
+    if(!sel)return;
+    var stores=vzAllowedStores(window.cu||{});
+    var err=document.getElementById('nota-confirm-err');
+    var btn=document.getElementById('btn-nota-wa');
+
+    if(!stores.length){
+      sel.innerHTML='<option value="">Sin tienda asignada</option>';
+      sel.value='';
+      if(btn)btn.disabled=true;
+      if(err){err.textContent='Este usuario no tiene una tienda asignada. Pide al Super Admin asignarle VIVIRSTAR o ZOMA.';err.style.display='block';}
+      return;
+    }
+
+    if(btn)btn.disabled=false;
+    var ids=stores.map(function(s){return s.id;});
+    var orderStore=vzNorm(order&&(order.tienda||order.store||order.tiendaId||order.shopifyStore));
+    var active=vzNorm((window.cfg&&cfg.activeTiendaId)||'');
+    var selected=(orderStore&&ids.indexOf(orderStore)!==-1)?orderStore:((active&&ids.indexOf(active)!==-1)?active:stores[0].id);
+
+    sel.innerHTML=stores.map(function(t){return '<option value="'+vzEsc(t.id)+'" '+(t.id===selected?'selected':'')+'>'+vzEsc(t.name||t.id.toUpperCase())+'</option>';}).join('');
+    sel.value=selected;
+    if(err)err.style.display='none';
+
+    try{ if(typeof updateTiendaPreviewPC==='function')updateTiendaPreviewPC(); }catch(e){}
+    try{ if(typeof updateTiendaPreview==='function')updateTiendaPreview(); }catch(e){}
+  }
+
+  function vzCheckSelectedStore(){
+    var sel=document.getElementById('nota-tienda-sel');
+    if(!sel)return true;
+    var ids=vzAllowedStores(window.cu||{}).map(function(s){return s.id;});
+    var ok=ids.indexOf(vzNorm(sel.value))!==-1;
+    if(!ok){
+      var err=document.getElementById('nota-confirm-err');
+      if(err){err.textContent='No tienes permiso para generar nota con esa tienda.';err.style.display='block';}
+      if(typeof toast==='function')toast('No tienes permiso para esa tienda');
+    }
+    return ok;
+  }
+
+  var oldOpen=window.openNotaModal;
+  if(typeof oldOpen==='function'){
+    window.openNotaModal=function(orderId){
+      var r=oldOpen.apply(this,arguments);
+      setTimeout(function(){vzConfigureNotaSelector(window._notaCurrentOrder || (typeof orderId==='object'?orderId:null));},100);
+      setTimeout(function(){vzConfigureNotaSelector(window._notaCurrentOrder || (typeof orderId==='object'?orderId:null));},450);
+      return r;
+    };
+  }
+
+  var oldConfirm=window.confirmSendNota;
+  if(typeof oldConfirm==='function'){
+    window.confirmSendNota=function(){
+      if(!vzCheckSelectedStore())return;
+      return oldConfirm.apply(this,arguments);
+    };
+  }
+
+  // Si se abre el formulario manual, fuerza el selector a tiendas permitidas.
+  var oldOpenNueva=window.openNueva;
+  if(typeof oldOpenNueva==='function'){
+    window.openNueva=function(){
+      var r=oldOpenNueva.apply(this,arguments);
+      setTimeout(function(){
+        var sel=document.getElementById('nv-tienda');
+        if(sel)sel.innerHTML=window.buildSalesStoreOptions(window.getDefaultSalesStore(window.cu),window.cu);
+        var noStores=!vzAllowedStores(window.cu||{}).length;
+        var btn=document.getElementById('btn-nueva');
+        if(btn)btn.disabled=!!noStores;
+        if(noStores&&typeof toast==='function')toast('Este usuario no tiene tienda asignada');
+      },80);
+      return r;
+    };
+  }
+
+  var oldOpenEdit=window.openEdit;
+  if(typeof oldOpenEdit==='function'){
+    window.openEdit=function(orderId){
+      var r=oldOpenEdit.apply(this,arguments);
+      setTimeout(function(){
+        var o=(window.orders||[]).find(function(x){return x.id===orderId;})||{};
+        var sel=document.getElementById('eo-tienda');
+        if(sel)sel.innerHTML=window.buildSalesStoreOptions(o.tienda||o.store||window.getDefaultSalesStore(window.cu),window.cu);
+      },100);
+      return r;
+    };
+  }
 })();
 </script>
 
